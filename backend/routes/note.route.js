@@ -1,0 +1,259 @@
+/**
+ * @swagger
+ * tags:
+ *   name: Notes
+ *   description: Notes management
+ */
+
+const to = require("await-to-js").default;
+const router = require("express").Router();
+const HttpStatus = require("../constants/error.constants").HttpStatus;
+const Note = require("../models/note.model");
+
+/**
+ * @swagger
+ * path:
+ *  /notes/:
+ *    get:
+ *      summary: Get notes
+ *      tags: [Notes]
+ *      responses:
+ *        "200":
+ *          description: OK. Returns a list of note schemas
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: array
+ *                items:
+ *                  $ref: '#/components/schemas/Note'
+ *        "204":
+ *          description: NO_CONTENT. Returns an empty list
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: array
+ *                items:
+ *                  $ref: '#/components/schemas/Note'
+ */
+router.route("/").get(async (req, res) => {
+  let err, notes;
+
+  [err, notes] = await to(Note.find());
+  if (err) {
+    return res.status(HttpStatus.BAD_REQUEST).send("Error: " + err);
+  }
+  if (!notes) {
+    return res.status(HttpStatus.NO_CONTENT).send({ notes });
+  }
+  return res.status(HttpStatus.OK).send({ notes });
+});
+
+/**
+ * @swagger
+ * path:
+ *  /notes/add:
+ *    post:
+ *      summary: Create a new note
+ *      tags: [Notes]
+ *      requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Note'
+ *      responses:
+ *        "201":
+ *          description: CREATED. Returns a note schema
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/schemas/Note'
+ */
+router.route("/add").post(async (req, res) => {
+  let err, note, newNote;
+
+  note = new Note({
+    title: req.body.title,
+    authors: req.body.authors,
+    taggedUsers: req.body.taggedUsers,
+    body: req.body.body,
+    date: req.body.date,
+    hidden: req.body.hidden
+  });
+
+  [err, newNote] = await to(note.save());
+  if (err) {
+    return res.status(HttpStatus.BAD_REQUEST).send("Error: " + err);
+  }
+  if (!newNote) {
+    return res
+      .status(HttpStatus.BAD_REQUEST)
+      .send("Error: Bad request creating new note");
+  }
+  return res.status(HttpStatus.CREATED).send({ note: newNote });
+});
+
+/**
+ * @swagger
+ * path:
+ *  /notes/{id}:
+ *    get:
+ *      summary: Get a note by ID
+ *      tags: [Notes]
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          schema:
+ *            type: string
+ *          required: true
+ *          description: Object ID of the note to get
+ *      responses:
+ *        "201":
+ *          description: CREATED. Returns a note schema
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/schemas/Note'
+ *        "404":
+ *          description: NOT_FOUND. Note not found
+ *
+ */
+router.route("/:id").get(async (req, res) => {
+  let err, note;
+
+  [err, note] = await to(Note.findById(req.params.id));
+  if (err) {
+    return res.status(HttpStatus.BAD_REQUEST).send("Error: " + err);
+  }
+  if (!note) {
+    return res
+      .status(HttpStatus.NOT_FOUND)
+      .send(`Error: Note with id ${req.params.id} NOT_FOUND`);
+  }
+  return res.status(HttpStatus.OK).send({ note });
+});
+
+/**
+ * @swagger
+ * path:
+ *  /notes/{id}:
+ *    delete:
+ *      summary: Delete a note by ID
+ *      tags: [Notes]
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          schema:
+ *            type: string
+ *          required: true
+ *          description: Object ID of the note to get
+ *      responses:
+ *        "200":
+ *          description: OK. Note soft deleted.
+ *          schema:
+ *            type: string
+ *        "404":
+ *          description: NOT_FOUND. Note not found
+ */
+router.route("/:id").delete(async (req, res) => {
+  let err, note, newNote;
+
+  [err, note] = await to(Note.findById(req.params.id));
+  if (err) {
+    return res
+      .status(HttpStatus.BAD_REQUEST)
+      .send("Error while finding note: " + err);
+  }
+  if (!note) {
+    return res
+      .status(HttpStatus.NOT_FOUND)
+      .send(`Error: Note with id ${req.params.id} NOT_FOUND`);
+  }
+
+  if (note.deleted) {
+    return res.status(HttpStatus.OK).send("Note has already been deleted");
+  }
+
+  note.deleted = true;
+
+  [err, newNote] = await to(note.save());
+  if (err) {
+    return res
+      .status(HttpStatus.BAD_REQUEST)
+      .send("Error while deleting note: " + err);
+  }
+  if (!newNote) {
+    return res
+      .status(HttpStatus.BAD_REQUEST)
+      .send("Error: Bad request deleting note");
+  }
+  return res
+    .status(HttpStatus.OK)
+    .send(`Note with id ${req.params.id} successfully deleted.`);
+});
+
+/**
+ * @swagger
+ * path:
+ *  /notes/update/{id}:
+ *    post:
+ *      summary: Update a note by ID
+ *      tags: [Notes]
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          schema:
+ *            type: string
+ *          required: true
+ *          description: Object ID of the note to get
+ *      requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Note'
+ *      responses:
+ *        "200":
+ *          description: OK. Returns a note schema
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/schemas/Note'
+ */
+router.route("/update/:id").post(async (req, res) => {
+  let err, note, newNote;
+
+  [err, note] = await to(Note.findById(req.params.id));
+  if (err) {
+    return res
+      .status(HttpStatus.BAD_REQUEST)
+      .send("Error while finding note: " + err);
+  }
+  if (!note) {
+    return res
+      .status(HttpStatus.NOT_FOUND)
+      .send(`Error: Note with id ${req.params.id} NOT_FOUND`);
+  }
+
+  note.title = req.body.title || note.title;
+  note.authors = req.body.authors || note.authors;
+  note.taggedUsers = req.body.taggedUsers || note.taggedUsers;
+  note.body = req.body.body || note.body;
+  note.minimized = req.body.minimized || note.minimized;
+  note.private = req.body.private || note.private;
+
+  [err, newNote] = await to(note.save());
+  if (err) {
+    return res
+      .status(HttpStatus.BAD_REQUEST)
+      .send("Error while updating note: " + err);
+  }
+  if (!newNote) {
+    return res
+      .status(HttpStatus.BAD_REQUEST)
+      .send("Error: Bad request updating note");
+  }
+  return res.status(HttpStatus.OK).send({ note: newNote });
+});
+
+module.exports = router;
