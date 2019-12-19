@@ -19,6 +19,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "backend": "cd backend && nodemon server.js",
     "prettify": "./node_modules/.bin/prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\""
   },
   "eslintConfig": {

@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 /**
  * @swagger
  *  components:
- *    schemas: 
+ *    schemas:
  *      User:
  *        type: object
  *        required:
@@ -15,6 +15,7 @@ const Schema = mongoose.Schema;
  *          _id:
  *            type: string
  *            description: The unique identifier.
+ *            readOnly: true
  *          name:
  *            type: string
  *          username:
@@ -24,6 +25,9 @@ const Schema = mongoose.Schema;
  *            type: string
  *            format: email
  *            description: The user's email address.
+ *          deleted:
+ *            type: boolean
+ *            default: false
  *          createdAt:
  *            type: string
  *            format: date-time
@@ -35,16 +39,13 @@ const Schema = mongoose.Schema;
  *            description: The datetime that the user was last updated.
  *            readOnly: true
  *        example:
- *          _id: 5df96a498bb8f9495cac1855
  *          name: Alex Kim
  *          username: alexkim
  *          email: alexkim@dev.com
- *          createdAt: 2019-12-17T23:52:41.066Z
- *          updatedAt: 2019-12-17T23:52:41.066Z
  */
 const userSchema = new Schema(
   {
-    name: {type: String, required: true, trim: true},
+    name: { type: String, required: true, trim: true },
     username: {
       type: String,
       required: [true, "Username required"],
@@ -61,7 +62,8 @@ const userSchema = new Schema(
         message: props => `${props.value} is not a valid email address!`
       },
       required: [true, "Email address required"]
-    }
+    },
+    deleted: { type: Boolean, default: false }
   },
   {
     timestamps: true

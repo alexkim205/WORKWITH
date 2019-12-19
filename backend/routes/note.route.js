@@ -51,6 +51,45 @@ router.route("/").get(async (req, res) => {
 /**
  * @swagger
  * path:
+ *  /notes/{id}:
+ *    get:
+ *      summary: Get a note by ID
+ *      tags: [Notes]
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          schema:
+ *            type: string
+ *          required: true
+ *          description: Object ID of the note to get
+ *      responses:
+ *        "201":
+ *          description: CREATED. Returns a note schema
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/schemas/Note'
+ *        "404":
+ *          description: NOT_FOUND. Note not found
+ */
+router.route("/:id").get(async (req, res) => {
+  let err, note;
+
+  [err, note] = await to(Note.findById(req.params.id));
+  if (err) {
+    return res.status(HttpStatus.BAD_REQUEST).send("Error: " + err);
+  }
+  if (!note) {
+    return res
+      .status(HttpStatus.NOT_FOUND)
+      .send(`Error: Note with id ${req.params.id} NOT_FOUND`);
+  }
+  return res.status(HttpStatus.OK).send({ note });
+});
+
+/**
+ * @swagger
+ * path:
  *  /notes/add:
  *    post:
  *      summary: Create a new note
@@ -91,105 +130,6 @@ router.route("/add").post(async (req, res) => {
       .send("Error: Bad request creating new note");
   }
   return res.status(HttpStatus.CREATED).send({ note: newNote });
-});
-
-/**
- * @swagger
- * path:
- *  /notes/{id}:
- *    get:
- *      summary: Get a note by ID
- *      tags: [Notes]
- *      parameters:
- *        - in: path
- *          name: id
- *          schema:
- *            type: string
- *          required: true
- *          description: Object ID of the note to get
- *      responses:
- *        "201":
- *          description: CREATED. Returns a note schema
- *          content:
- *            application/json:
- *              schema:
- *                $ref: '#/components/schemas/Note'
- *        "404":
- *          description: NOT_FOUND. Note not found
- *
- */
-router.route("/:id").get(async (req, res) => {
-  let err, note;
-
-  [err, note] = await to(Note.findById(req.params.id));
-  if (err) {
-    return res.status(HttpStatus.BAD_REQUEST).send("Error: " + err);
-  }
-  if (!note) {
-    return res
-      .status(HttpStatus.NOT_FOUND)
-      .send(`Error: Note with id ${req.params.id} NOT_FOUND`);
-  }
-  return res.status(HttpStatus.OK).send({ note });
-});
-
-/**
- * @swagger
- * path:
- *  /notes/{id}:
- *    delete:
- *      summary: Delete a note by ID
- *      tags: [Notes]
- *      parameters:
- *        - in: path
- *          name: id
- *          schema:
- *            type: string
- *          required: true
- *          description: Object ID of the note to get
- *      responses:
- *        "200":
- *          description: OK. Note soft deleted.
- *          schema:
- *            type: string
- *        "404":
- *          description: NOT_FOUND. Note not found
- */
-router.route("/:id").delete(async (req, res) => {
-  let err, note, newNote;
-
-  [err, note] = await to(Note.findById(req.params.id));
-  if (err) {
-    return res
-      .status(HttpStatus.BAD_REQUEST)
-      .send("Error while finding note: " + err);
-  }
-  if (!note) {
-    return res
-      .status(HttpStatus.NOT_FOUND)
-      .send(`Error: Note with id ${req.params.id} NOT_FOUND`);
-  }
-
-  if (note.deleted) {
-    return res.status(HttpStatus.OK).send("Note has already been deleted");
-  }
-
-  note.deleted = true;
-
-  [err, newNote] = await to(note.save());
-  if (err) {
-    return res
-      .status(HttpStatus.BAD_REQUEST)
-      .send("Error while deleting note: " + err);
-  }
-  if (!newNote) {
-    return res
-      .status(HttpStatus.BAD_REQUEST)
-      .send("Error: Bad request deleting note");
-  }
-  return res
-    .status(HttpStatus.OK)
-    .send(`Note with id ${req.params.id} successfully deleted.`);
 });
 
 /**
@@ -254,6 +194,65 @@ router.route("/update/:id").post(async (req, res) => {
       .send("Error: Bad request updating note");
   }
   return res.status(HttpStatus.OK).send({ note: newNote });
+});
+
+/**
+ * @swagger
+ * path:
+ *  /notes/{id}:
+ *    delete:
+ *      summary: Delete a note by ID
+ *      tags: [Notes]
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          schema:
+ *            type: string
+ *          required: true
+ *          description: Object ID of the note to get
+ *      responses:
+ *        "200":
+ *          description: OK. Note soft deleted.
+ *          schema:
+ *            type: string
+ *        "404":
+ *          description: NOT_FOUND. Note not found
+ */
+router.route("/:id").delete(async (req, res) => {
+  let err, note, newNote;
+
+  [err, note] = await to(Note.findById(req.params.id));
+  if (err) {
+    return res
+      .status(HttpStatus.BAD_REQUEST)
+      .send("Error while finding note: " + err);
+  }
+  if (!note) {
+    return res
+      .status(HttpStatus.NOT_FOUND)
+      .send(`Error: Note with id ${req.params.id} NOT_FOUND`);
+  }
+
+  if (note.deleted) {
+    return res.status(HttpStatus.OK).send("Note has already been deleted");
+  }
+
+  note.deleted = true;
+
+  [err, newNote] = await to(note.save());
+  if (err) {
+    return res
+      .status(HttpStatus.BAD_REQUEST)
+      .send("Error while deleting note: " + err);
+  }
+  if (!newNote) {
+    return res
+      .status(HttpStatus.BAD_REQUEST)
+      .send("Error: Bad request deleting note");
+  }
+  return res
+    .status(HttpStatus.OK)
+    .send(`Note with id ${req.params.id} successfully deleted.`);
 });
 
 module.exports = router;

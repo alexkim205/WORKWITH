@@ -15,6 +15,7 @@ const ObjectId = mongoose.Schema.Types.ObjectId;
  *          _id:
  *            type: string
  *            description: The unique identifier.
+ *            readOnly: true
  *          title:
  *            type: string
  *            description: The users mentioned in this note.
