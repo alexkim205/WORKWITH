@@ -17,14 +17,14 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: process.env.DEV_API
+        url: `http://localhost:${process.env.API_PORT}/api/v1.0.0`
       },
       {
-        url: process.env.PROD_API_URL
+        url: `http://idonthaveadomainyet.com/api/v1.0.0`
       }
     ]
   },
-  apis: ["./models/*.model.js", "./routes/*.route.js"]
+  apis: ["./backend/models/*.model.js", "./backend/routes/*.route.js"]
 };
 
 module.exports.default = swaggerOptions;
