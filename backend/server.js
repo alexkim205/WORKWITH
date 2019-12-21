@@ -11,7 +11,7 @@ const port = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
-app.use(morgan('tiny'))
+app.use(morgan("tiny"));
 
 // Make connection to MongoDB
 const uri = process.env.ATLAS_URI;
@@ -27,7 +27,7 @@ const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerOptions = require("./config/swagger.config.js").default;
 const specs = swaggerJsdoc(swaggerOptions);
 
-app.use(express.static('public'))
+app.use(express.static("public"));
 app.use("/api-docs", swaggerUi.serve);
 app.get(
   "/api-docs",

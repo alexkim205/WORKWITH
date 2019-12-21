@@ -4,8 +4,7 @@ const swaggerOptions = {
     info: {
       version: process.env.API_VERSION,
       title: "WorkWith REST API Documentation",
-      description:
-        "A social organizational app.",
+      description: "A social organizational app.",
       license: {
         name: "MIT",
         url: "https://choosealicense.com/licenses/mit/"
@@ -18,7 +17,10 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: `http://localhost:5000/api/v${process.env.API_VERSION}`
+        url: process.env.DEV_API
+      },
+      {
+        url: process.env.PROD_API_URL
       }
     ]
   },
