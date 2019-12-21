@@ -19,6 +19,7 @@
   - Theming, store (+ persist), and routing
 - Moved frontend stuff into separate folder
 - Environments in VSCode
+- Add README.md
 
 ## 12/19/2019
 
