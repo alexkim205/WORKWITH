@@ -17,5 +17,4 @@ const HttpStatus = {
   INTERNAL_SERVER_ERROR: 500
 };
 
-
 module.exports.HttpStatus = HttpStatus;

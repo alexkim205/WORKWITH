@@ -213,7 +213,7 @@ router.route("/update/:id").post(async (req, res) => {
  *        "404":
  *          description: NOT_FOUND. User not found
  */
-router.route("/:id").delete(async(req, res)=> {
+router.route("/:id").delete(async (req, res) => {
   let err, user, newUser;
 
   [err, user] = await to(User.findById(req.params.id));
@@ -248,6 +248,6 @@ router.route("/:id").delete(async(req, res)=> {
   return res
     .status(HttpStatus.OK)
     .send(`User with id ${req.params.id} successfully deleted.`);
-})
+});
 
 module.exports = router;

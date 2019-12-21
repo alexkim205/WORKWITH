@@ -10,10 +10,10 @@
     "prettier": "^1.19.1"
   },
   "scripts": {
-    "prettify": "./node_modules/.bin/prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\""
+    "prettify": "./node_modules/.bin/prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\""
   },
   "lint-staged": {
-    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+    "**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
       "prettier --write",
       "git add"
     ]
