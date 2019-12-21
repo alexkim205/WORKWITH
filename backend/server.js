@@ -35,10 +35,11 @@ app.get(
 );
 
 // Setup API endpoints
+const API_VERSION = swaggerOptions.swaggerDefinition.info.version;
 const notesRouter = require("./routes/note.route");
 const userRouter = require("./routes/user.route");
-app.use(`/api/v${process.env.API_VERSION}/notes`, notesRouter);
-app.use(`/api/v${process.env.API_VERSION}/users`, userRouter);
+app.use(`/api/v${API_VERSION}/notes`, notesRouter);
+app.use(`/api/v${API_VERSION}/users`, userRouter);
 
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);

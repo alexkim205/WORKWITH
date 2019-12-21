@@ -10,6 +10,8 @@
     "prettier": "^1.19.1"
   },
   "scripts": {
+    "frontend": "cd frontend && yarn start",
+    "backend": "cd backend && nodemon server.js",
     "prettify": "./node_modules/.bin/prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\""
   },
   "lint-staged": {

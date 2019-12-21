@@ -2,7 +2,7 @@ const swaggerOptions = {
   swaggerDefinition: {
     openapi: "3.0.0",
     info: {
-      version: process.env.API_VERSION,
+      version: "1.0.0",
       title: "WorkWith REST API Documentation",
       description: "A social organizational app.",
       license: {
