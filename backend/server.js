@@ -27,7 +27,7 @@ const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerOptions = require("./config/swagger.config.js").default;
 const specs = swaggerJsdoc(swaggerOptions);
 
-app.use(express.static("public"));
+app.use(express.static("./backend/public"));
 app.use("/api-docs", swaggerUi.serve);
 app.get(
   "/api-docs",
