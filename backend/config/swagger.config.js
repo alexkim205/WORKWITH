@@ -24,7 +24,7 @@ const swaggerOptions = {
       }
     ]
   },
-  apis: ["./backend/models/*.model.js", "./backend/routes/*.route.js"]
+  apis: ["./models/*.model.js", "./routes/*.route.js"]
 };
 
 module.exports.default = swaggerOptions;

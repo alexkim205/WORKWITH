@@ -16,7 +16,8 @@
 ## 12/21/2019
 
 - Figure out enzyme testing configuration
-- Add constant and reducer util files
+- Add constants
+- Add reducer util files
 
 ## 12/20/2019
 
