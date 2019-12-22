@@ -13,6 +13,11 @@
 - Spend just one day figuring out authentication
 - Figure out clear TDD pipeline
 
+## 12/21/2019
+
+- Figure out enzyme testing configuration
+- Add constant and reducer util files
+
 ## 12/20/2019
 
 - Setup frontend boilerplate
