@@ -19,7 +19,7 @@ const Note = require("../models/note.model");
  *      tags: [Notes]
  *      responses:
  *        "200":
- *          description: OK. Returns a list of note schemas
+ *          description: OK. Returns a list of notes
  *          content:
  *            application/json:
  *              schema:
@@ -63,8 +63,8 @@ router.route("/").get(async (req, res) => {
  *          required: true
  *          description: Object ID of the note to get
  *      responses:
- *        "201":
- *          description: CREATED. Returns a note schema
+ *        "200":
+ *          description: OK. Returns a note
  *          content:
  *            application/json:
  *              schema:
@@ -116,8 +116,8 @@ router.route("/add").post(async (req, res) => {
     authors: req.body.authors,
     taggedUsers: req.body.taggedUsers,
     body: req.body.body,
-    date: req.body.date,
-    hidden: req.body.hidden
+    minimized: req.body.minimized,
+    private: req.body.private
   });
 
   [err, newNote] = await to(note.save());
@@ -145,7 +145,7 @@ router.route("/add").post(async (req, res) => {
  *          schema:
  *            type: string
  *          required: true
- *          description: Object ID of the note to get
+ *          description: Object ID of the note to update
  *      requestBody:
  *        required: true
  *        content:
@@ -154,7 +154,7 @@ router.route("/add").post(async (req, res) => {
  *              $ref: '#/components/schemas/Note'
  *      responses:
  *        "200":
- *          description: OK. Returns a note schema
+ *          description: OK. Returns a note
  *          content:
  *            application/json:
  *              schema:
@@ -209,7 +209,7 @@ router.route("/update/:id").post(async (req, res) => {
  *          schema:
  *            type: string
  *          required: true
- *          description: Object ID of the note to get
+ *          description: Object ID of the note to delete
  *      responses:
  *        "200":
  *          description: OK. Note soft deleted.

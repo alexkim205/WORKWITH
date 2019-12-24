@@ -38,8 +38,10 @@ app.get(
 const API_VERSION = swaggerOptions.swaggerDefinition.info.version;
 const notesRouter = require("./routes/note.route");
 const userRouter = require("./routes/user.route");
+const projectRouter = require("./routes/project.route");
 app.use(`/api/v${API_VERSION}/notes`, notesRouter);
 app.use(`/api/v${API_VERSION}/users`, userRouter);
+app.use(`/api/v${API_VERSION}/projects}`, projectRouter);
 
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);

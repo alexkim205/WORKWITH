@@ -13,6 +13,16 @@
 - Spend just one day figuring out authentication
 - Figure out clear TDD pipeline
 
+## 12/23/2019
+
+- Server
+  - Add Project Schema
+    - Add project_id field to note
+    - Add model
+    - Add router
+- Client
+  - Implement notes and users services
+
 ## 12/21/2019
 
 - Figure out enzyme testing configuration

@@ -16,6 +16,10 @@ const ObjectId = mongoose.Schema.Types.ObjectId;
  *            type: string
  *            description: The unique identifier.
  *            readOnly: true
+ *          projectId:
+ *            type: string
+ *            description: The project that this note is associated with.
+ *            readOnly: true
  *          title:
  *            type: string
  *            description: The users mentioned in this note.
@@ -60,6 +64,7 @@ const ObjectId = mongoose.Schema.Types.ObjectId;
  */
 const noteSchema = new Schema(
   {
+    projectId: { type: ObjectId, ref: "Project", required: true },
     title: String,
     authors: [{ type: ObjectId, ref: "User", required: true }],
     taggedUsers: [{ type: ObjectId, ref: "User" }],
