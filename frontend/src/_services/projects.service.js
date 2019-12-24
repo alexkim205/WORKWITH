@@ -9,95 +9,95 @@ const { serverUrl } = setupUrls();
 const getProjectsByUser = user_id => async dispatch => {
   let [err, projects];
   const { actionPending, actionSuccess, actionError } = createActionCreator(
-    notesConstants,
+    projectsConstants,
     "GET_USER_PROJECTS"
   );
-  const requestUrl = `${serverUrl}/projects/user/${project_id}`;
+  const requestUrl = `${serverUrl}/projects/user/${user_id}`;
 
   dispatch(actionPending());
-  [err, notes] = await to(axios.get(requestUrl));
+  [err, projects] = await to(axios.get(requestUrl));
   if (err) {
     dispatch(actionError(err));
     throw err;
   }
-  dispatch(actionSuccess(notes));
+  dispatch(actionSuccess(projects));
 };
 
-const getNotes = () => async dispatch => {
-  let [err, notes];
+const getProjects = () => async dispatch => {
+  let [err, projects];
   const { actionPending, actionSuccess, actionError } = createActionCreator(
-    notesConstants,
-    "GET_NOTES"
+    projectsConstants,
+    "GET_PROJECTS"
   );
-  const requestUrl = `${serverUrl}/notes`;
+  const requestUrl = `${serverUrl}/projects`;
 
   dispatch(actionPending());
-  [err, notes] = await to(axios.get(requestUrl));
+  [err, projects] = await to(axios.get(requestUrl));
   if (err) {
     dispatch(actionError(err));
     throw err;
   }
-  dispatch(actionSuccess(notes));
+  dispatch(actionSuccess(projects));
 };
 
-const getNote = note_id => async dispatch => {
-  let [err, note];
+const getProject = project_id => async dispatch => {
+  let [err, project];
   const { actionPending, actionSuccess, actionError } = createActionCreator(
-    notesConstants,
-    "GET_NOTE"
+    projectsConstants,
+    "GET_PROJECT"
   );
-  const requestUrl = `${serverUrl}/notes/${note_id}`;
+  const requestUrl = `${serverUrl}/projects/${project_id}`;
 
   dispatch(actionPending());
-  [err, note] = await to(axios.get(requestUrl));
+  [err, project] = await to(axios.get(requestUrl));
   if (err) {
     dispatch(actionError(err));
     throw err;
   }
-  dispatch(actionSuccess(note));
+  dispatch(actionSuccess(project));
 };
 
-const createNote = newNote => async dispatch => {
-  let [err, note];
+const createProject = newProject => async dispatch => {
+  let [err, project];
   const { actionPending, actionSuccess, actionError } = createActionCreator(
-    notesConstants,
-    "CREATE_NOTE"
+    projectsConstants,
+    "CREATE_PROJECT"
   );
-  const requestUrl = `${serverUrl}/notes/add`;
+  const requestUrl = `${serverUrl}/projects/add`;
 
   dispatch(actionPending());
-  [err, note] = await to(axios.post(requestUrl, newNote));
+  [err, project] = await to(axios.post(requestUrl, newProject));
   if (err) {
     dispatch(actionError(err));
     throw err;
   }
-  dispatch(actionSuccess(note));
+  dispatch(actionSuccess(project));
 };
 
-const updateNote = (note_id, newNote) => async dispatch => {
-  let [err, note];
+const updateProject = (project_id, newProject) => async dispatch => {
+  let [err, project];
   const { actionPending, actionSuccess, actionError } = createActionCreator(
-    notesConstants,
-    "UPDATE_NOTE"
+    projectsConstants,
+    "UPDATE_PROJECT"
   );
-  const requestUrl = `${serverUrl}/notes/update/${note_id}`;
+  const requestUrl = `${serverUrl}/projects/update/${project_id}`;
 
   dispatch(actionPending());
-  [err, note] = await to(axios.post(requestUrl, newNote));
+  [err, project] = await to(axios.post(requestUrl, newProject));
   if (err) {
     dispatch(actionError(err));
     throw err;
   }
-  dispatch(actionSuccess(note));
+  dispatch(actionSuccess(project));
 };
 
-const deleteNote = note_id => async dispatch => {
+const deleteProject = project_id => async dispatch => {
   let err;
   const { actionPending, actionSuccess, actionError } = createActionCreator(
-    notesConstants,
-    "DELETE_NOTE"
+    projectsConstants,
+    "DELETE_PROJECT"
   );
-  const requestUrl = `${serverUrl}/notes/${note_id}`;
+  const requestUrl = `${serverUrl}/projects/${project_id}`;
 
   dispatch(actionPending());
   [err, _] = await to(axios.delete(requestUrl));
@@ -108,11 +108,11 @@ const deleteNote = note_id => async dispatch => {
   dispatch(actionSuccess());
 };
 
-export const notesActions = {
-  getNotesByProject,
-  getNotes,
-  getNote,
-  createNote,
-  updateNote,
-  deleteNote
+export const projectsActions = {
+  getProjectsByUser,
+  getProjects,
+  getProject,
+  createProject,
+  updateProject,
+  deleteProject
 };
