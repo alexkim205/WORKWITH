@@ -5,11 +5,13 @@
   "author": "Alex Gyujin Kim <alexgkim205@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "concurrently": "^5.0.2",
     "husky": "^3.1.0",
     "lint-staged": "^9.5.0",
     "prettier": "^1.19.1"
   },
   "scripts": {
+    "start": "concurrently \"yarn frontend\" \"yarn backend\"",
     "frontend": "cd frontend && yarn start",
     "backend": "cd backend && nodemon server.js",
     "prettify": "./node_modules/.bin/prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\""
