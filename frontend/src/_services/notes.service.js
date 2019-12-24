@@ -9,8 +9,8 @@ const { serverUrl } = setupUrls();
 const getNotesByProject = project_id => async dispatch => {
   let [err, notes];
   const { actionPending, actionSuccess, actionError } = createActionCreator(
-    developersConstants,
-    "GET_NOTES"
+    notesConstants,
+    "GET_PROJECT_NOTES"
   );
   const requestUrl = `${serverUrl}/notes/project/${project_id}`;
 
@@ -23,16 +23,94 @@ const getNotesByProject = project_id => async dispatch => {
   dispatch(actionSuccess(notes));
 };
 
-const getNote = note_id => {};
+const getNotes = () => async dispatch => {
+  let [err, notes];
+  const { actionPending, actionSuccess, actionError } = createActionCreator(
+    notesConstants,
+    "GET_NOTES"
+  );
+  const requestUrl = `${serverUrl}/notes`;
 
-const createNote = note => {};
+  dispatch(actionPending());
+  [err, notes] = await to(axios.get(requestUrl));
+  if (err) {
+    dispatch(actionError(err));
+    throw err;
+  }
+  dispatch(actionSuccess(notes));
+};
 
-const updateNote = (note_id, note) => {};
+const getNote = note_id => async dispatch => {
+  let [err, note];
+  const { actionPending, actionSuccess, actionError } = createActionCreator(
+    notesConstants,
+    "GET_NOTE"
+  );
+  const requestUrl = `${serverUrl}/notes/${note_id}`;
 
-const deleteNote = note => {};
+  dispatch(actionPending());
+  [err, note] = await to(axios.get(requestUrl));
+  if (err) {
+    dispatch(actionError(err));
+    throw err;
+  }
+  dispatch(actionSuccess(note));
+};
+
+const createNote = newNote => async dispatch => {
+  let [err, note];
+  const { actionPending, actionSuccess, actionError } = createActionCreator(
+    notesConstants,
+    "CREATE_NOTE"
+  );
+  const requestUrl = `${serverUrl}/notes/add`;
+
+  dispatch(actionPending());
+  [err, note] = await to(axios.post(requestUrl, newNote));
+  if (err) {
+    dispatch(actionError(err));
+    throw err;
+  }
+  dispatch(actionSuccess(note));
+};
+
+const updateNote = (note_id, newNote) => async dispatch => {
+  let [err, note];
+  const { actionPending, actionSuccess, actionError } = createActionCreator(
+    notesConstants,
+    "UPDATE_NOTE"
+  );
+  const requestUrl = `${serverUrl}/notes/update/${note_id}`;
+
+  dispatch(actionPending());
+  [err, note] = await to(axios.post(requestUrl, newNote));
+  if (err) {
+    dispatch(actionError(err));
+    throw err;
+  }
+  dispatch(actionSuccess(note));
+};
+
+const deleteNote = note_id => async dispatch => {
+  let err;
+  const { actionPending, actionSuccess, actionError } = createActionCreator(
+    notesConstants,
+    "DELETE_NOTE"
+  );
+  const requestUrl = `${serverUrl}/notes/${note_id}`;
+
+  dispatch(actionPending());
+  [err, _] = await to(axios.delete(requestUrl));
+  if (err) {
+    dispatch(actionError(err));
+    throw err;
+  }
+  dispatch(actionSuccess());
+};
 
 export const notesActions = {
   getNotesByProject,
+  getNotes,
   getNote,
   createNote,
   updateNote,

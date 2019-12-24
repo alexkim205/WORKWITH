@@ -1,3 +1,21 @@
 .swagger-ui .topbar {
   display: none;
 }
+
+html,
+body,
+div {
+  background-color: #191919 !important;
+}
+
+select {
+  background-color: darkslategrey !important;
+}
+
+* {
+  color: white !important;
+}
+
+thead {
+  border-bottom: 2px solid gray;
+}
