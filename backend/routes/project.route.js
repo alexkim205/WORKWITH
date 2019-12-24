@@ -92,7 +92,7 @@ router.route("/:id").get(async (req, res) => {
  * path:
  *  /projects/user/{id}:
  *    get:
- *      summary: Get a user's projects
+ *      summary: Get projects by user ID
  *      tags: [Projects]
  *      parameters:
  *        - in: path
@@ -129,7 +129,7 @@ router.route("/user/:id").get(async (req, res) => {
   }
   if (!projects) {
     return res
-      .status(HttpStatus.NOT_FOUND)
+      .status(HttpStatus.NO_CONTENT)
       .send(
         `Error: User with id ${req.params.id} doesn't have any projects; NOT_FOUND`
       );

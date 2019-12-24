@@ -90,6 +90,55 @@ router.route("/:id").get(async (req, res) => {
 /**
  * @swagger
  * path:
+ *  /notes/project/{id}:
+ *    get:
+ *      summary: Get notes by project ID
+ *      tags: [Notes]
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          schema:
+ *            type: string
+ *          required: true
+ *          description: Object ID of project
+ *      responses:
+ *        "200":
+ *          description: OK. Returns a list of notes
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: array
+ *                items:
+ *                  $ref: '#/components/schemas/Note'
+ *        "204":
+ *          description: NO_CONTENT. Returns an empty list
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: array
+ *                items:
+ *                  $ref: '#/components/schemas/Note'
+ */
+router.route("/project/:id").get(async (req, res) => {
+  let err, notes;
+
+  [err, notes] = await to(Note.find({ projectId: req.params.id }));
+  if (err) {
+    return res.status(HttpStatus.BAD_REQUEST).send("Error: " + err);
+  }
+  if (!notes) {
+    return res
+      .status(HttpStatus.NOT_FOUND)
+      .send(
+        `Error: There are no notes in the project with id ${req.params.id}; NOT_FOUND`
+      );
+  }
+  return res.status(HttpStatus.OK).send({ notes });
+});
+
+/**
+ * @swagger
+ * path:
  *  /notes/add:
  *    post:
  *      summary: Create a new note
@@ -112,6 +161,7 @@ router.route("/add").post(async (req, res) => {
   let err, note, newNote;
 
   note = new Note({
+    projectId: req.body.projectId,
     title: req.body.title,
     authors: req.body.authors,
     taggedUsers: req.body.taggedUsers,
@@ -175,6 +225,7 @@ router.route("/update/:id").post(async (req, res) => {
       .send(`Error: Note with id ${req.params.id} NOT_FOUND`);
   }
 
+  note.projectId = req.body.projectId || note.projectId; // should this even be allowed?
   note.title = req.body.title || note.title;
   note.authors = req.body.authors || note.authors;
   note.taggedUsers = req.body.taggedUsers || note.taggedUsers;

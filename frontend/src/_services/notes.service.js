@@ -4,7 +4,7 @@ import notesConstants from "../_constants/notes.constants";
 import createActionCreator from "../_utils/createActionCreator.util";
 import setupUrls from "../_config/setupUrls";
 
-const { serverUrl } = serverUrls();
+const { serverUrl } = setupUrls();
 
 const getNotesByProject = project_id => async dispatch => {
   let [err, notes];
@@ -20,6 +20,7 @@ const getNotesByProject = project_id => async dispatch => {
     dispatch(actionError(err));
     throw err;
   }
+  dispatch(actionSuccess(notes));
 };
 
 const getNote = note_id => {};

@@ -1,3 +1,6 @@
+const GET_PROJECT_NOTES_PENDING = "notes/get-project-notes-pending";
+const GET_PROJECT_NOTES_SUCCESS = "notes/get-project-notes-success";
+const GET_PROJECT_NOTES_ERROR = "notes/get-project-notes-error";
 const GET_NOTES_PENDING = "notes/get-notes-pending";
 const GET_NOTES_SUCCESS = "notes/get-notes-success";
 const GET_NOTES_ERROR = "notes/get-notes-error";
@@ -15,6 +18,9 @@ const UPDATE_NOTE_SUCCESS = "notes/update-note-success";
 const UPDATE_NOTE_ERROR = "notes/update-note-error";
 
 export default {
+  GET_PROJECT_NOTES_PENDING,
+  GET_PROJECT_NOTES_SUCCESS,
+  GET_PROJECT_NOTES_ERROR,
   GET_NOTES_PENDING,
   GET_NOTES_SUCCESS,
   GET_NOTES_ERROR,

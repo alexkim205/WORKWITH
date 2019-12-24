@@ -16,10 +16,11 @@
 ## 12/23/2019
 
 - Server
-  - Add Project Schema
+  - Add Project collection
     - Add project_id field to note
     - Add model
     - Add router
+  - Reflect changes in Note
 - Client
   - Implement notes and users services
 
