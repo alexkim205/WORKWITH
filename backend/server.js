@@ -2,9 +2,12 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const morgan = require("morgan");
+const passport = require("passport");
+const to = require("await-to-js");
 
 // Setup Express
 require("dotenv").config();
+require("./_config/passport.config").config();
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -12,10 +15,15 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 app.use(morgan("tiny"));
+app.use(passport.initialize());
 
 // Make connection to MongoDB
 const uri = process.env.ATLAS_URI;
-mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true });
+mongoose.connect(uri, {
+  useUnifiedTopology: true,
+  useNewUrlParser: true,
+  useCreateIndex: true
+});
 const connection = mongoose.connection;
 connection.once("open", () => {
   console.log("MongoDB database connection established successfully");
@@ -24,7 +32,7 @@ connection.once("open", () => {
 // Setup Swagger API Documentation
 const swaggerUi = require("swagger-ui-express");
 const swaggerJsdoc = require("swagger-jsdoc");
-const swaggerOptions = require("./config/swagger.config.js").default;
+const swaggerOptions = require("./_config/swagger.config.js").default;
 const specs = swaggerJsdoc(swaggerOptions);
 
 app.use(express.static("./public"));

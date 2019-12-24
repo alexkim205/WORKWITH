@@ -10,7 +10,8 @@
   - Actions and Action Creators
   - Reducers
   - TDD with Jest and Enzyme
-- Spend just one day figuring out authentication
+- Authentication service on client side
+  - Connect it with redux
 - Figure out clear TDD pipeline
 
 ## 12/23/2019
@@ -20,9 +21,13 @@
     - Add project_id field to note
     - Add model
     - Add router
-  - Reflect changes in Note
+  - Reflect changes in Note and User
+  - Replace username field in User with screenName
+  - Add authentication in backend
+    - Setup hash, salt, jwt, passport
+    - Implement login and register endpoints
 - Client
-  - Implement notes and users services
+  - Implement notes, projects, and users services
 
 ## 12/21/2019
 

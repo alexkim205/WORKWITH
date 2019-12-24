@@ -7,7 +7,7 @@
 
 const to = require("await-to-js").default;
 const router = require("express").Router();
-const HttpStatus = require("../constants/error.constants").HttpStatus;
+const HttpStatus = require("../_constants/error.constants").HttpStatus;
 const Project = require("../models/project.model");
 
 /**
