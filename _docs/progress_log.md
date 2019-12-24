@@ -18,6 +18,7 @@
 
 - Setup linter with Airbnb JS standards
 - Setup test continuous integration with Travis
+- Move linter from directories to project root.
 
 ## 12/23/2019
 

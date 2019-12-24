@@ -11,7 +11,13 @@
     "start": "concurrently \"yarn frontend\" \"yarn backend\"",
     "frontend": "cd frontend && yarn start",
     "backend": "cd backend && nodemon server.js",
-    "prettify": "./node_modules/.bin/prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\""
+    "prettify": "./node_modules/.bin/prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
+    "backend-lint:manual": "esw backend/ --ext .jsx,.js --clear -w --color --format codeframe",
+    "backend-lint:format-dry": "eslint backend/ --ext .jsx,.js --fix-dry-run",
+    "backend-lint:format": "eslint backend/ --ext .jsx,.js --fix",
+    "frontend-lint:manual": "esw frontend/ --ext .jsx,.js --clear -w --color --format codeframe",
+    "frontend-lint:format-dry": "eslint frontend/ --ext .jsx,.js --fix-dry-run",
+    "frontend-lint:format": "eslint frontend/ --ext .jsx,.js --fix"
   },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
@@ -35,6 +41,16 @@
   "devDependencies": {
     "husky": "^3.1.0",
     "lint-staged": "^9.5.0",
-    "prettier": "^1.19.1"
+    "prettier": "^1.19.1",
+    "eslint": "^6.8.0",
+    "babel-eslint": "^10.0.3",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-config-prettier": "^6.7.0",
+    "eslint-plugin-import": "^2.19.1",
+    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.17.0",
+    "eslint-plugin-react-hooks": "^1.7.0",
+    "eslint-watch": "^6.0.1"
   }
 }
