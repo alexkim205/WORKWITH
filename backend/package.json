@@ -3,6 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "lint:manual": "esw ./ --ext .jsx,.js --clear -w --color --format codeframe",
+    "lint:format-dry": "eslint ./ --ext .jsx,.js --fix-dry-run",
+    "lint:format": "eslint ./ --ext .jsx,.js --fix"
+  },
   "dependencies": {
     "await-to-js": "^2.1.1",
     "cors": "^2.8.5",
@@ -17,5 +22,13 @@
     "swagger-jsdoc": "^3.5.0",
     "swagger-ui-express": "^4.1.2",
     "validator": "^12.1.0"
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-config-prettier": "^6.7.0",
+    "eslint-plugin-import": "^2.19.1",
+    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-watch": "^6.0.1"
   }
 }

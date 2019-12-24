@@ -1,6 +1,6 @@
 // https://github.com/Agillic/create-reducer/blob/master/src/index.js
 const createReducer = (initialState, actions, mode = "setState") => {
-  //const {mode = 'setState'} = options || {}; // default merge old state with new one
+  // const {mode = 'setState'} = options || {}; // default merge old state with new one
   return (state = initialState, action) => {
     const identifiedAction = actions[action.type];
     if (identifiedAction) {

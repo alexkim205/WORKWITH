@@ -1,9 +1,11 @@
 import React from "react";
-import { shallow } from "enzyme";
-import Card from "./index.js";
+import renderer from "react-test-renderer";
+import Card from "./index";
 
-describe("Card", () => {
-  it("should render Card component", () => {
-    const wrapper = shallow(<Card />);
+describe("<Card />", () => {
+  it("shapshot renders", () => {
+    const component = renderer.create(<Card />);
+    const tree = component.toJSON();
+    expect(tree).toMatchSnapshot();
   });
 });

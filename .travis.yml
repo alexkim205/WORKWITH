@@ -1,0 +1,26 @@
+# check different combinations of build flags which is able to divide builds into “jobs”.
+matrix:
+
+# Helps to run different languages in one .travis.yml file
+include:
+  # Backend Job
+  - language: node_js
+node_js:
+  - "6"
+
+addons:
+chrome: stable
+
+cache: yarn
+
+env:
+global:
+  # See https://git.io/vdao3 for details.
+  - JOBS=1
+
+before_install:
+  - cd frontend
+  - yarn install
+
+script:
+  - npm 

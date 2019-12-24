@@ -7,7 +7,6 @@ import setupUrls from "../_config/setupUrls";
 const { serverUrl } = setupUrls();
 
 const getUsers = () => async dispatch => {
-  let [err, users];
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     usersConstants,
     "GET_USERS"
@@ -15,7 +14,7 @@ const getUsers = () => async dispatch => {
   const requestUrl = `${serverUrl}/users`;
 
   dispatch(actionPending());
-  [err, users] = await to(axios.get(requestUrl));
+  const [err, users] = await to(axios.get(requestUrl));
   if (err) {
     dispatch(actionError(err));
     throw err;
@@ -23,16 +22,15 @@ const getUsers = () => async dispatch => {
   dispatch(actionSuccess(users));
 };
 
-const getUser = user_id => async dispatch => {
-  let [err, user];
+const getUser = userId => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     usersConstants,
     "GET_USER"
   );
-  const requestUrl = `${serverUrl}/users/${user_id}`;
+  const requestUrl = `${serverUrl}/users/${userId}`;
 
   dispatch(actionPending());
-  [err, user] = await to(axios.get(requestUrl));
+  const [err, user] = await to(axios.get(requestUrl));
   if (err) {
     dispatch(actionError(err));
     throw err;
@@ -41,7 +39,6 @@ const getUser = user_id => async dispatch => {
 };
 
 const createUser = newUser => async dispatch => {
-  let [err, user];
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     usersConstants,
     "CREATE_USER"
@@ -49,7 +46,7 @@ const createUser = newUser => async dispatch => {
   const requestUrl = `${serverUrl}/users/add`;
 
   dispatch(actionPending());
-  [err, user] = await to(axios.post(requestUrl, newUser));
+  const [err, user] = await to(axios.post(requestUrl, newUser));
   if (err) {
     dispatch(actionError(err));
     throw err;
@@ -57,16 +54,15 @@ const createUser = newUser => async dispatch => {
   dispatch(actionSuccess(user));
 };
 
-const updateUser = (user_id, newUser) => async dispatch => {
-  let [err, user];
+const updateUser = (userId, newUser) => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     usersConstants,
     "UPDATE_USER"
   );
-  const requestUrl = `${serverUrl}/users/update/${user_id}`;
+  const requestUrl = `${serverUrl}/users/update/${userId}`;
 
   dispatch(actionPending());
-  [err, user] = await to(axios.post(requestUrl, newUser));
+  const [err, user] = await to(axios.post(requestUrl, newUser));
   if (err) {
     dispatch(actionError(err));
     throw err;
@@ -74,16 +70,15 @@ const updateUser = (user_id, newUser) => async dispatch => {
   dispatch(actionSuccess(user));
 };
 
-const deleteUser = user_id => async dispatch => {
-  let err;
+const deleteUser = userId => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     usersConstants,
     "DELETE_USER"
   );
-  const requestUrl = `${serverUrl}/users/${user_id}`;
+  const requestUrl = `${serverUrl}/users/${userId}`;
 
   dispatch(actionPending());
-  [err, _] = await to(axios.delete(requestUrl));
+  const [err] = await to(axios.delete(requestUrl));
   if (err) {
     dispatch(actionError(err));
     throw err;
@@ -91,8 +86,7 @@ const deleteUser = user_id => async dispatch => {
   dispatch(actionSuccess());
 };
 
-export const usersActions = {
-  getUsersByProject,
+export default {
   getUsers,
   getUser,
   createUser,

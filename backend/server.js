@@ -1,9 +1,9 @@
+/* eslint-disable no-console */
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const morgan = require("morgan");
 const passport = require("passport");
-const to = require("await-to-js");
 
 // Setup Express
 require("dotenv").config();
@@ -24,7 +24,7 @@ mongoose.connect(uri, {
   useNewUrlParser: true,
   useCreateIndex: true
 });
-const connection = mongoose.connection;
+const { connection } = mongoose;
 connection.once("open", () => {
   console.log("MongoDB database connection established successfully");
 });
@@ -33,6 +33,7 @@ connection.once("open", () => {
 const swaggerUi = require("swagger-ui-express");
 const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerOptions = require("./_config/swagger.config.js").default;
+
 const specs = swaggerJsdoc(swaggerOptions);
 
 app.use(express.static("./public"));
@@ -47,6 +48,7 @@ const API_VERSION = swaggerOptions.swaggerDefinition.info.version;
 const notesRouter = require("./routes/note.route");
 const userRouter = require("./routes/user.route");
 const projectRouter = require("./routes/project.route");
+
 app.use(`/api/v${API_VERSION}/notes`, notesRouter);
 app.use(`/api/v${API_VERSION}/users`, userRouter);
 app.use(`/api/v${API_VERSION}/projects}`, projectRouter);

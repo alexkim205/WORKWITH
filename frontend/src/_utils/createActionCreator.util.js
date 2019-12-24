@@ -1,4 +1,4 @@
-import { HttpStatus } from "../../../backend/constants/error.constants";
+import HttpStatus from "../_constants/httpErrors.constants";
 
 const createActionCreator = (constants, constantPrefix) => ({
   actionPending: () => ({ type: constants[`${constantPrefix}_PENDING`] }),

@@ -5,10 +5,7 @@
   "author": "Alex Gyujin Kim <alexgkim205@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "concurrently": "^5.0.2",
-    "husky": "^3.1.0",
-    "lint-staged": "^9.5.0",
-    "prettier": "^1.19.1"
+    "concurrently": "^5.0.2"
   },
   "scripts": {
     "start": "concurrently \"yarn frontend\" \"yarn backend\"",
@@ -20,6 +17,14 @@
     "**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
       "prettier --write",
       "git add"
+    ],
+    "backend/**/*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "git add"
+    ],
+    "frontend/**/*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "git add"
     ]
   },
   "husky": {
@@ -27,5 +32,9 @@
       "pre-commit": "lint-staged"
     }
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "husky": "^3.1.0",
+    "lint-staged": "^9.5.0",
+    "prettier": "^1.19.1"
+  }
 }

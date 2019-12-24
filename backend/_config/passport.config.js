@@ -19,9 +19,7 @@ const config = () => {
         passwordField: "password"
       },
       async (email, password, done) => {
-        let err, user;
-
-        [err, user] = await to(User.findOne({ email }));
+        const [err, user] = await to(User.findOne({ email }));
         // Return if server error
         if (err) {
           return done(err);

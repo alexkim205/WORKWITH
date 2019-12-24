@@ -1,4 +1,5 @@
 import React, { useState, useContext, createContext } from "react";
+import PropTypes from "prop-types";
 import { ThemeProvider } from "styled-components";
 
 const ThemeToggleContext = createContext({
@@ -14,10 +15,14 @@ export const MyThemeProvider = ({ children }) => {
     setThemeState({ mode });
   };
   return (
-    <ThemeToggleContext.Provider value={{ toggle: toggle }}>
+    <ThemeToggleContext.Provider value={{ toggle }}>
       <ThemeProvider theme={{ mode: themeState.mode }}>
         {children}
       </ThemeProvider>
     </ThemeToggleContext.Provider>
   );
+};
+
+MyThemeProvider.propTypes = {
+  children: PropTypes.node.isRequired
 };

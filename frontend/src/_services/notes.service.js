@@ -6,16 +6,15 @@ import setupUrls from "../_config/setupUrls";
 
 const { serverUrl } = setupUrls();
 
-const getNotesByProject = project_id => async dispatch => {
-  let [err, notes];
+const getNotesByProject = projectId => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     notesConstants,
     "GET_PROJECT_NOTES"
   );
-  const requestUrl = `${serverUrl}/notes/project/${project_id}`;
+  const requestUrl = `${serverUrl}/notes/project/${projectId}`;
 
   dispatch(actionPending());
-  [err, notes] = await to(axios.get(requestUrl));
+  const [err, notes] = await to(axios.get(requestUrl));
   if (err) {
     dispatch(actionError(err));
     throw err;
@@ -24,7 +23,6 @@ const getNotesByProject = project_id => async dispatch => {
 };
 
 const getNotes = () => async dispatch => {
-  let [err, notes];
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     notesConstants,
     "GET_NOTES"
@@ -32,7 +30,7 @@ const getNotes = () => async dispatch => {
   const requestUrl = `${serverUrl}/notes`;
 
   dispatch(actionPending());
-  [err, notes] = await to(axios.get(requestUrl));
+  const [err, notes] = await to(axios.get(requestUrl));
   if (err) {
     dispatch(actionError(err));
     throw err;
@@ -40,16 +38,15 @@ const getNotes = () => async dispatch => {
   dispatch(actionSuccess(notes));
 };
 
-const getNote = note_id => async dispatch => {
-  let [err, note];
+const getNote = noteId => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     notesConstants,
     "GET_NOTE"
   );
-  const requestUrl = `${serverUrl}/notes/${note_id}`;
+  const requestUrl = `${serverUrl}/notes/${noteId}`;
 
   dispatch(actionPending());
-  [err, note] = await to(axios.get(requestUrl));
+  const [err, note] = await to(axios.get(requestUrl));
   if (err) {
     dispatch(actionError(err));
     throw err;
@@ -58,7 +55,6 @@ const getNote = note_id => async dispatch => {
 };
 
 const createNote = newNote => async dispatch => {
-  let [err, note];
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     notesConstants,
     "CREATE_NOTE"
@@ -66,7 +62,7 @@ const createNote = newNote => async dispatch => {
   const requestUrl = `${serverUrl}/notes/add`;
 
   dispatch(actionPending());
-  [err, note] = await to(axios.post(requestUrl, newNote));
+  const [err, note] = await to(axios.post(requestUrl, newNote));
   if (err) {
     dispatch(actionError(err));
     throw err;
@@ -74,16 +70,15 @@ const createNote = newNote => async dispatch => {
   dispatch(actionSuccess(note));
 };
 
-const updateNote = (note_id, newNote) => async dispatch => {
-  let [err, note];
+const updateNote = (noteId, newNote) => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     notesConstants,
     "UPDATE_NOTE"
   );
-  const requestUrl = `${serverUrl}/notes/update/${note_id}`;
+  const requestUrl = `${serverUrl}/notes/update/${noteId}`;
 
   dispatch(actionPending());
-  [err, note] = await to(axios.post(requestUrl, newNote));
+  const [err, note] = await to(axios.post(requestUrl, newNote));
   if (err) {
     dispatch(actionError(err));
     throw err;
@@ -91,16 +86,15 @@ const updateNote = (note_id, newNote) => async dispatch => {
   dispatch(actionSuccess(note));
 };
 
-const deleteNote = note_id => async dispatch => {
-  let err;
+const deleteNote = noteId => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     notesConstants,
     "DELETE_NOTE"
   );
-  const requestUrl = `${serverUrl}/notes/${note_id}`;
+  const requestUrl = `${serverUrl}/notes/${noteId}`;
 
   dispatch(actionPending());
-  [err, _] = await to(axios.delete(requestUrl));
+  const [err] = await to(axios.delete(requestUrl));
   if (err) {
     dispatch(actionError(err));
     throw err;
@@ -108,7 +102,7 @@ const deleteNote = note_id => async dispatch => {
   dispatch(actionSuccess());
 };
 
-export const notesActions = {
+export default {
   getNotesByProject,
   getNotes,
   getNote,

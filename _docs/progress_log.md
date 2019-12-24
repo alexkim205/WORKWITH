@@ -14,6 +14,11 @@
   - Connect it with redux
 - Figure out clear TDD pipeline
 
+## 12/24/2019
+
+- Setup linter with Airbnb JS standards
+- Setup test continuous integration with Travis
+
 ## 12/23/2019
 
 - Server

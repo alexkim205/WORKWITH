@@ -7,7 +7,8 @@
 
 const to = require("await-to-js").default;
 const router = require("express").Router();
-const HttpStatus = require("../_constants/error.constants").HttpStatus;
+const isEmpty = require("is-empty");
+const { HttpStatus } = require("../_constants/error.constants");
 const Project = require("../models/project.model");
 
 /**
@@ -36,13 +37,11 @@ const Project = require("../models/project.model");
  *                  $ref: '#/components/schemas/Project'
  */
 router.route("/").get(async (req, res) => {
-  let err, projects;
-
-  [err, projects] = await to(Project.find());
-  if (err) {
-    return res.status(HttpStatus.BAD_REQUEST).send("Error: " + err);
+  const [err, projects] = await to(Project.find());
+  if (!isEmpty(err)) {
+    return res.status(HttpStatus.BAD_REQUEST).send(`Error: ${err}`);
   }
-  if (!projects) {
+  if (isEmpty(projects)) {
     return res.status(HttpStatus.NO_CONTENT).send({ projects });
   }
   return res.status(HttpStatus.OK).send({ projects });
@@ -73,13 +72,11 @@ router.route("/").get(async (req, res) => {
  *          description: NOT_FOUND. Project not found
  */
 router.route("/:id").get(async (req, res) => {
-  let err, project;
-
-  [err, project] = await to(Project.findById(req.params.id));
-  if (err) {
-    return res.status(HttpStatus.BAD_REQUEST).send("Error: " + err);
+  const [err, project] = await to(Project.findById(req.params.id));
+  if (!isEmpty(err)) {
+    return res.status(HttpStatus.BAD_REQUEST).send(`Error: ${err}`);
   }
-  if (!project) {
+  if (isEmpty(project)) {
     return res
       .status(HttpStatus.NOT_FOUND)
       .send(`Error: Project with id ${req.params.id} NOT_FOUND`);
@@ -120,14 +117,12 @@ router.route("/:id").get(async (req, res) => {
  *                  $ref: '#/components/schemas/Project'
  */
 router.route("/user/:id").get(async (req, res) => {
-  let err, projects;
-
   // https://stackoverflow.com/questions/18148166/find-document-with-array-that-contains-a-specific-value
-  [err, projects] = await to(Project.find({ users: req.params.id }));
-  if (err) {
-    return res.status(HttpStatus.BAD_REQUEST).send("Error: " + err);
+  const [err, projects] = await to(Project.find({ users: req.params.id }));
+  if (!isEmpty(err)) {
+    return res.status(HttpStatus.BAD_REQUEST).send(`Error: ${err}`);
   }
-  if (!projects) {
+  if (isEmpty(projects)) {
     return res
       .status(HttpStatus.NO_CONTENT)
       .send(
@@ -159,19 +154,17 @@ router.route("/user/:id").get(async (req, res) => {
  *                $ref: '#/components/schemas/Project'
  */
 router.route("/add").post(async (req, res) => {
-  let err, project, newProject;
-
-  project = new Project({
+  const project = new Project({
     title: req.body.title,
     users: req.body.users,
     private: req.body.private
   });
 
-  [err, newProject] = await to(project.save());
-  if (err) {
-    return res.status(HttpStatus.BAD_REQUEST).send("Error: " + err);
+  const [err, newProject] = await to(project.save());
+  if (!isEmpty(err)) {
+    return res.status(HttpStatus.BAD_REQUEST).send(`Error: ${err}`);
   }
-  if (!newProject) {
+  if (isEmpty(newProject)) {
     return res
       .status(HttpStatus.BAD_REQUEST)
       .send("Error: Bad request creating new project");
@@ -208,15 +201,13 @@ router.route("/add").post(async (req, res) => {
  *                $ref: '#/components/schemas/Project'
  */
 router.route("/update/:id").post(async (req, res) => {
-  let err, project, newProject;
-
-  [err, project] = await to(Project.findById(req.params.id));
-  if (err) {
+  const [err1, project] = await to(Project.findById(req.params.id));
+  if (!isEmpty(err1)) {
     return res
       .status(HttpStatus.BAD_REQUEST)
-      .send("Error while finding project: " + err);
+      .send(`Error while finding project: ${err1}`);
   }
-  if (!project) {
+  if (isEmpty(project)) {
     return res
       .status(HttpStatus.NOT_FOUND)
       .send(`Error: Project with id ${req.params.id} NOT_FOUND`);
@@ -226,13 +217,13 @@ router.route("/update/:id").post(async (req, res) => {
   project.authors = req.body.users || project.users;
   project.private = req.body.private || project.private;
 
-  [err, newProject] = await to(project.save());
-  if (err) {
+  const [err2, newProject] = await to(project.save());
+  if (!isEmpty(err2)) {
     return res
       .status(HttpStatus.BAD_REQUEST)
-      .send("Error while updating project: " + err);
+      .send(`Error while updating project: ${err2}`);
   }
-  if (!newProject) {
+  if (isEmpty(newProject)) {
     return res
       .status(HttpStatus.BAD_REQUEST)
       .send("Error: Bad request updating project");
@@ -263,15 +254,13 @@ router.route("/update/:id").post(async (req, res) => {
  *          description: NOT_FOUND. Project not found
  */
 router.route("/:id").delete(async (req, res) => {
-  let err, project, newProject;
-
-  [err, project] = await to(Project.findById(req.params.id));
-  if (err) {
+  const [err1, project] = await to(Project.findById(req.params.id));
+  if (!isEmpty(err1)) {
     return res
       .status(HttpStatus.BAD_REQUEST)
-      .send("Error while finding project: " + err);
+      .send(`Error while finding project: ${err1}`);
   }
-  if (!project) {
+  if (isEmpty(project)) {
     return res
       .status(HttpStatus.NOT_FOUND)
       .send(`Error: Project with id ${req.params.id} NOT_FOUND`);
@@ -283,13 +272,13 @@ router.route("/:id").delete(async (req, res) => {
 
   project.deleted = true;
 
-  [err, newProject] = await to(project.save());
-  if (err) {
+  const [err2, newProject] = await to(project.save());
+  if (!isEmpty(err2)) {
     return res
       .status(HttpStatus.BAD_REQUEST)
-      .send("Error while deleting project: " + err);
+      .send(`Error while deleting project: ${err2}`);
   }
-  if (!newProject) {
+  if (isEmpty(newProject)) {
     return res
       .status(HttpStatus.BAD_REQUEST)
       .send("Error: Bad request deleting project");

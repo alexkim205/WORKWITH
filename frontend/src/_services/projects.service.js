@@ -6,16 +6,15 @@ import setupUrls from "../_config/setupUrls";
 
 const { serverUrl } = setupUrls();
 
-const getProjectsByUser = user_id => async dispatch => {
-  let [err, projects];
+const getProjectsByUser = userId => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     projectsConstants,
     "GET_USER_PROJECTS"
   );
-  const requestUrl = `${serverUrl}/projects/user/${user_id}`;
+  const requestUrl = `${serverUrl}/projects/user/${userId}`;
 
   dispatch(actionPending());
-  [err, projects] = await to(axios.get(requestUrl));
+  const [err, projects] = await to(axios.get(requestUrl));
   if (err) {
     dispatch(actionError(err));
     throw err;
@@ -24,7 +23,6 @@ const getProjectsByUser = user_id => async dispatch => {
 };
 
 const getProjects = () => async dispatch => {
-  let [err, projects];
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     projectsConstants,
     "GET_PROJECTS"
@@ -32,7 +30,7 @@ const getProjects = () => async dispatch => {
   const requestUrl = `${serverUrl}/projects`;
 
   dispatch(actionPending());
-  [err, projects] = await to(axios.get(requestUrl));
+  const [err, projects] = await to(axios.get(requestUrl));
   if (err) {
     dispatch(actionError(err));
     throw err;
@@ -40,16 +38,15 @@ const getProjects = () => async dispatch => {
   dispatch(actionSuccess(projects));
 };
 
-const getProject = project_id => async dispatch => {
-  let [err, project];
+const getProject = projectId => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     projectsConstants,
     "GET_PROJECT"
   );
-  const requestUrl = `${serverUrl}/projects/${project_id}`;
+  const requestUrl = `${serverUrl}/projects/${projectId}`;
 
   dispatch(actionPending());
-  [err, project] = await to(axios.get(requestUrl));
+  const [err, project] = await to(axios.get(requestUrl));
   if (err) {
     dispatch(actionError(err));
     throw err;
@@ -58,7 +55,6 @@ const getProject = project_id => async dispatch => {
 };
 
 const createProject = newProject => async dispatch => {
-  let [err, project];
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     projectsConstants,
     "CREATE_PROJECT"
@@ -66,7 +62,7 @@ const createProject = newProject => async dispatch => {
   const requestUrl = `${serverUrl}/projects/add`;
 
   dispatch(actionPending());
-  [err, project] = await to(axios.post(requestUrl, newProject));
+  const [err, project] = await to(axios.post(requestUrl, newProject));
   if (err) {
     dispatch(actionError(err));
     throw err;
@@ -74,16 +70,15 @@ const createProject = newProject => async dispatch => {
   dispatch(actionSuccess(project));
 };
 
-const updateProject = (project_id, newProject) => async dispatch => {
-  let [err, project];
+const updateProject = (projectId, newProject) => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     projectsConstants,
     "UPDATE_PROJECT"
   );
-  const requestUrl = `${serverUrl}/projects/update/${project_id}`;
+  const requestUrl = `${serverUrl}/projects/update/${projectId}`;
 
   dispatch(actionPending());
-  [err, project] = await to(axios.post(requestUrl, newProject));
+  const [err, project] = await to(axios.post(requestUrl, newProject));
   if (err) {
     dispatch(actionError(err));
     throw err;
@@ -91,16 +86,15 @@ const updateProject = (project_id, newProject) => async dispatch => {
   dispatch(actionSuccess(project));
 };
 
-const deleteProject = project_id => async dispatch => {
-  let err;
+const deleteProject = projectId => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     projectsConstants,
     "DELETE_PROJECT"
   );
-  const requestUrl = `${serverUrl}/projects/${project_id}`;
+  const requestUrl = `${serverUrl}/projects/${projectId}`;
 
   dispatch(actionPending());
-  [err, _] = await to(axios.delete(requestUrl));
+  const [err] = await to(axios.delete(requestUrl));
   if (err) {
     dispatch(actionError(err));
     throw err;
@@ -108,7 +102,7 @@ const deleteProject = project_id => async dispatch => {
   dispatch(actionSuccess());
 };
 
-export const projectsActions = {
+export default {
   getProjectsByUser,
   getProjects,
   getProject,
