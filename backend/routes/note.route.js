@@ -221,8 +221,10 @@ router.route("/update/:id").post(async (req, res) => {
   note.authors = req.body.authors || note.authors;
   note.taggedUsers = req.body.taggedUsers || note.taggedUsers;
   note.body = req.body.body || note.body;
-  note.minimized = req.body.minimized || note.minimized;
-  note.private = req.body.private || note.private;
+  note.minimized = isEmpty(req.body.minimized)
+    ? note.minimized
+    : req.body.minimized;
+  note.private = isEmpty(req.body.private) ? note.private : req.body.private;
 
   const [err2, newNote] = await to(note.save());
   if (!isEmpty(err2)) {

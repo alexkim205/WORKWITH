@@ -8,7 +8,7 @@
   "scripts": {
     "start": "concurrently \"yarn frontend\" \"yarn backend\"",
     "frontend": "cd frontend && yarn start",
-    "backend": "cd backend && nodemon server.js",
+    "backend": "cd backend && yarn start",
     "tidy": "concurrently \"yarn b-clean:js\" \"yarn f-clean:js\"",
     "b-build:js": "cd backend && eslint ./ --ext .jsx,.js",
     "b-watch:js": "cd backend && esw ./ --ext .jsx,.js --clear -w --color --format codeframe",

@@ -4,6 +4,8 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const morgan = require("morgan");
 const passport = require("passport");
+const swaggerUi = require("swagger-ui-express");
+const swaggerJsdoc = require("swagger-jsdoc");
 
 // Setup Express
 require("dotenv").config();
@@ -18,7 +20,9 @@ app.use(morgan("tiny"));
 app.use(passport.initialize());
 
 // Make connection to MongoDB
-const uri = process.env.ATLAS_URI;
+const uri = require("./_config/getDatabaseUri.config").getUri();
+
+console.log(uri);
 mongoose.connect(uri, {
   useUnifiedTopology: true,
   useNewUrlParser: true,
@@ -30,8 +34,6 @@ connection.once("open", () => {
 });
 
 // Setup Swagger API Documentation
-const swaggerUi = require("swagger-ui-express");
-const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerOptions = require("./_config/swagger.config.js").default;
 
 const specs = swaggerJsdoc(swaggerOptions);
@@ -51,7 +53,7 @@ const projectRouter = require("./routes/project.route");
 
 app.use(`/api/v${API_VERSION}/notes`, notesRouter);
 app.use(`/api/v${API_VERSION}/users`, userRouter);
-app.use(`/api/v${API_VERSION}/projects}`, projectRouter);
+app.use(`/api/v${API_VERSION}/projects`, projectRouter);
 
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);

@@ -215,7 +215,9 @@ router.route("/update/:id").post(async (req, res) => {
 
   project.title = req.body.title || project.title;
   project.authors = req.body.users || project.users;
-  project.private = req.body.private || project.private;
+  project.private = isEmpty(req.body.private)
+    ? project.private
+    : req.body.private;
 
   const [err2, newProject] = await to(project.save());
   if (!isEmpty(err2)) {
