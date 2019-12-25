@@ -6,6 +6,7 @@ const morgan = require("morgan");
 const passport = require("passport");
 const swaggerUi = require("swagger-ui-express");
 const swaggerJsdoc = require("swagger-jsdoc");
+const tcpPortUsed = require("tcp-port-used");
 
 // Setup Express
 require("dotenv").config();
@@ -13,15 +14,20 @@ require("./_config/passport.config").config();
 const getEnv = require("./_config/getEnv.config");
 
 const app = express();
-const port = getEnv.getPort() || 5001;
+const port = parseInt(getEnv.getPort(), 10) || 5001;
 
 app.use(cors());
 app.use(express.json());
-app.use(morgan("tiny"));
 app.use(passport.initialize());
 
+// Different logging config for each environment
+getEnv.switchEnvs({
+  dev: () => app.use(morgan("combined")),
+  test: () => app.use(morgan("tiny"))
+});
+
 // Make connection to MongoDB
-mongoose.connect(getEnv.getUri(), {
+mongoose.connect(getEnv.getDatabaseUri(), {
   useUnifiedTopology: true,
   useNewUrlParser: true,
   useCreateIndex: true
@@ -44,17 +50,23 @@ app.get(
 );
 
 // Setup API endpoints
-const API_VERSION = swaggerOptions.swaggerDefinition.info.version;
 const notesRouter = require("./routes/note.route");
 const userRouter = require("./routes/user.route");
 const projectRouter = require("./routes/project.route");
 
-app.use(`/api/v${API_VERSION}/notes`, notesRouter);
-app.use(`/api/v${API_VERSION}/users`, userRouter);
-app.use(`/api/v${API_VERSION}/projects`, projectRouter);
+app.use(`/api/v${process.env.API_VERSION}/notes`, notesRouter);
+app.use(`/api/v${process.env.API_VERSION}/users`, userRouter);
+app.use(`/api/v${process.env.API_VERSION}/projects`, projectRouter);
 
-app.listen(port, () => {
-  console.log(`Server is running on port: ${port}`);
-});
+// Don't listen again if address is already being used
+(async () => {
+  const inUse = await tcpPortUsed.check(port);
+  if (!inUse) {
+    app.listen(port, () => {
+      console.log(`Server is running on port: ${port}`);
+      app.emit("appStarted");
+    });
+  }
+})();
 
 module.exports = app;

@@ -17,7 +17,10 @@
 ## 12/25/2019
 
 - Setup database for each environment
+- Implement getEnv config util for backend
 - Write tests for all api endpoints (Mocha + Chai)
+- Better environment configuration
+- Fixed address in use error during backend testing
 
 ## 12/24/2019
 
