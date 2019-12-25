@@ -3,7 +3,7 @@ os:
   - linux
   - windows
   - osx
-  
+
 node_js:
   - 12
 
@@ -20,7 +20,7 @@ directories:
 env:
   global:
     - YARN_GPG=no
-  local:
+  jobs:
     - SCRIPT=b-build:js
     - SCRIPT=f-build:js
 
