@@ -3,7 +3,7 @@ os:
   - linux
   - windows
   - osx
-
+  
 node_js:
   - 12
 
@@ -18,9 +18,8 @@ directories:
   - frontend/node_modules
 
 env:
-  - YARN_GPG=no
-  - SCRIPT=backend-lint:check
-  - SCRIPT=frontend-lint:check
+  - YARN_GPG=no SCRIPT=backend-lint:check
+  - YARN_GPG=no SCRIPT=frontend-lint:check
 
 before_install:
   - yarn install
