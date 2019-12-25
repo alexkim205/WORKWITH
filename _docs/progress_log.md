@@ -14,6 +14,10 @@
   - Connect it with redux
 - Figure out clear TDD pipeline
 
+## 12/25/2019
+
+- Setup database for each environment
+
 ## 12/24/2019
 
 - Setup linter with Airbnb JS standards

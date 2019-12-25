@@ -192,7 +192,7 @@ router.route("/login").post(async (req, res) => {
  * @swagger
  * path:
  *  /users/update/{id}:
- *    post:
+ *    put:
  *      summary: Update a user by ID
  *      tags: [Users]
  *      parameters:
@@ -216,7 +216,7 @@ router.route("/login").post(async (req, res) => {
  *              schema:
  *                $ref: '#/components/schemas/User'
  */
-router.route("/update/:id").post(async (req, res) => {
+router.route("/update/:id").put(async (req, res) => {
   const [err1, user] = await to(User.findById(req.params.id));
   if (!isEmpty(err1)) {
     return res

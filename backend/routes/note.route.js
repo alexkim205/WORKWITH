@@ -179,7 +179,7 @@ router.route("/add").post(async (req, res) => {
  * @swagger
  * path:
  *  /notes/update/{id}:
- *    post:
+ *    put:
  *      summary: Update a note by ID
  *      tags: [Notes]
  *      parameters:
@@ -203,7 +203,7 @@ router.route("/add").post(async (req, res) => {
  *              schema:
  *                $ref: '#/components/schemas/Note'
  */
-router.route("/update/:id").post(async (req, res) => {
+router.route("/update/:id").put(async (req, res) => {
   const [err1, note] = await to(Note.findById(req.params.id));
   if (isEmpty(err1)) {
     return res
