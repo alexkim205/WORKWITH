@@ -13,12 +13,12 @@
     "backend": "cd backend && nodemon server.js",
     "tidy": "concurrently \"yarn prettify\" \"yarn backend-lint:format\" \"yarn frontend-lint:format\"",
     "prettify": "./node_modules/.bin/prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
-    "backend-lint:watch": "cd backend && esw ./ --ext .jsx,.js --clear -w --color --format codeframe",
-    "backend-lint:check": "cd backend && eslint ./ --ext .jsx,.js",
-    "backend-lint:format": "cd backend && eslint ./ --ext .jsx,.js --fix",
-    "frontend-lint:watch": "cd frontend && esw ./ --ext .jsx,.js --clear -w --color --format codeframe",
-    "frontend-lint:check": "cd frontend && eslint ./ --ext .jsx,.js",
-    "frontend-lint:format": "cd frontend && eslint ./ --ext .jsx,.js --fix"
+    "backend-lint:watch": "cd backend && esw ./ --ext .jsx,.js --clear -w --color --format codeframe -c .eslintrc.js --ignore-path .eslintignore",
+    "backend-lint:check": "cd backend && eslint ./ --ext .jsx,.js -c .eslintrc.js --ignore-path .eslintignore",
+    "backend-lint:format": "cd backend && eslint ./ --ext .jsx,.js --fix -c .eslintrc.js --ignore-path .eslintignore",
+    "frontend-lint:watch": "cd frontend && esw ./ --ext .jsx,.js --clear -w --color --format codeframe -c .eslintrc.js --ignore-path .eslintignore",
+    "frontend-lint:check": "cd frontend && eslint ./ --ext .jsx,.js -c .eslintrc.js --ignore-path .eslintignore",
+    "frontend-lint:format": "cd frontend && eslint ./ --ext .jsx,.js --fix -c .eslintrc.js --ignore-path .eslintignore"
   },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
