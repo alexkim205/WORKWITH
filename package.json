@@ -11,13 +11,14 @@
     "start": "concurrently \"yarn frontend\" \"yarn backend\"",
     "frontend": "cd frontend && yarn start",
     "backend": "cd backend && nodemon server.js",
+    "tidy": "concurrently \"yarn prettify\" \"yarn backend-lint:format\" \"yarn frontend-lint:format\"",
     "prettify": "./node_modules/.bin/prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
-    "backend-lint:manual": "esw backend/ --ext .jsx,.js --clear -w --color --format codeframe",
-    "backend-lint:format-dry": "eslint backend/ --ext .jsx,.js --fix-dry-run",
-    "backend-lint:format": "eslint backend/ --ext .jsx,.js --fix",
-    "frontend-lint:manual": "esw frontend/ --ext .jsx,.js --clear -w --color --format codeframe",
-    "frontend-lint:format-dry": "eslint frontend/ --ext .jsx,.js --fix-dry-run",
-    "frontend-lint:format": "eslint frontend/ --ext .jsx,.js --fix"
+    "backend-lint:manual": "cd backend && esw ./ --ext .jsx,.js --clear -w --color --format codeframe",
+    "backend-lint:format-dry": "cd backend && eslint ./ --ext .jsx,.js --fix-dry-run",
+    "backend-lint:format": "cd backend && eslint ./ --ext .jsx,.js --fix",
+    "frontend-lint:manual": "cd frontend && esw ./ --ext .jsx,.js --clear -w --color --format codeframe",
+    "frontend-lint:format-dry": "cd frontend && eslint ./ --ext .jsx,.js --fix-dry-run",
+    "frontend-lint:format": "cd frontend && eslint ./ --ext .jsx,.js --fix"
   },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx,json,css,scss,md}": [

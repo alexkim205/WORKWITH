@@ -6,8 +6,8 @@
 - Breakdown components
 - Create detailed routing outline
 - Connect frontend and backend
-  - Services
-  - Actions and Action Creators
+  - ~~Services~~
+  - ~~Actions and Action Creators~~
   - Reducers
   - TDD with Jest and Enzyme
 - Authentication service on client side
