@@ -17,6 +17,7 @@
 ## 12/25/2019
 
 - Setup database for each environment
+- Write tests for all api endpoints (Mocha + Chai)
 
 ## 12/24/2019
 

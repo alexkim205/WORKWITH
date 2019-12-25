@@ -17,7 +17,7 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: `http://localhost:${process.env.API_PORT}/api/v1.0.0`
+        url: `http://localhost:${process.env.PRODUCTION_API_PORT}/api/v1.0.0`
       },
       {
         url: `http://idonthaveadomainyet.com/api/v1.0.0`
