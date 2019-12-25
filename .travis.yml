@@ -21,8 +21,8 @@ env:
   global:
     - YARN_GPG=no
   local:
-    - SCRIPT=backend-lint:check
-    - SCRIPT=frontend-lint:check
+    - SCRIPT=b-build:js
+    - SCRIPT=f-build:js
 
 before_install:
   - yarn install
@@ -34,5 +34,4 @@ before_install:
   - cd ..
 
 script:
-  - yarn prettify
   - yarn $SCRIPT

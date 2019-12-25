@@ -4,21 +4,18 @@
   "main": "index.js",
   "author": "Alex Gyujin Kim <alexgkim205@gmail.com>",
   "license": "MIT",
-  "dependencies": {
-    "concurrently": "^5.0.2"
-  },
+  "dependencies": {},
   "scripts": {
     "start": "concurrently \"yarn frontend\" \"yarn backend\"",
     "frontend": "cd frontend && yarn start",
     "backend": "cd backend && nodemon server.js",
-    "tidy": "concurrently \"yarn prettify\" \"yarn backend-lint:format\" \"yarn frontend-lint:format\"",
-    "prettify": "./node_modules/.bin/prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
-    "backend-lint:watch": "cd backend && esw ./ --ext .jsx,.js --clear -w --color --format codeframe",
-    "backend-lint:check": "cd backend && eslint ./ --ext .jsx,.js",
-    "backend-lint:format": "cd backend && eslint ./ --ext .jsx,.js --fix",
-    "frontend-lint:watch": "cd frontend && esw ./ --ext .jsx,.js --clear -w --color --format codeframe",
-    "frontend-lint:check": "cd frontend && eslint ./ --ext .jsx,.js",
-    "frontend-lint:format": "cd frontend && eslint ./ --ext .jsx,.js --fix"
+    "tidy": "concurrently \"yarn b-clean:js\" \"yarn f-clean:js\"",
+    "b-build:js": "cd backend && eslint ./ --ext .jsx,.js",
+    "b-watch:js": "cd backend && esw ./ --ext .jsx,.js --clear -w --color --format codeframe",
+    "b-clean:js": "cd backend && eslint ./ --ext .jsx,.js --fix",
+    "f-build:js": "cd frontend && eslint ./ --ext .jsx,.js",
+    "f-watch:js": "cd frontend && esw ./ --ext .jsx,.js --clear -w --color --format codeframe",
+    "f-clean:js": "cd frontend && eslint ./ --ext .jsx,.js --fix"
   },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
@@ -40,18 +37,19 @@
     }
   },
   "devDependencies": {
-    "husky": "^3.1.0",
-    "lint-staged": "^9.5.0",
-    "prettier": "^1.19.1",
-    "eslint": "^6.8.0",
     "babel-eslint": "^10.0.3",
+    "concurrently": "^5.0.2",
+    "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-config-prettier": "^6.7.0",
     "eslint-plugin-import": "^2.19.1",
-    "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-react": "^7.17.0",
     "eslint-plugin-react-hooks": "^1.7.0",
-    "eslint-watch": "^6.0.1"
+    "eslint-watch": "^6.0.1",
+    "husky": "^3.1.0",
+    "lint-staged": "^9.5.0",
+    "prettier": "^1.19.1"
   }
 }
