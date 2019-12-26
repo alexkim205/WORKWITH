@@ -1,9 +1,17 @@
-const isEmpty = require("is-empty");
-
 const switchEnvs = ({ dev, prod, test, generic }) => {
   const ternaryUtil = v => {
-    if (isEmpty(v)) return generic || null;
-    return typeof v === "function" ? v() : v;
+    if (typeof v === "undefined") {
+      if (typeof generic === "function") {
+        generic();
+        return null;
+      }
+      return generic;
+    }
+    if (typeof v === "function") {
+      v();
+      return null;
+    }
+    return v;
   };
   switch (process.env.NODE_ENV) {
     case "production":

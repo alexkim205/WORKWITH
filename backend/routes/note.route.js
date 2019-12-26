@@ -42,7 +42,7 @@ router.route("/").get(async (req, res) => {
     return res.status(HttpStatus.BAD_REQUEST).send(`Error: ${err}`);
   }
   if (isEmpty(notes)) {
-    return res.status(HttpStatus.NO_CONTENT).send({ notes });
+    return res.status(HttpStatus.NO_CONTENT).send();
   }
   return res.status(HttpStatus.OK).send({ notes });
 });

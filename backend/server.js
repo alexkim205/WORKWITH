@@ -6,7 +6,6 @@ const morgan = require("morgan");
 const passport = require("passport");
 const swaggerUi = require("swagger-ui-express");
 const swaggerJsdoc = require("swagger-jsdoc");
-const tcpPortUsed = require("tcp-port-used");
 
 // Setup Express
 require("dotenv").config();
@@ -14,7 +13,7 @@ require("./_config/passport.config").config();
 const getEnv = require("./_config/getEnv.config");
 
 const app = express();
-const port = parseInt(getEnv.getPort(), 10) || 5001;
+app.set("PORT", parseInt(getEnv.getPort(), 10) || 5001);
 
 app.use(cors());
 app.use(express.json());
@@ -34,7 +33,11 @@ mongoose.connect(getEnv.getDatabaseUri(), {
 });
 const { connection } = mongoose;
 connection.once("open", () => {
-  console.log("MongoDB database connection established successfully");
+  getEnv.switchEnvs({
+    test: () => {},
+    generic: () =>
+      console.log("MongoDB database connection established successfully")
+  });
 });
 
 // Setup Swagger API Documentation
@@ -58,15 +61,22 @@ app.use(`/api/v${process.env.API_VERSION}/notes`, notesRouter);
 app.use(`/api/v${process.env.API_VERSION}/users`, userRouter);
 app.use(`/api/v${process.env.API_VERSION}/projects`, projectRouter);
 
-// Don't listen again if address is already being used
-(async () => {
-  const inUse = await tcpPortUsed.check(port);
-  if (!inUse) {
-    app.listen(port, () => {
-      console.log(`Server is running on port: ${port}`);
-      app.emit("appStarted");
-    });
-  }
-})();
+// Expose listen and close methods so that they can be called in test files
+let server;
+app.tListen = async () => {
+  server = await app.listen(app.get("PORT"));
+  getEnv.switchEnvs({
+    test: () => {},
+    generic: () => console.log(`Server is running on port: ${app.get("PORT")}`)
+  });
+};
+app.tClose = async () => {
+  await server.close();
+};
+
+getEnv.switchEnvs({
+  test: () => {},
+  generic: app.tListen
+});
 
 module.exports = app;

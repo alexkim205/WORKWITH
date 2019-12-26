@@ -41,14 +41,13 @@ const validateLoginInput = require("../validators/login.validator");
  */
 router.route("/").get(async (req, res) => {
   const [err, users] = await to(User.find());
-
   if (!isEmpty(err)) {
     return res.status(HttpStatus.BAD_REQUEST).send(`Error: ${err}`);
   }
   if (isEmpty(users)) {
-    return res.status(HttpStatus.NO_CONTENT).send({ users });
+    return res.status(HttpStatus.NO_CONTENT).send();
   }
-  return res.status(HttpStatus.OK).send({ users });
+  return res.status(HttpStatus.OK).json({ users });
 });
 
 /**

@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start": "cross-env NODE_ENV=development nodemon server.js",
-    "test": "mocha \"./{,!(node_modules)/**/}*.test.js\" --timeout 4s -w"
+    "test": "nodemon --exec \"mocha ./_tests/*.test.js --timeout 4s --exit -w -R spec\""
   },
   "dependencies": {
     "await-to-js": "^2.1.1",
@@ -27,6 +27,7 @@
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
     "cross-env": "^6.0.3",
+    "lodash": "^4.17.15",
     "mocha": "^6.2.2"
   }
 }
