@@ -13,6 +13,7 @@
 - Authentication service on client side
   - Connect it with redux
 - Figure out clear TDD pipeline
+- Fix Travis .env encryption
 
 ## 12/25/2019
 
