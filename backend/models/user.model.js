@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
+const { switchEnvs } = require("../_config/getEnv.config");
 
 const { Schema } = mongoose;
 
@@ -155,7 +156,10 @@ userSchema.methods.generateJwt = () => {
       name: this.name,
       exp: parseInt(expiry.getTime() / 1000, 10)
     },
-    process.env.JWT_SECRET
+    switchEnvs({
+      generic: process.env.JWT_SECRET,
+      test: "TESTING_JWT_SECRET_KEY"
+    })
   );
 };
 
