@@ -25,6 +25,8 @@ env:
     - JS_SCRIPT=f-build:js TEST_SCRIPT=f-build:test
 
 before_install:
+  - openssl aes-256-cbc -K $encrypted_5880cf525281_key -iv $encrypted_5880cf525281_iv -in env_files.tar.enc -out env_files.tar -d
+  - tar xvf env_files.tar
   - yarn install
   - cd frontend
   - yarn install
