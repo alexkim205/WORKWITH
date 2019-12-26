@@ -10,12 +10,16 @@
     "frontend": "cd frontend && yarn start",
     "backend": "cd backend && yarn start",
     "tidy": "concurrently \"yarn b-clean:js\" \"yarn f-clean:js\"",
-    "b-build:js": "cd backend && eslint ./ --ext .jsx,.js",
-    "b-watch:js": "cd backend && esw ./ --ext .jsx,.js --clear -w --color --format codeframe",
-    "b-clean:js": "cd backend && eslint ./ --ext .jsx,.js --fix",
-    "f-build:js": "cd frontend && eslint ./ --ext .jsx,.js",
-    "f-watch:js": "cd frontend && esw ./ --ext .jsx,.js --clear -w --color --format codeframe",
-    "f-clean:js": "cd frontend && eslint ./ --ext .jsx,.js --fix"
+    "b-build:js": "cd backend && yarn build:js",
+    "b-watch:js": "cd backend && yarn watch:js",
+    "b-clean:js": "cd backend && yarn clean:js",
+    "f-build:js": "cd frontend && yarn build:js",
+    "f-watch:js": "cd frontend && yarn watch:js",
+    "f-clean:js": "cd frontend && yarn clean:js",
+    "b-build:test": "cd backend && yarn build:test",
+    "b-watch:test": "cd backend && yarn watch:test",
+    "f-build:test": "cd frontend && yarn build:test",
+    "f-watch:test": "cd frontend && yarn watch:test"
   },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx,json,css,scss,md}": [

@@ -24,5 +24,10 @@ module.exports = {
     "react/jsx-filename-extension": [1, { extensions: [".js", ".jsx"] }],
     "import/no-extraneous-dependencies": ["error", { devDependencies: true }],
     "prettier/prettier": ["error"]
+  },
+  settings: {
+    react: {
+      version: "detect"
+    }
   }
 };

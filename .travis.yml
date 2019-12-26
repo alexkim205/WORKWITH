@@ -21,8 +21,8 @@ env:
   global:
     - YARN_GPG=no
   jobs:
-    - SCRIPT=b-build:js
-    - SCRIPT=f-build:js
+    - JS_SCRIPT=b-build:js TEST_SCRIPT=b-build:test
+    - JS_SCRIPT=f-build:js TEST_SCRIPT=f-build:test
 
 before_install:
   - yarn install
@@ -34,4 +34,5 @@ before_install:
   - cd ..
 
 script:
-  - yarn $SCRIPT
+  - yarn $JS_SCRIPT
+  - yarn $TEST_SCRIPT

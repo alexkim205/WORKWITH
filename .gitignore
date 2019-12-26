@@ -8,12 +8,15 @@
 
 # testing
 /coverage
+/frontend/coverage
+**/__snapshots__/**
 
 # production
 /build
 node_modules
 /backend/node_modules
 /frontend/node_modules
+/frontend/build
 
 # misc
 .DS_Store

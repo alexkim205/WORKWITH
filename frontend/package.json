@@ -22,9 +22,13 @@
     "styled-theming": "^2.2.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "cross-env REACT_APP_ENV=development react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "build:test": "cross-env REACT_APP_ENV=testing cross-env CI=true react-scripts test",
+    "watch:test": "cross-env REACT_APP_ENV=testing react-scripts test --watch",
+    "build:js": "eslint ./ --ext .jsx,.js",
+    "watch:js": "esw ./ --ext .jsx,.js --clear -w --color --format codeframe",
+    "clean:js": "eslint ./ --ext .jsx,.js --fix",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
