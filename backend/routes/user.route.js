@@ -13,6 +13,7 @@ const { HttpStatus } = require("../_constants/error.constants");
 const User = require("../models/user.model");
 const validateRegisterInput = require("../validators/register.validator");
 const validateLoginInput = require("../validators/login.validator");
+const validateUpdateUserInput = require("../validators/update.user.validator");
 
 /**
  * @swagger
@@ -119,7 +120,9 @@ router.route("/add").post(async (req, res) => {
     name: req.body.name,
     email: req.body.email
   });
-  user.setPassword(req.body.password);
+
+  // Explicitly set salt and hash
+  [user.salt, user.hash] = user.setPassword(req.body.password);
 
   const [err2, newUser] = await to(user.save());
 
@@ -181,6 +184,7 @@ router.route("/login").post(async (req, res) => {
       const token = user.generateJwt();
       return res.status(HttpStatus.OK).send({ user, token });
     }
+
     return res
       .status(HttpStatus.NOT_FOUND)
       .send(`Error: ${JSON.stringify(info)}`);
@@ -216,6 +220,12 @@ router.route("/login").post(async (req, res) => {
  *                $ref: '#/components/schemas/User'
  */
 router.route("/update/:id").put(async (req, res) => {
+  // Validate form data
+  const err = validateUpdateUserInput(req.body);
+  if (!isEmpty(err)) {
+    return res.status(HttpStatus.UNPROCESSABLE_ENTITY).send(`Error: ${err}`);
+  }
+
   const [err1, user] = await to(User.findById(req.params.id));
   if (!isEmpty(err1)) {
     return res

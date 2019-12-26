@@ -22,7 +22,7 @@ app.use(passport.initialize());
 // Different logging config for each environment
 getEnv.switchEnvs({
   dev: () => app.use(morgan("combined")),
-  test: () => app.use(morgan("tiny"))
+  test: () => {}
 });
 
 // Make connection to MongoDB

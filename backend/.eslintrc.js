@@ -18,6 +18,7 @@ module.exports = {
   rules: {
     // "linebreak-style": ["error", "windows"],
     "no-underscore-dangle": ["error", { allow: ["_id"] }],
+    "import/no-extraneous-dependencies": ["error", { devDependencies: true }],
     "prettier/prettier": ["error"]
   }
 };

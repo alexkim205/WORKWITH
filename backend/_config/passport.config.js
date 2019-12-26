@@ -1,16 +1,9 @@
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
+const to = require("await-to-js").default;
 const User = require("../models/user.model");
 
-// For some reason, doesn't recognize `to` as a function.
-function to(promise) {
-  return promise
-    .then(data => {
-      return [null, data];
-    })
-    .catch(err => [err]);
-}
-
+// https://www.wlaurance.com/2018/09/async-await-passportjs-local-strategy/
 const config = () => {
   passport.use(
     new LocalStrategy(
