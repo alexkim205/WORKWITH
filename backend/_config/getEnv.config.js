@@ -34,8 +34,8 @@ const getDatabaseUri = () =>
 const getPort = () =>
   switchEnvs({
     dev: process.env.DEVELOPMENT_API_PORT,
-    prod: process.env.PRODUCTION_API_PORT,
-    test: process.env.TESTING_API_PORT
+    prod: process.env.PRODUCTION_API_PORT
+    // test uses local mongod instance
   });
 
 const getApiBase = () => `/api/v${process.env.API_VERSION}`;

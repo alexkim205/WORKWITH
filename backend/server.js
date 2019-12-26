@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
 const express = require("express");
 const cors = require("cors");
-const mongoose = require("mongoose");
 const morgan = require("morgan");
 const passport = require("passport");
 const swaggerUi = require("swagger-ui-express");
@@ -11,6 +10,7 @@ const swaggerJsdoc = require("swagger-jsdoc");
 require("dotenv").config();
 require("./_config/passport.config").config();
 const getEnv = require("./_config/getEnv.config");
+const setupDatabaseConnection = require("./_config/db.config");
 
 const app = express();
 app.set("PORT", parseInt(getEnv.getPort(), 10) || 5001);
@@ -26,19 +26,9 @@ getEnv.switchEnvs({
 });
 
 // Make connection to MongoDB
-mongoose.connect(getEnv.getDatabaseUri(), {
-  useUnifiedTopology: true,
-  useNewUrlParser: true,
-  useCreateIndex: true
-});
-const { connection } = mongoose;
-connection.once("open", () => {
-  getEnv.switchEnvs({
-    test: () => {},
-    generic: () =>
-      console.log("MongoDB database connection established successfully")
-  });
-});
+(async () => {
+  await setupDatabaseConnection();
+})();
 
 // Setup Swagger API Documentation
 const swaggerOptions = require("./_config/swagger.config.js").default;
