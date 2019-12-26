@@ -18,7 +18,7 @@
 
 - Setup database for each environment
 - Implement getEnv config util for backend
-- Write tests for all api endpoints (Mocha + Chai)
+- Write backend tests for users api (Mocha + Chai)
 - Better environment configuration
 - Fixed address in use error during backend testing
 
