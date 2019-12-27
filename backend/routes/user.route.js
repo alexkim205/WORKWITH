@@ -221,6 +221,7 @@ router.route("/login").post(async (req, res) => {
  */
 router.route("/update/:id").put(async (req, res) => {
   // Validate form data
+  req.body._id = req.params.id;
   const err = validateUpdateUserInput(req.body);
   if (!isEmpty(err)) {
     return res.status(HttpStatus.UNPROCESSABLE_ENTITY).send(`Error: ${err}`);

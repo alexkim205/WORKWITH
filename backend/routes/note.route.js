@@ -13,7 +13,7 @@ const User = require("../models/user.model");
 const Project = require("../models/project.model");
 const Note = require("../models/note.model");
 const validateAddNoteInput = require("../validators/add.note.validator");
-// const validateUpdateNoteInput = require("../validators/update.note.validator");
+const validateUpdateNoteInput = require("../validators/update.note.validator");
 
 /**
  * @swagger
@@ -248,16 +248,55 @@ router.route("/add").post(async (req, res) => {
  *                $ref: '#/components/schemas/Note'
  */
 router.route("/update/:id").put(async (req, res) => {
-  const [err1, note] = await to(Note.findById(req.params.id));
-  if (isEmpty(err1)) {
+  // Validate form data
+  const err1 = validateUpdateNoteInput(req.body);
+  if (!isEmpty(err1)) {
+    return res.status(HttpStatus.UNPROCESSABLE_ENTITY).send(`Error: ${err1}`);
+  }
+
+  // Check that note exists
+  const [err2, note] = await to(Note.findById(req.params.id));
+  if (!isEmpty(err2)) {
     return res
       .status(HttpStatus.BAD_REQUEST)
-      .send(`Error while finding note: ${err1}`);
+      .send(`Error while finding note: ${err2}`);
   }
   if (isEmpty(note)) {
     return res
       .status(HttpStatus.NOT_FOUND)
       .send(`Error: Note with id ${req.params.id} NOT_FOUND`);
+  }
+
+  // Check if all authors exist
+  const checkAuthorPromises = req.body.authors.map(async authorId => {
+    const [errAuthor, user] = await to(User.findById(authorId));
+    if (!isEmpty(errAuthor)) {
+      throw new Error(errAuthor);
+    }
+    if (isEmpty(user)) {
+      throw new Error(`Author with id ${authorId} was NOT_FOUND`);
+    }
+    return user;
+  });
+  const [err3, authors] = await to(Promise.all(checkAuthorPromises));
+  if (!isEmpty(err3)) {
+    return res.status(HttpStatus.NOT_FOUND).send(`Error: ${err3}`);
+  }
+  if (isEmpty(authors)) {
+    return res
+      .status(HttpStatus.NOT_FOUND)
+      .send(`Error: Authors were NOT_FOUND`);
+  }
+
+  // Check if project exists
+  const [err4, project] = await to(Project.findById(req.body.projectId));
+  if (!isEmpty(err4)) {
+    return res.status(HttpStatus.BAD_REQUEST).send(`Error: ${err4}`);
+  }
+  if (isEmpty(project)) {
+    return res
+      .status(HttpStatus.NOT_FOUND)
+      .send(`Error: Project with id ${req.body.projectId} was NOT_FOUND`);
   }
 
   note.projectId = req.body.projectId || note.projectId; // should this even be allowed?
@@ -270,11 +309,11 @@ router.route("/update/:id").put(async (req, res) => {
     : req.body.minimized;
   note.private = isEmpty(req.body.private) ? note.private : req.body.private;
 
-  const [err2, newNote] = await to(note.save());
-  if (!isEmpty(err2)) {
+  const [err5, newNote] = await to(note.save());
+  if (!isEmpty(err5)) {
     return res
       .status(HttpStatus.BAD_REQUEST)
-      .send(`Error while updating note: ${err2}`);
+      .send(`Error while updating note: ${err5}`);
   }
   if (isEmpty(newNote)) {
     return res

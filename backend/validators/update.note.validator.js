@@ -40,7 +40,7 @@ const validateUpdateNoteInput = data => {
     !Validator.isEmpty(formattedData.projectId) &&
     !Validator.isObjectId(formattedData.projectId)
   ) {
-    errors.projectId = "Project ID field is required";
+    errors.projectId = "Project ID field is not an Object ID";
   }
 
   // Authors check
@@ -62,7 +62,7 @@ const validateUpdateNoteInput = data => {
   // Minimized check
   if (
     !isEmpty(formattedData.minimized) &&
-    !Validator.isBoolean(formattedData.minimized)
+    !Validator.isRealBoolean(formattedData.minimized)
   ) {
     errors.minimized = "Minimized field must be a boolean";
   }
@@ -70,7 +70,7 @@ const validateUpdateNoteInput = data => {
   // Private check
   if (
     !isEmpty(formattedData.private) &&
-    !Validator.isBoolean(formattedData.private)
+    !Validator.isRealBoolean(formattedData.private)
   ) {
     errors.private = "Private field must be a boolean";
   }

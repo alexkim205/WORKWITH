@@ -17,6 +17,10 @@ Validator.prototype.isObjectId = v => {
   return mongoose.Types.ObjectId.isValid(v);
 };
 
+Validator.prototype.isRealBoolean = v => {
+  return typeof v === "boolean";
+};
+
 const validator = new Validator();
 
 module.exports = validator;

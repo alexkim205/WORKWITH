@@ -140,7 +140,7 @@ describe("User", () => {
       if (!isEmpty(err)) {
         throw new Error(`Error: ${err}`);
       }
-      if (isEmpty(user)) {
+      if (isEmpty(foundUser)) {
         throw new Error(`Error: User with email ${user.email} NOT_FOUND`);
       }
       userId = foundUser._id.toString();
@@ -240,12 +240,12 @@ describe("User", () => {
       name: "Alex the Great",
       email: "alexthegreat@dev.com"
     };
-    it("it should not DELETE user with non ObjectId", async () => {
+    it("it should not PUT user with non ObjectId", async () => {
       const res = await chai
         .request(app)
         .put(createApiBase("idthereforeiamnot"))
         .send(userUpdate);
-      expect(res.statusCode).to.equal(HttpStatus.BAD_REQUEST);
+      expect(res.statusCode).to.equal(HttpStatus.UNPROCESSABLE_ENTITY);
       expect(res).to.not.have.nested.property("body[0]");
     });
     it("it should not PUT update a user that doesn't exist", async () => {
