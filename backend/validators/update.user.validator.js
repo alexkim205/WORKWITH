@@ -1,5 +1,5 @@
-const Validator = require("validator");
 const isEmpty = require("is-empty");
+const Validator = require("../_utils/validator.util");
 
 const validateUpdateUserInput = data => {
   const errors = {};

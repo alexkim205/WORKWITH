@@ -9,6 +9,7 @@ const isEmpty = require("is-empty");
 
 const app = require("../server");
 const User = require("../models/user.model");
+const { user } = require("../_constants/test.constants");
 const { getApiBase } = require("../_config/getEnv.config");
 const { HttpStatus } = require("../_constants/error.constants");
 const testUserResponse = require("../_utils/testUserResponse.util");
@@ -19,14 +20,11 @@ chai.use(chaiHttp);
 describe("User", () => {
   // New server and clean database
   before(() => app.tListen);
-  after(() => app.tClose);
+  after(async () => {
+    await app.tClose();
+    await User.deleteMany({});
+  });
 
-  const user = {
-    name: "Alex Kim",
-    email: "alexkim@dev.com",
-    password: "Theworstpassword!12345",
-    password2: "Theworstpassword!12345"
-  };
   let userId;
 
   describe("GET /users", () => {

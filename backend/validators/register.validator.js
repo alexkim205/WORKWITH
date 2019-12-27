@@ -1,11 +1,10 @@
-const Validator = require("validator");
 const isEmpty = require("is-empty");
+const Validator = require("../_utils/validator.util");
 
 const validateRegisterInput = data => {
   const errors = {};
   const formattedData = {};
 
-  // Convert empty fields to an empty string so we can use validator functions
   formattedData.name = !isEmpty(data.name) ? data.name : "";
   formattedData.email = !isEmpty(data.email) ? data.email : "";
   formattedData.password = !isEmpty(data.password) ? data.password : "";

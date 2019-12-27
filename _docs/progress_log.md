@@ -6,14 +6,18 @@
 - Breakdown components
 - Create detailed routing outline
 - Connect frontend and backend
-  - ~~Services~~
-  - ~~Actions and Action Creators~~
   - Reducers
   - TDD with Jest and Enzyme
 - Authentication service on client side
   - Connect it with redux
 - Figure out clear TDD pipeline
-- Fix Travis .env encryption
+
+## 12/26/2019
+
+- Workaround Travis .env encryption by using local mongod for testing
+- Write backend tests for users api
+  - Extend Validator library
+  - Add note validators
 
 ## 12/25/2019
 

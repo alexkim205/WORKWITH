@@ -9,7 +9,11 @@ const to = require("await-to-js").default;
 const router = require("express").Router();
 const isEmpty = require("is-empty");
 const { HttpStatus } = require("../_constants/error.constants");
+const User = require("../models/user.model");
+const Project = require("../models/project.model");
 const Note = require("../models/note.model");
+const validateAddNoteInput = require("../validators/add.note.validator");
+// const validateUpdateNoteInput = require("../validators/update.note.validator");
 
 /**
  * @swagger
@@ -151,8 +155,48 @@ router.route("/project/:id").get(async (req, res) => {
  *            application/json:
  *              schema:
  *                $ref: '#/components/schemas/Note'
+ *        "404":
+ *          description: NOT_FOUND. Either authors or project with projectId doesn't exist
  */
 router.route("/add").post(async (req, res) => {
+  // Validate form data
+  const err1 = validateAddNoteInput(req.body);
+  if (!isEmpty(err1)) {
+    return res.status(HttpStatus.UNPROCESSABLE_ENTITY).send(`Error: ${err1}`);
+  }
+
+  // Check if all authors exist
+  const checkAuthorPromises = req.body.authors.map(async authorId => {
+    const [errAuthor, user] = await to(User.findById(authorId));
+    if (!isEmpty(errAuthor)) {
+      throw new Error(errAuthor);
+    }
+    if (isEmpty(user)) {
+      throw new Error(`Author with id ${authorId} was NOT_FOUND`);
+    }
+    return user;
+  });
+  const [err2, authors] = await to(Promise.all(checkAuthorPromises));
+  if (!isEmpty(err2)) {
+    return res.status(HttpStatus.NOT_FOUND).send(`Error: ${err2}`);
+  }
+  if (isEmpty(authors)) {
+    return res
+      .status(HttpStatus.NOT_FOUND)
+      .send(`Error: Authors were NOT_FOUND`);
+  }
+
+  // Check if project exists
+  const [err3, project] = await to(Project.findById(req.body.projectId));
+  if (!isEmpty(err3)) {
+    return res.status(HttpStatus.BAD_REQUEST).send(`Error: ${err3}`);
+  }
+  if (isEmpty(project)) {
+    return res
+      .status(HttpStatus.NOT_FOUND)
+      .send(`Error: Project with id ${req.body.projectId} was NOT_FOUND`);
+  }
+
   const note = new Note({
     projectId: req.body.projectId,
     title: req.body.title,
@@ -163,9 +207,9 @@ router.route("/add").post(async (req, res) => {
     private: req.body.private
   });
 
-  const [err, newNote] = await to(note.save());
-  if (!isEmpty(err)) {
-    return res.status(HttpStatus.BAD_REQUEST).send(`Error: ${err}`);
+  const [err4, newNote] = await to(note.save());
+  if (!isEmpty(err4)) {
+    return res.status(HttpStatus.BAD_REQUEST).send(`Error: ${err4}`);
   }
   if (isEmpty(newNote)) {
     return res

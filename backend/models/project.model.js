@@ -9,6 +9,9 @@ const { ObjectId } = mongoose.Schema.Types;
  *    schemas:
  *      Project:
  *        type: object
+ *        required:
+ *          - title
+ *          - authors
  *        properties:
  *          _id:
  *            type: string
@@ -17,6 +20,11 @@ const { ObjectId } = mongoose.Schema.Types;
  *          title:
  *            type: string
  *            description: The title of the project.
+ *          authors:
+ *            type: array
+ *            items:
+ *              type: string
+ *            description: The authors for the project.
  *          users:
  *            type: array
  *            items:
@@ -47,7 +55,8 @@ const { ObjectId } = mongoose.Schema.Types;
 const projectSchema = new Schema(
   {
     title: String,
-    users: [{ type: ObjectId, ref: "User", required: true }],
+    authors: [{ type: ObjectId, ref: "User", required: true }],
+    users: [{ type: ObjectId, ref: "User" }],
     private: { type: Boolean, default: false },
     deleted: { type: Boolean, default: false }
   },

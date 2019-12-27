@@ -11,6 +11,7 @@ const { ObjectId } = mongoose.Schema.Types;
  *        type: object
  *        required:
  *          - authors
+ *          - projectId
  *        properties:
  *          _id:
  *            type: string
@@ -41,7 +42,7 @@ const { ObjectId } = mongoose.Schema.Types;
  *            default: false
  *          private:
  *            type: boolean
- *            default: false
+ *            default: true
  *          deleted:
  *            type: boolean
  *            default: false
@@ -68,9 +69,9 @@ const noteSchema = new Schema(
     title: String,
     authors: [{ type: ObjectId, ref: "User", required: true }],
     taggedUsers: [{ type: ObjectId, ref: "User" }],
-    body: { type: String, required: false },
+    body: String,
     minimized: { type: Boolean, default: false },
-    private: { type: Boolean, default: false },
+    private: { type: Boolean, default: true },
     deleted: { type: Boolean, default: false }
   },
   {

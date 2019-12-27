@@ -56,7 +56,7 @@ let server;
 app.tListen = async () => {
   server = await app.listen(app.get("PORT"));
   getEnv.switchEnvs({
-    test: () => {},
+    test: () => console.log(`Server is running on port: ${app.get("PORT")}`),
     generic: () => console.log(`Server is running on port: ${app.get("PORT")}`)
   });
 };
