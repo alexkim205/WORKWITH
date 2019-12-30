@@ -2,20 +2,19 @@
 
 ## Backlog Todo
 
-- Write backend tests
 - Breakdown components
 - Create detailed routing outline
-- Connect frontend and backend
-  - Reducers
-  - TDD with Jest and Enzyme
-- Authentication service on client side
-  - Connect it with redux
-- Figure out clear TDD pipeline
+- Figure out clear TDD pipeline for frontend
+- Write frontend tests for services
+  - Decide if I want to use mock http (more time to implement, but best practice) or serve client server (less time)
 
 ## 12/30/2019
 
-- Finish writing notes tests
+- Finish writing client notes tests
 - Fix bug Mocha scope bug
+- Added frontend reducers
+- Authentication service on client side
+  - Connect it with redux
 
 ## 12/27/2019
 
