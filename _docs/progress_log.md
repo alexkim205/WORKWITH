@@ -12,10 +12,14 @@
   - Connect it with redux
 - Figure out clear TDD pipeline
 
+## 12/30/2019
+
+- Finish writing notes tests
+- Fix bug Mocha scope bug
+
 ## 12/27/2019
 
 - Continue writing backend tests for notes api
-- Bug where I can't assign local variables to be used between tests
 
 ## 12/26/2019
 

@@ -1,5 +1,6 @@
 import axios from "axios";
 import to from "await-to-js";
+import _ from "lodash";
 import usersConstants from "../_constants/users.constants";
 import createActionCreator from "../_utils/createActionCreator.util";
 import setupUrls from "../_config/setupUrls";
@@ -38,10 +39,27 @@ const getUser = userId => async dispatch => {
   dispatch(actionSuccess(user));
 };
 
-const createUser = newUser => async dispatch => {
+const login = (email, password) => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     usersConstants,
-    "CREATE_USER"
+    "LOGIN"
+  );
+  const requestUrl = `${serverUrl}/users/login`;
+
+  dispatch(actionPending());
+  const [err, user] = await to(axios.post(requestUrl, { email, password }));
+  if (err) {
+    dispatch(actionError(err));
+    throw err;
+  }
+  const userWithToken = _.assign({}, user.user, { token: user.token });
+  dispatch(actionSuccess(userWithToken));
+};
+
+const register = newUser => async dispatch => {
+  const { actionPending, actionSuccess, actionError } = createActionCreator(
+    usersConstants,
+    "REGISTER"
   );
   const requestUrl = `${serverUrl}/users/add`;
 
@@ -51,7 +69,8 @@ const createUser = newUser => async dispatch => {
     dispatch(actionError(err));
     throw err;
   }
-  dispatch(actionSuccess(user));
+  const userWithToken = _.assign({}, user.user, { token: user.token });
+  dispatch(actionSuccess(userWithToken));
 };
 
 const updateUser = (userId, newUser) => async dispatch => {
@@ -89,7 +108,8 @@ const deleteUser = userId => async dispatch => {
 export default {
   getUsers,
   getUser,
-  createUser,
+  login,
+  register,
   updateUser,
   deleteUser
 };

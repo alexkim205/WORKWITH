@@ -7,9 +7,9 @@ const GET_USER_ERROR = "users/get-user-error";
 const DELETE_USER_PENDING = "users/delete-user-pending";
 const DELETE_USER_SUCCESS = "users/delete-user-success";
 const DELETE_USER_ERROR = "users/delete-user-error";
-const CREATE_USER_PENDING = "users/create-user-pending";
-const CREATE_USER_SUCCESS = "users/create-user-success";
-const CREATE_USER_ERROR = "users/create-user-error";
+const REGISTER_PENDING = "users/register-pending";
+const REGISTER_SUCCESS = "users/register-success";
+const REGISTER_ERROR = "users/register-error";
 const UPDATE_USER_PENDING = "users/update-user-pending";
 const UPDATE_USER_SUCCESS = "users/update-user-success";
 const UPDATE_USER_ERROR = "users/update-user-error";
@@ -18,9 +18,9 @@ const LOGIN_PENDING = "users/login-success";
 const LOGIN_SUCCESS = "users/login-success";
 const LOGIN_ERROR = "users/login-error";
 const LOGOUT_SUCCESS = "users/logout-success";
-const REGISTER_PENDING = "users/register-pending";
-const REGISTER_SUCCESS = "users/register-success";
-const REGISTER_ERROR = "users/register-error";
+// const REGISTER_PENDING = "users/register-pending";
+// const REGISTER_SUCCESS = "users/register-success";
+// const REGISTER_ERROR = "users/register-error";
 const FORGOT_PWD_PENDING = "users/forgot-pwd-pending";
 const FORGOT_PWD_SUCCESS = "users/forgot-pwd-success";
 const FORGOT_PWD_ERROR = "users/forgot-pwd-error";
@@ -38,9 +38,6 @@ export default {
   DELETE_USER_PENDING,
   DELETE_USER_SUCCESS,
   DELETE_USER_ERROR,
-  CREATE_USER_PENDING,
-  CREATE_USER_SUCCESS,
-  CREATE_USER_ERROR,
   UPDATE_USER_PENDING,
   UPDATE_USER_SUCCESS,
   UPDATE_USER_ERROR,
