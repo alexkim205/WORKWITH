@@ -5,7 +5,7 @@ const validateUpdateNoteInput = data => {
   const errors = {};
   const formattedData = {};
 
-  // Convert empty fields to an empty string so we can use validator functions
+  formattedData._id = !isEmpty(data._id) ? data._id : "";
   formattedData.projectId = !isEmpty(data.projectId) ? data.projectId : "";
   formattedData.title = !isEmpty(data.title) ? data.title : "";
   formattedData.authors = !isEmpty(data.authors) ? data.authors : "";
@@ -34,6 +34,13 @@ const validateUpdateNoteInput = data => {
     Validator.isEmpty(formattedData.private)
   ) {
     errors.general = "At least one field must be updated";
+  }
+  // Note ID checks
+  if (
+    !Validator.isEmpty(formattedData._id) &&
+    !Validator.isObjectId(formattedData._id)
+  ) {
+    errors.projectId = "Note ID field is not an Object ID";
   }
   // Project ID checks
   if (

@@ -186,10 +186,36 @@ router.route("/add").post(async (req, res) => {
       .send(`Error: Authors were NOT_FOUND`);
   }
 
-  // Check if project exists
-  const [err3, project] = await to(Project.findById(req.body.projectId));
+  // Check if all tagged users exist
+  req.body.taggedUsers = isEmpty(req.body.taggedUsers)
+    ? []
+    : req.body.taggedUsers;
+  const checkTaggedUserPromises = req.body.taggedUsers.map(
+    async taggedUserId => {
+      const [errTaggedUser, user] = await to(User.findById(taggedUserId));
+      if (!isEmpty(errTaggedUser)) {
+        throw new Error(errTaggedUser);
+      }
+      if (isEmpty(user)) {
+        throw new Error(`Tagged user with id ${taggedUserId} was NOT_FOUND`);
+      }
+      return user;
+    }
+  );
+  const [err3, taggedUsers] = await to(Promise.all(checkTaggedUserPromises));
   if (!isEmpty(err3)) {
-    return res.status(HttpStatus.BAD_REQUEST).send(`Error: ${err3}`);
+    return res.status(HttpStatus.NOT_FOUND).send(`Error: ${err3}`);
+  }
+  if (!isEmpty(req.body.taggedUsers) && isEmpty(taggedUsers)) {
+    return res
+      .status(HttpStatus.NOT_FOUND)
+      .send(`Error: Tagged users were NOT_FOUND`);
+  }
+
+  // Check if project exists
+  const [err4, project] = await to(Project.findById(req.body.projectId));
+  if (!isEmpty(err4)) {
+    return res.status(HttpStatus.BAD_REQUEST).send(`Error: ${err4}`);
   }
   if (isEmpty(project)) {
     return res
@@ -207,9 +233,9 @@ router.route("/add").post(async (req, res) => {
     private: req.body.private
   });
 
-  const [err4, newNote] = await to(note.save());
-  if (!isEmpty(err4)) {
-    return res.status(HttpStatus.BAD_REQUEST).send(`Error: ${err4}`);
+  const [err5, newNote] = await to(note.save());
+  if (!isEmpty(err5)) {
+    return res.status(HttpStatus.BAD_REQUEST).send(`Error: ${err5}`);
   }
   if (isEmpty(newNote)) {
     return res
@@ -249,6 +275,7 @@ router.route("/add").post(async (req, res) => {
  */
 router.route("/update/:id").put(async (req, res) => {
   // Validate form data
+  req.body._id = req.params.id;
   const err1 = validateUpdateNoteInput(req.body);
   if (!isEmpty(err1)) {
     return res.status(HttpStatus.UNPROCESSABLE_ENTITY).send(`Error: ${err1}`);
@@ -268,6 +295,7 @@ router.route("/update/:id").put(async (req, res) => {
   }
 
   // Check if all authors exist
+  req.body.authors = isEmpty(req.body.authors) ? [] : req.body.authors;
   const checkAuthorPromises = req.body.authors.map(async authorId => {
     const [errAuthor, user] = await to(User.findById(authorId));
     if (!isEmpty(errAuthor)) {
@@ -282,21 +310,49 @@ router.route("/update/:id").put(async (req, res) => {
   if (!isEmpty(err3)) {
     return res.status(HttpStatus.NOT_FOUND).send(`Error: ${err3}`);
   }
-  if (isEmpty(authors)) {
+  if (!isEmpty(req.body.authors) && isEmpty(authors)) {
     return res
       .status(HttpStatus.NOT_FOUND)
       .send(`Error: Authors were NOT_FOUND`);
   }
 
-  // Check if project exists
-  const [err4, project] = await to(Project.findById(req.body.projectId));
+  // Check if all tagged users exist
+  req.body.taggedUsers = isEmpty(req.body.taggedUsers)
+    ? []
+    : req.body.taggedUsers;
+  const checkTaggedUserPromises = req.body.taggedUsers.map(
+    async taggedUserId => {
+      const [errTaggedUser, user] = await to(User.findById(taggedUserId));
+      if (!isEmpty(errTaggedUser)) {
+        throw new Error(errTaggedUser);
+      }
+      if (isEmpty(user)) {
+        throw new Error(`Tagged user with id ${taggedUserId} was NOT_FOUND`);
+      }
+      return user;
+    }
+  );
+  const [err4, taggedUsers] = await to(Promise.all(checkTaggedUserPromises));
   if (!isEmpty(err4)) {
-    return res.status(HttpStatus.BAD_REQUEST).send(`Error: ${err4}`);
+    return res.status(HttpStatus.NOT_FOUND).send(`Error: ${err4}`);
   }
-  if (isEmpty(project)) {
+  if (!isEmpty(req.body.taggedUsers) && isEmpty(taggedUsers)) {
     return res
       .status(HttpStatus.NOT_FOUND)
-      .send(`Error: Project with id ${req.body.projectId} was NOT_FOUND`);
+      .send(`Error: Tagged users were NOT_FOUND`);
+  }
+
+  // Check if project exists
+  if (!isEmpty(req.body.projectId)) {
+    const [err5, project] = await to(Project.findById(req.body.projectId));
+    if (!isEmpty(err5)) {
+      return res.status(HttpStatus.BAD_REQUEST).send(`Error: ${err5}`);
+    }
+    if (isEmpty(project)) {
+      return res
+        .status(HttpStatus.NOT_FOUND)
+        .send(`Error: Project with id ${req.body.projectId} was NOT_FOUND`);
+    }
   }
 
   note.projectId = req.body.projectId || note.projectId; // should this even be allowed?
@@ -309,11 +365,11 @@ router.route("/update/:id").put(async (req, res) => {
     : req.body.minimized;
   note.private = isEmpty(req.body.private) ? note.private : req.body.private;
 
-  const [err5, newNote] = await to(note.save());
-  if (!isEmpty(err5)) {
+  const [err6, newNote] = await to(note.save());
+  if (!isEmpty(err6)) {
     return res
       .status(HttpStatus.BAD_REQUEST)
-      .send(`Error while updating note: ${err5}`);
+      .send(`Error while updating note: ${err6}`);
   }
   if (isEmpty(newNote)) {
     return res

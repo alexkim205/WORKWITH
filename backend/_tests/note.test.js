@@ -131,6 +131,17 @@ describe("Note", () => {
       expect(res).to.have.status(HttpStatus.NOT_FOUND);
       expect(res).to.not.have.nested.property("body[0]");
     });
+    it("it should not POST a note for tagged user that doesn't exist", async () => {
+      const newNote = _.assign({}, sendableNote, {
+        taggedUsers: ["5e05608eba9d0ea7ccd0d74b"]
+      });
+      const res = await chai
+        .request(app)
+        .post(apiBase)
+        .send(newNote);
+      expect(res).to.have.status(HttpStatus.NOT_FOUND);
+      expect(res).to.not.have.nested.property("body[0]");
+    });
     it("it should not POST a note for project that doesn't exist", async () => {
       const newNote = _.assign({}, sendableNote, {
         projectId: "5e05608eba9d0ea7ccd0d74b"
@@ -189,18 +200,19 @@ describe("Note", () => {
 
   describe("PUT /notes/update/:id", () => {
     const createApiBase = id => `${getApiBase()}/notes/update/${id}`;
-    const noteUpdate = {
+    const createNoteUpdate = uId => ({
       title: "New Title",
       body: "I like my new body.",
-      taggedUsers: [userId], // tag author
+      authors: [uId],
+      taggedUsers: [uId], // tag author
       minimized: true,
       private: false
-    };
+    });
     it("it should not PUT note with non ObjectId", async () => {
       const res = await chai
         .request(app)
         .put(createApiBase("idthereforeiamnot"))
-        .send(noteUpdate);
+        .send(createNoteUpdate(userId));
       expect(res.statusCode).to.equal(HttpStatus.UNPROCESSABLE_ENTITY);
       expect(res).to.not.have.nested.property("body[0]");
     });
@@ -208,12 +220,36 @@ describe("Note", () => {
       const res = await chai
         .request(app)
         .put(createApiBase("5e0441c26044dfb8d86d8cc0"))
-        .send(noteUpdate);
+        .send(createNoteUpdate(userId));
+      expect(res.statusCode).to.equal(HttpStatus.NOT_FOUND);
+      expect(res).to.not.have.nested.property("body[0]");
+    });
+    it("it should not PUT update a note for project with non ObjectId", async () => {
+      const newNoteUpdate = _.assign({}, createNoteUpdate(userId), {
+        projectId: "idthereforeiamnot"
+      });
+      const res = await chai
+        .request(app)
+        .put(createApiBase("noteId"))
+        .send(newNoteUpdate);
+      expect(res.statusCode).to.equal(HttpStatus.UNPROCESSABLE_ENTITY);
+      expect(res).to.not.have.nested.property("body[0]");
+    });
+    it("it should not PUT update a note for a project that doesn't exist", async () => {
+      const newNoteUpdate = _.assign({}, createNoteUpdate(userId), {
+        projectId: "5e0441c26044dfb8d86d8cc0"
+      });
+      const res = await chai
+        .request(app)
+        .put(createApiBase(userId))
+        .send(newNoteUpdate);
       expect(res.statusCode).to.equal(HttpStatus.NOT_FOUND);
       expect(res).to.not.have.nested.property("body[0]");
     });
     it("it should not PUT update the delete field", async () => {
-      const newNoteUpdate = _.assign({}, noteUpdate, { deleted: false });
+      const newNoteUpdate = _.assign({}, createNoteUpdate(userId), {
+        deleted: false
+      });
       const res = await chai
         .request(app)
         .put(createApiBase(noteId))
@@ -227,6 +263,111 @@ describe("Note", () => {
         .put(createApiBase(noteId))
         .send({});
       expect(res.statusCode).to.equal(HttpStatus.UNPROCESSABLE_ENTITY);
+      expect(res).to.not.have.nested.property("body[0]");
+    });
+    it("it should not PUT update a note without authors field of array type", async () => {
+      const newNoteUpdate = _.assign({}, createNoteUpdate(userId), {
+        authors: "imnotanarray"
+      });
+      const res = await chai
+        .request(app)
+        .put(createApiBase(noteId))
+        .send(newNoteUpdate);
+      expect(res).to.have.status(HttpStatus.UNPROCESSABLE_ENTITY);
+      expect(res).to.not.have.nested.property("body[0]");
+    });
+    it("it should not PUT update a note without tagged users field of array type", async () => {
+      const newNoteUpdate = _.assign({}, createNoteUpdate(userId), {
+        taggedUsers: "imnotanarray"
+      });
+      const res = await chai
+        .request(app)
+        .put(createApiBase(noteId))
+        .send(newNoteUpdate);
+      expect(res).to.have.status(HttpStatus.UNPROCESSABLE_ENTITY);
+      expect(res).to.not.have.nested.property("body[0]");
+    });
+    it("it should not PUT update a note for tagged users that don't exist", async () => {
+      const newNoteUpdate = _.assign({}, createNoteUpdate(userId), {
+        taggedUsers: ["5e0441c26044dfb8d86d8cc0"]
+      });
+      const res = await chai
+        .request(app)
+        .put(createApiBase(userId))
+        .send(newNoteUpdate);
+      expect(res.statusCode).to.equal(HttpStatus.NOT_FOUND);
+      expect(res).to.not.have.nested.property("body[0]");
+    });
+    it("it should not PUT update a note without minimized field of boolean type", async () => {
+      const newNoteUpdate = _.assign({}, createNoteUpdate(userId), {
+        minimized: "imnotaboolean"
+      });
+      const res = await chai
+        .request(app)
+        .put(createApiBase(noteId))
+        .send(newNoteUpdate);
+      expect(res).to.have.status(HttpStatus.UNPROCESSABLE_ENTITY);
+      expect(res).to.not.have.nested.property("body[0]");
+    });
+    it("it should not PUT update a note without private field of boolean type", async () => {
+      const newNoteUpdate = _.assign({}, createNoteUpdate(userId), {
+        private: "imnotaboolean"
+      });
+      const res = await chai
+        .request(app)
+        .put(createApiBase(noteId))
+        .send(newNoteUpdate);
+      expect(res).to.have.status(HttpStatus.UNPROCESSABLE_ENTITY);
+      expect(res).to.not.have.nested.property("body[0]");
+    });
+    it("it should PUT update a note without private field of boolean type", async () => {
+      const newNoteUpdate = _.assign({}, createNoteUpdate(userId), {
+        private: "imnotaboolean"
+      });
+      const res = await chai
+        .request(app)
+        .put(createApiBase(noteId))
+        .send(newNoteUpdate);
+      expect(res).to.have.status(HttpStatus.UNPROCESSABLE_ENTITY);
+      expect(res).to.not.have.nested.property("body[0]");
+    });
+    it("it should PUT update with well formed request", async () => {
+      const newNoteUpdate = createNoteUpdate(userId);
+      const noteToCheck = _.assign({}, sendableNote, newNoteUpdate);
+      const res = await chai
+        .request(app)
+        .put(createApiBase(noteId))
+        .send(newNoteUpdate);
+      expect(res.statusCode).to.equal(HttpStatus.OK);
+      testNoteResponse(res, noteToCheck);
+      expect(res.body.note._id).to.equal(noteId);
+    });
+  });
+
+  describe("DELETE /notes/:id", () => {
+    const createApiBase = id => `${getApiBase()}/notes/${id}`;
+    it("it should not DELETE note with non ObjectId", async () => {
+      const res = await chai
+        .request(app)
+        .delete(createApiBase("idthereforeiamnot"));
+      expect(res.statusCode).to.equal(HttpStatus.BAD_REQUEST);
+      expect(res).to.not.have.nested.property("body[0]");
+    });
+    it("it should not DELETE note that doesn't exist", async () => {
+      const res = await chai
+        .request(app)
+        .delete(createApiBase("5e0441c26044dfb8d86d8cc0"));
+      expect(res.statusCode).to.equal(HttpStatus.NOT_FOUND);
+      expect(res).to.not.have.nested.property("body[0]");
+    });
+    it("it should DELETE note that hasn't been deleted", async () => {
+      const res = await chai.request(app).delete(createApiBase(noteId));
+      expect(res.statusCode).to.equal(HttpStatus.OK);
+      expect(res).to.not.have.nested.property("body[0]");
+    });
+    it("it should DELETE note that is already deleted", async () => {
+      const res = await chai.request(app).delete(createApiBase(noteId));
+      expect(res.statusCode).to.equal(HttpStatus.OK);
       expect(res).to.not.have.nested.property("body[0]");
     });
   });
