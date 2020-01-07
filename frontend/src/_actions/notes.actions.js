@@ -1,20 +1,18 @@
-import axios from "axios";
 import to from "await-to-js";
 import notesConstants from "../_constants/notes.constants";
+import services from "../_services";
 import createActionCreator from "../_utils/createActionCreator.util";
-import setupUrls from "../_config/setupUrls";
 
-const { serverUrl } = setupUrls();
+const { notesServices } = services;
 
 const getNotesByProject = projectId => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     notesConstants,
     "GET_PROJECT_NOTES"
   );
-  const requestUrl = `${serverUrl}/notes/project/${projectId}`;
 
   dispatch(actionPending());
-  const [err, notes] = await to(axios.get(requestUrl));
+  const [err, notes] = await to(notesServices.getNotesByProject(projectId));
   if (err) {
     dispatch(actionError(err));
     throw err;
@@ -27,10 +25,9 @@ const getNotes = () => async dispatch => {
     notesConstants,
     "GET_NOTES"
   );
-  const requestUrl = `${serverUrl}/notes`;
 
   dispatch(actionPending());
-  const [err, notes] = await to(axios.get(requestUrl));
+  const [err, notes] = await to(notesServices.getNotes());
   if (err) {
     dispatch(actionError(err));
     throw err;
@@ -43,10 +40,9 @@ const getNote = noteId => async dispatch => {
     notesConstants,
     "GET_NOTE"
   );
-  const requestUrl = `${serverUrl}/notes/${noteId}`;
 
   dispatch(actionPending());
-  const [err, note] = await to(axios.get(requestUrl));
+  const [err, note] = await to(notesServices.getNote(noteId));
   if (err) {
     dispatch(actionError(err));
     throw err;
@@ -59,10 +55,9 @@ const createNote = newNote => async dispatch => {
     notesConstants,
     "CREATE_NOTE"
   );
-  const requestUrl = `${serverUrl}/notes/add`;
 
   dispatch(actionPending());
-  const [err, note] = await to(axios.post(requestUrl, newNote));
+  const [err, note] = await to(notesServices.createNote(newNote));
   if (err) {
     dispatch(actionError(err));
     throw err;
@@ -75,10 +70,9 @@ const updateNote = (noteId, newNote) => async dispatch => {
     notesConstants,
     "UPDATE_NOTE"
   );
-  const requestUrl = `${serverUrl}/notes/update/${noteId}`;
 
   dispatch(actionPending());
-  const [err, note] = await to(axios.post(requestUrl, newNote));
+  const [err, note] = await to(notesServices.updateNote(noteId, newNote));
   if (err) {
     dispatch(actionError(err));
     throw err;
@@ -91,10 +85,9 @@ const deleteNote = noteId => async dispatch => {
     notesConstants,
     "DELETE_NOTE"
   );
-  const requestUrl = `${serverUrl}/notes/${noteId}`;
 
   dispatch(actionPending());
-  const [err] = await to(axios.delete(requestUrl));
+  const [err] = await to(notesServices.deleteNote(noteId));
   if (err) {
     dispatch(actionError(err));
     throw err;

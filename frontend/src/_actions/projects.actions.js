@@ -1,20 +1,18 @@
-import axios from "axios";
 import to from "await-to-js";
 import projectsConstants from "../_constants/projects.constants";
+import services from "../_services";
 import createActionCreator from "../_utils/createActionCreator.util";
-import setupUrls from "../_config/setupUrls";
 
-const { serverUrl } = setupUrls();
+const { projectsServices } = services;
 
 const getProjectsByUser = userId => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     projectsConstants,
     "GET_USER_PROJECTS"
   );
-  const requestUrl = `${serverUrl}/projects/user/${userId}`;
 
   dispatch(actionPending());
-  const [err, projects] = await to(axios.get(requestUrl));
+  const [err, projects] = await to(projectsServices.getProjectsByUser(userId));
   if (err) {
     dispatch(actionError(err));
     throw err;
@@ -27,10 +25,9 @@ const getProjects = () => async dispatch => {
     projectsConstants,
     "GET_PROJECTS"
   );
-  const requestUrl = `${serverUrl}/projects`;
 
   dispatch(actionPending());
-  const [err, projects] = await to(axios.get(requestUrl));
+  const [err, projects] = await to(projectsServices.getProjects());
   if (err) {
     dispatch(actionError(err));
     throw err;
@@ -43,10 +40,9 @@ const getProject = projectId => async dispatch => {
     projectsConstants,
     "GET_PROJECT"
   );
-  const requestUrl = `${serverUrl}/projects/${projectId}`;
 
   dispatch(actionPending());
-  const [err, project] = await to(axios.get(requestUrl));
+  const [err, project] = await to(projectsServices.getProject(projectId));
   if (err) {
     dispatch(actionError(err));
     throw err;
@@ -59,10 +55,9 @@ const createProject = newProject => async dispatch => {
     projectsConstants,
     "CREATE_PROJECT"
   );
-  const requestUrl = `${serverUrl}/projects/add`;
 
   dispatch(actionPending());
-  const [err, project] = await to(axios.post(requestUrl, newProject));
+  const [err, project] = await to(projectsServices.createProject(newProject));
   if (err) {
     dispatch(actionError(err));
     throw err;
@@ -75,10 +70,11 @@ const updateProject = (projectId, newProject) => async dispatch => {
     projectsConstants,
     "UPDATE_PROJECT"
   );
-  const requestUrl = `${serverUrl}/projects/update/${projectId}`;
 
   dispatch(actionPending());
-  const [err, project] = await to(axios.post(requestUrl, newProject));
+  const [err, project] = await to(
+    projectsServices.updateProject(projectId, newProject)
+  );
   if (err) {
     dispatch(actionError(err));
     throw err;
@@ -91,10 +87,9 @@ const deleteProject = projectId => async dispatch => {
     projectsConstants,
     "DELETE_PROJECT"
   );
-  const requestUrl = `${serverUrl}/projects/${projectId}`;
 
   dispatch(actionPending());
-  const [err] = await to(axios.delete(requestUrl));
+  const [err] = await to(projectsServices.deleteProject(projectId));
   if (err) {
     dispatch(actionError(err));
     throw err;

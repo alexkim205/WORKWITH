@@ -138,11 +138,11 @@ userSchema.methods.setPassword = password => {
   return [this.salt, this.hash];
 };
 
-userSchema.methods.validPassword = password => {
+userSchema.methods.validPassword = (password, userHash, userSalt) => {
   const hash = crypto
-    .pbkdf2Sync(password, this.salt, 1000, 64, "sha512")
+    .pbkdf2Sync(password, userSalt, 1000, 64, "sha512")
     .toString("hex");
-  return this.hash === hash;
+  return userHash === hash;
 };
 
 userSchema.methods.generateJwt = () => {
@@ -158,7 +158,8 @@ userSchema.methods.generateJwt = () => {
     },
     switchEnvs({
       generic: process.env.JWT_SECRET,
-      test: "TESTING_JWT_SECRET_KEY"
+      test: "TESTING_JWT_SECRET_KEY",
+      testConnection: "TESTING_JWT_SECRET_KEY"
     })
   );
 };

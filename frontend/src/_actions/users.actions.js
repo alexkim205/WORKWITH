@@ -1,21 +1,18 @@
-import axios from "axios";
 import to from "await-to-js";
-import _ from "lodash";
 import usersConstants from "../_constants/users.constants";
+import services from "../_services";
 import createActionCreator from "../_utils/createActionCreator.util";
-import setupUrls from "../_config/setupUrls";
 
-const { serverUrl } = setupUrls();
+const { usersServices } = services;
 
 const getUsers = () => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     usersConstants,
     "GET_USERS"
   );
-  const requestUrl = `${serverUrl}/users`;
 
   dispatch(actionPending());
-  const [err, users] = await to(axios.get(requestUrl));
+  const [err, users] = await to(usersServices.getUsers());
   if (err) {
     dispatch(actionError(err));
     throw err;
@@ -28,10 +25,9 @@ const getUser = userId => async dispatch => {
     usersConstants,
     "GET_USER"
   );
-  const requestUrl = `${serverUrl}/users/${userId}`;
 
   dispatch(actionPending());
-  const [err, user] = await to(axios.get(requestUrl));
+  const [err, user] = await to(usersServices.getUser(userId));
   if (err) {
     dispatch(actionError(err));
     throw err;
@@ -44,16 +40,14 @@ const login = (email, password) => async dispatch => {
     usersConstants,
     "LOGIN"
   );
-  const requestUrl = `${serverUrl}/users/login`;
 
   dispatch(actionPending());
-  const [err, user] = await to(axios.post(requestUrl, { email, password }));
+  const [err, user] = await to(usersServices.login(email, password));
   if (err) {
     dispatch(actionError(err));
     throw err;
   }
-  const userWithToken = _.assign({}, user.user, { token: user.token });
-  dispatch(actionSuccess(userWithToken));
+  dispatch(actionSuccess(user));
 };
 
 const register = newUser => async dispatch => {
@@ -61,16 +55,14 @@ const register = newUser => async dispatch => {
     usersConstants,
     "REGISTER"
   );
-  const requestUrl = `${serverUrl}/users/add`;
 
   dispatch(actionPending());
-  const [err, user] = await to(axios.post(requestUrl, newUser));
+  const [err, user] = await to(usersServices.register(newUser));
   if (err) {
     dispatch(actionError(err));
     throw err;
   }
-  const userWithToken = _.assign({}, user.user, { token: user.token });
-  dispatch(actionSuccess(userWithToken));
+  dispatch(actionSuccess(user));
 };
 
 const updateUser = (userId, newUser) => async dispatch => {
@@ -78,10 +70,9 @@ const updateUser = (userId, newUser) => async dispatch => {
     usersConstants,
     "UPDATE_USER"
   );
-  const requestUrl = `${serverUrl}/users/update/${userId}`;
 
   dispatch(actionPending());
-  const [err, user] = await to(axios.post(requestUrl, newUser));
+  const [err, user] = await to(usersServices.updateUser(userId, newUser));
   if (err) {
     dispatch(actionError(err));
     throw err;
@@ -94,10 +85,9 @@ const deleteUser = userId => async dispatch => {
     usersConstants,
     "DELETE_USER"
   );
-  const requestUrl = `${serverUrl}/users/${userId}`;
 
   dispatch(actionPending());
-  const [err] = await to(axios.delete(requestUrl));
+  const [err] = await to(usersServices.deleteUser(userId));
   if (err) {
     dispatch(actionError(err));
     throw err;

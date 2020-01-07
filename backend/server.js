@@ -22,7 +22,8 @@ app.use(passport.initialize());
 // Different logging config for each environment
 getEnv.switchEnvs({
   dev: () => app.use(morgan("combined")),
-  test: () => {}
+  test: () => {},
+  testConnection: () => app.use(morgan("tiny"))
 });
 
 // Make connection to MongoDB
@@ -56,7 +57,7 @@ let server;
 app.tListen = async () => {
   server = await app.listen(app.get("PORT"));
   getEnv.switchEnvs({
-    test: () => console.log(`Server is running on port: ${app.get("PORT")}`),
+    test: () => {},
     generic: () => console.log(`Server is running on port: ${app.get("PORT")}`)
   });
 };

@@ -37,19 +37,17 @@ const setupOffline = async () => {
 };
 
 const setupDatabaseConnection = async () => {
+  getEnv.switchEnvs({
+    test: async () => {
+      await setupOffline();
+    },
+    generic: async () => {
+      await setupOnline();
+    }
+  });
+
   try {
-    getEnv.switchEnvs({
-      dev: async () => {
-        await setupOnline();
-      },
-      prod: async () => {
-        await setupOnline();
-      },
-      test: async () => {
-        await setupOffline();
-      }
-    });
-    await connection.once("open", () => {
+    connection.once("open", () => {
       getEnv.switchEnvs({
         test: () => {},
         generic: () =>

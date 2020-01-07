@@ -1,31 +1,20 @@
 const isEmpty = require("is-empty");
 const Validator = require("../_utils/validator.util");
 
-const validateAddNoteInput = data => {
+const validateAddProjectInput = data => {
   const errors = {};
   const formattedData = {};
 
-  // Convert empty fields to an empty string so we can use validator functions
-  formattedData.projectId = !isEmpty(data.projectId) ? data.projectId : "";
   formattedData.title = !isEmpty(data.title) ? data.title : "";
   formattedData.authors = !isEmpty(data.authors) ? data.authors : "";
-  formattedData.taggedUsers = !isEmpty(data.taggedUsers)
-    ? data.taggedUsers
-    : "";
+  formattedData.users = !isEmpty(data.users) ? data.users : "";
   formattedData.body = !isEmpty(data.body) ? data.body : "";
-  formattedData.minimized = !isEmpty(data.minimized) ? data.minimized : "";
   formattedData.private = !isEmpty(data.private) ? data.private : "";
   formattedData.deleted = !isEmpty(data.deleted) ? data.deleted : "";
 
-  // Project ID checks
-  if (Validator.isEmpty(formattedData.projectId)) {
-    errors.projectId = "Project ID field is required";
-  }
-  if (
-    !Validator.isEmpty(formattedData.projectId) &&
-    !Validator.isObjectId(formattedData.projectId)
-  ) {
-    errors.projectId = "Project ID field is not an Object ID";
+  // Title check
+  if (isEmpty(formattedData.title)) {
+    errors.title = "Title field is required";
   }
 
   // Authors check
@@ -39,20 +28,12 @@ const validateAddNoteInput = data => {
     errors.authors = "Authors field is not an array";
   }
 
-  // Tagged Users check
+  // Users check
   if (
-    !isEmpty(formattedData.taggedUsers) &&
-    !Validator.isArray(formattedData.taggedUsers)
+    !isEmpty(formattedData.users) &&
+    !Validator.isArray(formattedData.users)
   ) {
-    errors.taggedUsers = "Tagged users field is not an array";
-  }
-
-  // Minimized check
-  if (
-    !isEmpty(formattedData.minimized) &&
-    !Validator.isRealBoolean(formattedData.minimized)
-  ) {
-    errors.minimized = "Minimized field must be a boolean";
+    errors.users = "Users field is not an array";
   }
 
   // Private check
@@ -72,4 +53,4 @@ const validateAddNoteInput = data => {
   return !isEmpty(errors) ? JSON.stringify(errors) : "";
 };
 
-module.exports = validateAddNoteInput;
+module.exports = validateAddProjectInput;

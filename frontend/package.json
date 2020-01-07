@@ -24,16 +24,14 @@
   },
   "scripts": {
     "start": "cross-env REACT_APP_ENV=development react-scripts start",
+    "start:test-connect": "cross-env REACT_APP_ENV=testing-connection react-scripts test src/_tests/server.test.js",
     "build": "react-scripts build",
     "build:test": "cross-env REACT_APP_ENV=testing cross-env CI=true react-scripts test",
     "watch:test": "cross-env REACT_APP_ENV=testing react-scripts test --watch",
-    "build:js": "eslint ./ --ext .jsx,.js",
-    "watch:js": "esw ./ --ext .jsx,.js --clear -w --color --format codeframe",
-    "clean:js": "eslint ./ --ext .jsx,.js --fix",
+    "build:js": "eslint ./src/ --ext .jsx,.js",
+    "watch:js": "esw ./src/ --ext .jsx,.js --clear -w --color --format codeframe",
+    "clean:js": "eslint ./src/ --ext .jsx,.js --fix",
     "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
   },
   "browserslist": {
     "production": [
@@ -51,6 +49,9 @@
     "cross-env": "^6.0.3",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
-    "react-test-renderer": "^16.12.0"
+    "mongoose": "^5.8.4",
+    "nock": "^11.7.0",
+    "react-test-renderer": "^16.12.0",
+    "redux-mock-store": "^1.5.4"
   }
 }

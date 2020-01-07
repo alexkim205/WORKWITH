@@ -24,7 +24,7 @@ const config = () => {
           });
         }
         // Return if password is wrong
-        if (!user.validPassword(password)) {
+        if (!user.validPassword(password, user.hash, user.salt)) {
           return done(null, false, {
             message: "Password is incorrect"
           });

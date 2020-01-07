@@ -2,8 +2,8 @@ import React from "react";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { BrowserRouter as Router } from "react-router-dom";
-import configureStore from "../../_config/store";
-import { MyThemeProvider } from "../../_config/theme";
+import configureStore from "../../_config/store.config";
+import { MyThemeProvider } from "../../_config/theme.config";
 
 const { store, persistor } = configureStore();
 

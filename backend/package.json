@@ -5,6 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start": "cross-env NODE_ENV=development nodemon server.js",
+    "start:test": "cross-env NODE_ENV=testing-connection nodemon server.js",
     "build:test": "mocha ./_tests/*.test.js --timeout 4s --exit -R min",
     "watch:test": "nodemon --exec \"mocha ./_tests/*.test.js --timeout 4s --exit -w -R spec\"",
     "build:js": "eslint ./ --ext .jsx,.js",

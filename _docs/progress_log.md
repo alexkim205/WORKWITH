@@ -8,6 +8,43 @@
 - Write frontend tests for services
   - Decide if I want to use mock http (more time to implement, but best practice) or serve client server (less time)
 
+## 1/7/2020
+
+- Scrap comprehensive testing-connect, rather just have simple service.test.js that tests if connection to database can be made.
+- Unit test actions separately
+- Finish action tests
+- Finish writing backend tests for projects (finish backend tests)
+
+## 1/5/2020
+
+- create helper functions in test.constants.js for notes and projects
+- TODO: implement notes and projects action tests
+
+## 1/4/2020
+
+- Implement online (testing-connect) and offline (testing) tests for actions
+- Script to setup online testing-connect database and populate (finished for users.actions.test)
+
+## 1/2/2020
+
+- Write users actions tests.
+
+## 1/1/2020
+
+- Implemented mock services without using nock
+
+## 12/31/2019
+
+- Backend
+  - Create new "testing-connection" environment
+- Frontend
+  - Create new "testing-connection" environment
+  - Refactored actions into separate services
+  - Added mock services
+  - Wrote service tests
+    - Use nock (mock http) when testing actions + reducers offline
+    - To test if backend and frontend are connected (i.e., services hit server in testing mode; ENV=testing-connection), use npm script to concurrently start test server and use mocha + chai to test responses
+
 ## 12/30/2019
 
 - Finish writing client notes tests
