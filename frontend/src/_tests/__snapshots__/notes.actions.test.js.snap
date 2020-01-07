@@ -1,0 +1,172 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Note Actions it should CREATE a note 1`] = `
+Array [
+  Object {
+    "type": "notes/create-note-pending",
+  },
+  Object {
+    "payload": Object {
+      "note": Object {
+        "__v": 1,
+        "_id": "5e02f1b53e741a3e18c4027b",
+        "authors": Array [
+          "5e02eeaf6ebf6452d426c135",
+        ],
+        "body": "I like my new body.",
+        "createdAt": "2019-12-25T05:20:53.800Z",
+        "deleted": false,
+        "minimized": true,
+        "private": false,
+        "projectId": "5e02efdd94748b21482e6010",
+        "taggedUsers": Array [
+          "5e02eeaf6ebf6452d426c135",
+        ],
+        "title": "New Title",
+        "updatedAt": "2019-12-30T09:07:10.417Z",
+      },
+    },
+    "type": "notes/create-note-success",
+  },
+]
+`;
+
+exports[`Note Actions it should DELETE a note 1`] = `
+Array [
+  Object {
+    "type": "notes/delete-note-pending",
+  },
+  Object {
+    "payload": undefined,
+    "type": "notes/delete-note-success",
+  },
+]
+`;
+
+exports[`Note Actions it should GET a note 1`] = `
+Array [
+  Object {
+    "type": "notes/get-note-pending",
+  },
+  Object {
+    "payload": Object {
+      "note": Object {
+        "__v": 1,
+        "_id": "5e02f1b53e741a3e18c4027b",
+        "authors": Array [
+          "5e02eeaf6ebf6452d426c135",
+        ],
+        "body": "I like my new body.",
+        "createdAt": "2019-12-25T05:20:53.800Z",
+        "deleted": false,
+        "minimized": true,
+        "private": false,
+        "projectId": "5e02efdd94748b21482e6010",
+        "taggedUsers": Array [
+          "5e02eeaf6ebf6452d426c135",
+        ],
+        "title": "New Title",
+        "updatedAt": "2019-12-30T09:07:10.417Z",
+      },
+    },
+    "type": "notes/get-note-success",
+  },
+]
+`;
+
+exports[`Note Actions it should GET notes 1`] = `
+Array [
+  Object {
+    "type": "notes/get-notes-pending",
+  },
+  Object {
+    "payload": Object {
+      "notes": Array [
+        Object {
+          "__v": 1,
+          "_id": "5e02f1b53e741a3e18c4027b",
+          "authors": Array [
+            "5e02eeaf6ebf6452d426c135",
+          ],
+          "body": "I like my new body.",
+          "createdAt": "2019-12-25T05:20:53.800Z",
+          "deleted": false,
+          "minimized": true,
+          "private": false,
+          "projectId": "5e02efdd94748b21482e6010",
+          "taggedUsers": Array [
+            "5e02eeaf6ebf6452d426c135",
+          ],
+          "title": "New Title",
+          "updatedAt": "2019-12-30T09:07:10.417Z",
+        },
+      ],
+    },
+    "type": "notes/get-notes-success",
+  },
+]
+`;
+
+exports[`Note Actions it should GET notes by project 1`] = `
+Array [
+  Object {
+    "type": "notes/get-project-notes-pending",
+  },
+  Object {
+    "payload": Object {
+      "notes": Array [
+        Object {
+          "__v": 1,
+          "_id": "5e02f1b53e741a3e18c4027b",
+          "authors": Array [
+            "5e02eeaf6ebf6452d426c135",
+          ],
+          "body": "I like my new body.",
+          "createdAt": "2019-12-25T05:20:53.800Z",
+          "deleted": false,
+          "minimized": true,
+          "private": false,
+          "projectId": "5e02efdd94748b21482e6010",
+          "taggedUsers": Array [
+            "5e02eeaf6ebf6452d426c135",
+          ],
+          "title": "New Title",
+          "updatedAt": "2019-12-30T09:07:10.417Z",
+        },
+      ],
+    },
+    "type": "notes/get-project-notes-success",
+  },
+]
+`;
+
+exports[`Note Actions it should UPDATE a note 1`] = `
+Array [
+  Object {
+    "type": "notes/update-note-pending",
+  },
+  Object {
+    "payload": Object {
+      "note": Object {
+        "__v": 1,
+        "_id": "5e02f1b53e741a3e18c4027b",
+        "authors": Array [
+          "5e02eeaf6ebf6452d426c135",
+        ],
+        "body": "I like my new body.",
+        "createdAt": "2019-12-25T05:20:53.800Z",
+        "deleted": false,
+        "minimized": true,
+        "private": false,
+        "projectId": "5e02efdd94748b21482e6010",
+        "taggedUsers": Array [
+          "5e02eeaf6ebf6452d426c135",
+        ],
+        "title": "New Title",
+        "updatedAt": "2019-12-30T09:07:10.417Z",
+      },
+    },
+    "type": "notes/update-note-success",
+  },
+]
+`;

@@ -1,0 +1,158 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Project Actions it should CREATE a project 1`] = `
+Array [
+  Object {
+    "type": "projects/create-project-pending",
+  },
+  Object {
+    "payload": Object {
+      "project": Object {
+        "__v": 0,
+        "_id": "5e02efdd94748b21482e6010",
+        "authors": Array [
+          "5df9778c0f65fddc651e6167",
+        ],
+        "createdAt": "2019-12-25T05:13:01.264Z",
+        "deleted": false,
+        "private": true,
+        "title": "My Project",
+        "updatedAt": "2019-12-25T05:31:27.794Z",
+        "users": Array [
+          "5df9778c0f65fddc651e6167",
+          "5df97791556bc5bc928b32fb",
+        ],
+      },
+    },
+    "type": "projects/create-project-success",
+  },
+]
+`;
+
+exports[`Project Actions it should DELETE a project 1`] = `
+Array [
+  Object {
+    "type": "projects/delete-project-pending",
+  },
+  Object {
+    "payload": undefined,
+    "type": "projects/delete-project-success",
+  },
+]
+`;
+
+exports[`Project Actions it should GET a project 1`] = `
+Array [
+  Object {
+    "type": "projects/get-project-pending",
+  },
+  Object {
+    "payload": Object {
+      "project": Object {
+        "__v": 0,
+        "_id": "5e02efdd94748b21482e6010",
+        "authors": Array [
+          "5df9778c0f65fddc651e6167",
+        ],
+        "createdAt": "2019-12-25T05:13:01.264Z",
+        "deleted": false,
+        "private": true,
+        "title": "My Project",
+        "updatedAt": "2019-12-25T05:31:27.794Z",
+        "users": Array [
+          "5df9778c0f65fddc651e6167",
+          "5df97791556bc5bc928b32fb",
+        ],
+      },
+    },
+    "type": "projects/get-project-success",
+  },
+]
+`;
+
+exports[`Project Actions it should GET projects 1`] = `
+Array [
+  Object {
+    "type": "projects/get-projects-pending",
+  },
+  Object {
+    "payload": Object {
+      "projects": Array [
+        Object {
+          "__v": 0,
+          "_id": "5e02efdd94748b21482e6010",
+          "authors": Array [],
+          "createdAt": "2019-12-25T05:13:01.264Z",
+          "deleted": false,
+          "private": true,
+          "title": "My Project",
+          "updatedAt": "2019-12-25T05:31:27.794Z",
+          "users": Array [
+            "5df9778c0f65fddc651e6167",
+            "5df97791556bc5bc928b32fb",
+          ],
+        },
+      ],
+    },
+    "type": "projects/get-projects-success",
+  },
+]
+`;
+
+exports[`Project Actions it should GET projects by user 1`] = `
+Array [
+  Object {
+    "type": "projects/get-user-projects-pending",
+  },
+  Object {
+    "payload": Object {
+      "projects": Array [
+        Object {
+          "__v": 0,
+          "_id": "5e02efdd94748b21482e6010",
+          "authors": Array [],
+          "createdAt": "2019-12-25T05:13:01.264Z",
+          "deleted": false,
+          "private": true,
+          "title": "My Project",
+          "updatedAt": "2019-12-25T05:31:27.794Z",
+          "users": Array [
+            "5df9778c0f65fddc651e6167",
+            "5df97791556bc5bc928b32fb",
+          ],
+        },
+      ],
+    },
+    "type": "projects/get-user-projects-success",
+  },
+]
+`;
+
+exports[`Project Actions it should UPDATE a project 1`] = `
+Array [
+  Object {
+    "type": "projects/update-project-pending",
+  },
+  Object {
+    "payload": Object {
+      "project": Object {
+        "__v": 0,
+        "_id": "5e02efdd94748b21482e6010",
+        "authors": Array [
+          "5df9778c0f65fddc651e6167",
+        ],
+        "createdAt": "2019-12-25T05:13:01.264Z",
+        "deleted": false,
+        "private": true,
+        "title": "My Project",
+        "updatedAt": "2019-12-25T05:31:27.794Z",
+        "users": Array [
+          "5df9778c0f65fddc651e6167",
+          "5df97791556bc5bc928b32fb",
+        ],
+      },
+    },
+    "type": "projects/update-project-success",
+  },
+]
+`;

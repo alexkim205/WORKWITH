@@ -9,7 +9,6 @@
 # testing
 /coverage
 /frontend/coverage
-**/__snapshots__/**
 
 # production
 /build
