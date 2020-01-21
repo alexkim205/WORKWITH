@@ -6,6 +6,7 @@ Array [
     "type": "users/delete-user-pending",
   },
   Object {
+    "error": null,
     "payload": undefined,
     "type": "users/delete-user-success",
   },
@@ -18,6 +19,7 @@ Array [
     "type": "users/get-user-pending",
   },
   Object {
+    "error": null,
     "payload": Object {
       "user": Object {
         "__v": 0,
@@ -42,6 +44,7 @@ Array [
     "type": "users/get-users-pending",
   },
   Object {
+    "error": null,
     "payload": Object {
       "users": Array [
         Object {
@@ -65,9 +68,10 @@ Array [
 exports[`User Actions it should LOGIN a user 1`] = `
 Array [
   Object {
-    "type": "users/login-success",
+    "type": "users/login-pending",
   },
   Object {
+    "error": null,
     "payload": Object {
       "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Nzg1NDYxMjUsImlhdCI6MTU3Nzk0MTMyNX0.ksgtQ8uDQ3322tOhQ4jIkzZjH6B0luhLA1NRKGCG00w",
       "user": Object {
@@ -93,6 +97,7 @@ Array [
     "type": "users/register-pending",
   },
   Object {
+    "error": null,
     "payload": Object {
       "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Nzg1NDYxMjUsImlhdCI6MTU3Nzk0MTMyNX0.ksgtQ8uDQ3322tOhQ4jIkzZjH6B0luhLA1NRKGCG00w",
       "user": Object {
@@ -118,6 +123,7 @@ Array [
     "type": "users/update-user-pending",
   },
   Object {
+    "error": null,
     "payload": Object {
       "user": Object {
         "__v": 0,

@@ -1,9 +1,16 @@
 import createMockStore from "../_config/mockStore.config";
-import notesActions from "../_actions/notes.actions";
+import {
+  getNotesByProject,
+  getNotes,
+  getNote,
+  createNote,
+  updateNote,
+  deleteNote
+} from "../_actions/notes.actions";
 import testConstants from "../_constants/test.constants";
 
 const {
-  notes: { note, newNote, updateNote },
+  notes: { note, newNote, newUpdateNote },
   projects: { project }
 } = testConstants;
 
@@ -16,27 +23,27 @@ describe("Note Actions", () => {
     store.clearActions();
   });
   it("it should GET notes by project", async () => {
-    await store.dispatch(notesActions.getNotesByProject(project._id));
+    await store.dispatch(getNotesByProject(project._id));
     expect(store.getActions()).toMatchSnapshot();
   });
   it("it should GET notes", async () => {
-    await store.dispatch(notesActions.getNotes());
+    await store.dispatch(getNotes());
     expect(store.getActions()).toMatchSnapshot();
   });
   it("it should GET a note", async () => {
-    await store.dispatch(notesActions.getNote(note._id));
+    await store.dispatch(getNote(note._id));
     expect(store.getActions()).toMatchSnapshot();
   });
   it("it should CREATE a note", async () => {
-    await store.dispatch(notesActions.createNote(newNote));
+    await store.dispatch(createNote(newNote));
     expect(store.getActions()).toMatchSnapshot();
   });
   it("it should UPDATE a note", async () => {
-    await store.dispatch(notesActions.updateNote(note._id, updateNote));
+    await store.dispatch(updateNote(note._id, newUpdateNote));
     expect(store.getActions()).toMatchSnapshot();
   });
   it("it should DELETE a note", async () => {
-    await store.dispatch(notesActions.deleteNote(note._id));
+    await store.dispatch(deleteNote(note._id));
     expect(store.getActions()).toMatchSnapshot();
   });
 });

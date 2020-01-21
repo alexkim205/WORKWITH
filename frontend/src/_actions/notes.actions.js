@@ -5,7 +5,7 @@ import createActionCreator from "../_utils/createActionCreator.util";
 
 const { notesServices } = services;
 
-const getNotesByProject = projectId => async dispatch => {
+export const getNotesByProject = projectId => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     notesConstants,
     "GET_PROJECT_NOTES"
@@ -20,7 +20,7 @@ const getNotesByProject = projectId => async dispatch => {
   dispatch(actionSuccess(notes));
 };
 
-const getNotes = () => async dispatch => {
+export const getNotes = () => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     notesConstants,
     "GET_NOTES"
@@ -35,7 +35,7 @@ const getNotes = () => async dispatch => {
   dispatch(actionSuccess(notes));
 };
 
-const getNote = noteId => async dispatch => {
+export const getNote = noteId => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     notesConstants,
     "GET_NOTE"
@@ -50,7 +50,7 @@ const getNote = noteId => async dispatch => {
   dispatch(actionSuccess(note));
 };
 
-const createNote = newNote => async dispatch => {
+export const createNote = newNote => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     notesConstants,
     "CREATE_NOTE"
@@ -65,7 +65,7 @@ const createNote = newNote => async dispatch => {
   dispatch(actionSuccess(note));
 };
 
-const updateNote = (noteId, newNote) => async dispatch => {
+export const updateNote = (noteId, newNote) => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     notesConstants,
     "UPDATE_NOTE"
@@ -80,7 +80,7 @@ const updateNote = (noteId, newNote) => async dispatch => {
   dispatch(actionSuccess(note));
 };
 
-const deleteNote = noteId => async dispatch => {
+export const deleteNote = noteId => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     notesConstants,
     "DELETE_NOTE"

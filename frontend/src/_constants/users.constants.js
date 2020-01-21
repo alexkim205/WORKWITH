@@ -14,7 +14,7 @@ const UPDATE_USER_PENDING = "users/update-user-pending";
 const UPDATE_USER_SUCCESS = "users/update-user-success";
 const UPDATE_USER_ERROR = "users/update-user-error";
 
-const LOGIN_PENDING = "users/login-success";
+const LOGIN_PENDING = "users/login-pending";
 const LOGIN_SUCCESS = "users/login-success";
 const LOGIN_ERROR = "users/login-error";
 const LOGOUT_SUCCESS = "users/logout-success";

@@ -5,7 +5,7 @@ import createActionCreator from "../_utils/createActionCreator.util";
 
 const { usersServices } = services;
 
-const getUsers = () => async dispatch => {
+export const getUsers = () => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     usersConstants,
     "GET_USERS"
@@ -20,7 +20,7 @@ const getUsers = () => async dispatch => {
   dispatch(actionSuccess(users));
 };
 
-const getUser = userId => async dispatch => {
+export const getUser = userId => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     usersConstants,
     "GET_USER"
@@ -35,7 +35,7 @@ const getUser = userId => async dispatch => {
   dispatch(actionSuccess(user));
 };
 
-const login = (email, password) => async dispatch => {
+export const login = (email, password) => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     usersConstants,
     "LOGIN"
@@ -50,7 +50,7 @@ const login = (email, password) => async dispatch => {
   dispatch(actionSuccess(user));
 };
 
-const register = newUser => async dispatch => {
+export const register = newUser => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     usersConstants,
     "REGISTER"
@@ -65,7 +65,7 @@ const register = newUser => async dispatch => {
   dispatch(actionSuccess(user));
 };
 
-const updateUser = (userId, newUser) => async dispatch => {
+export const updateUser = (userId, newUser) => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     usersConstants,
     "UPDATE_USER"
@@ -80,7 +80,7 @@ const updateUser = (userId, newUser) => async dispatch => {
   dispatch(actionSuccess(user));
 };
 
-const deleteUser = userId => async dispatch => {
+export const deleteUser = userId => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     usersConstants,
     "DELETE_USER"

@@ -1,9 +1,16 @@
 import createMockStore from "../_config/mockStore.config";
-import usersActions from "../_actions/users.actions";
+import {
+  getUsers,
+  getUser,
+  login,
+  register,
+  updateUser,
+  deleteUser
+} from "../_actions/users.actions";
 import testConstants from "../_constants/test.constants";
 
 const {
-  users: { user, loginCredentials, newUser, updateUser }
+  users: { user, loginCredentials, newUser, newUpdateUser }
 } = testConstants;
 
 describe("User Actions", () => {
@@ -15,29 +22,29 @@ describe("User Actions", () => {
     store.clearActions();
   });
   it("it should GET users", async () => {
-    await store.dispatch(usersActions.getUsers());
+    await store.dispatch(getUsers());
     expect(store.getActions()).toMatchSnapshot();
   });
   it("it should GET a user", async () => {
-    await store.dispatch(usersActions.getUser(user._id));
+    await store.dispatch(getUser(user._id));
     expect(store.getActions()).toMatchSnapshot();
   });
   it("it should LOGIN a user", async () => {
     await store.dispatch(
-      usersActions.login(loginCredentials.email, loginCredentials.password)
+      login(loginCredentials.email, loginCredentials.password)
     );
     expect(store.getActions()).toMatchSnapshot();
   });
   it("it should REGISTER a user", async () => {
-    await store.dispatch(usersActions.register(newUser));
+    await store.dispatch(register(newUser));
     expect(store.getActions()).toMatchSnapshot();
   });
   it("it should UPDATE a user", async () => {
-    await store.dispatch(usersActions.updateUser(user._id, updateUser));
+    await store.dispatch(updateUser(user._id, newUpdateUser));
     expect(store.getActions()).toMatchSnapshot();
   });
   it("it should DELETE a note", async () => {
-    await store.dispatch(usersActions.deleteUser(user._id));
+    await store.dispatch(deleteUser(user._id));
     expect(store.getActions()).toMatchSnapshot();
   });
 });

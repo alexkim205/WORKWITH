@@ -42,7 +42,7 @@ const validateUpdateProjectInput = require("../validators/update.project.validat
 router.route("/").get(async (req, res) => {
   const [err, projects] = await to(Project.find());
   if (!isEmpty(err)) {
-    return res.status(HttpStatus.BAD_REQUEST).send(`Error: ${err}`);
+    return res.status(HttpStatus.BAD_REQUEST).send(err);
   }
   if (isEmpty(projects)) {
     return res.status(HttpStatus.NO_CONTENT).send();
@@ -77,12 +77,12 @@ router.route("/").get(async (req, res) => {
 router.route("/:id").get(async (req, res) => {
   const [err, project] = await to(Project.findById(req.params.id));
   if (!isEmpty(err)) {
-    return res.status(HttpStatus.BAD_REQUEST).send(`Error: ${err}`);
+    return res.status(HttpStatus.BAD_REQUEST).send(err);
   }
   if (isEmpty(project)) {
     return res
       .status(HttpStatus.NOT_FOUND)
-      .send(`Error: Project with id ${req.params.id} NOT_FOUND`);
+      .send(`Project with id ${req.params.id} NOT_FOUND`);
   }
   return res.status(HttpStatus.OK).send({ project });
 });
@@ -123,13 +123,13 @@ router.route("/user/:id").get(async (req, res) => {
   // https://stackoverflow.com/questions/18148166/find-document-with-array-that-contains-a-specific-value
   const [err, projects] = await to(Project.find({ users: req.params.id }));
   if (!isEmpty(err)) {
-    return res.status(HttpStatus.BAD_REQUEST).send(`Error: ${err}`);
+    return res.status(HttpStatus.BAD_REQUEST).send(err);
   }
   if (isEmpty(projects)) {
     return res
       .status(HttpStatus.NO_CONTENT)
       .send(
-        `Error: User with id ${req.params.id} doesn't have any projects; NOT_FOUND`
+        `User with id ${req.params.id} doesn't have any projects; NOT_FOUND`
       );
   }
   return res.status(HttpStatus.OK).send({ projects });
@@ -160,7 +160,7 @@ router.route("/add").post(async (req, res) => {
   // Validate form data
   const err1 = validateAddProjectInput(req.body);
   if (!isEmpty(err1)) {
-    return res.status(HttpStatus.UNPROCESSABLE_ENTITY).send(`Error: ${err1}`);
+    return res.status(HttpStatus.UNPROCESSABLE_ENTITY).send(err1);
   }
 
   // Check if all authors exist
@@ -176,12 +176,10 @@ router.route("/add").post(async (req, res) => {
   });
   const [err2, authors] = await to(Promise.all(checkAuthorPromises));
   if (!isEmpty(err2)) {
-    return res.status(HttpStatus.NOT_FOUND).send(`Error: ${err2}`);
+    return res.status(HttpStatus.NOT_FOUND).send(err2);
   }
   if (isEmpty(authors)) {
-    return res
-      .status(HttpStatus.NOT_FOUND)
-      .send(`Error: Authors were NOT_FOUND`);
+    return res.status(HttpStatus.NOT_FOUND).send(`Authors were NOT_FOUND`);
   }
 
   // Check if all users exist
@@ -198,10 +196,10 @@ router.route("/add").post(async (req, res) => {
   });
   const [err3, users] = await to(Promise.all(checkUsersPromises));
   if (!isEmpty(err3)) {
-    return res.status(HttpStatus.NOT_FOUND).send(`Error: ${err3}`);
+    return res.status(HttpStatus.NOT_FOUND).send(err3);
   }
   if (!isEmpty(req.body.users) && isEmpty(users)) {
-    return res.status(HttpStatus.NOT_FOUND).send(`Error: Users were NOT_FOUND`);
+    return res.status(HttpStatus.NOT_FOUND).send(`Users were NOT_FOUND`);
   }
 
   const project = new Project({
@@ -213,12 +211,12 @@ router.route("/add").post(async (req, res) => {
 
   const [err4, newProject] = await to(project.save());
   if (!isEmpty(err4)) {
-    return res.status(HttpStatus.BAD_REQUEST).send(`Error: ${err4}`);
+    return res.status(HttpStatus.BAD_REQUEST).send(err4);
   }
   if (isEmpty(newProject)) {
     return res
       .status(HttpStatus.BAD_REQUEST)
-      .send("Error: Bad request creating new project");
+      .send("Bad request creating new project");
   }
   return res.status(HttpStatus.CREATED).send({ project: newProject });
 });
@@ -256,20 +254,18 @@ router.route("/update/:id").put(async (req, res) => {
   req.body._id = req.params.id;
   const err1 = validateUpdateProjectInput(req.body);
   if (!isEmpty(err1)) {
-    return res.status(HttpStatus.UNPROCESSABLE_ENTITY).send(`Error: ${err1}`);
+    return res.status(HttpStatus.UNPROCESSABLE_ENTITY).send(err1);
   }
 
   // Check that project exists
   const [err2, project] = await to(Project.findById(req.params.id));
   if (!isEmpty(err2)) {
-    return res
-      .status(HttpStatus.BAD_REQUEST)
-      .send(`Error while finding project: ${err2}`);
+    return res.status(HttpStatus.BAD_REQUEST).send(err2);
   }
   if (isEmpty(project)) {
     return res
       .status(HttpStatus.NOT_FOUND)
-      .send(`Error: Project with id ${req.params.id} NOT_FOUND`);
+      .send(`Project with id ${req.params.id} NOT_FOUND`);
   }
 
   // Check if all authors exist
@@ -286,12 +282,10 @@ router.route("/update/:id").put(async (req, res) => {
   });
   const [err3, authors] = await to(Promise.all(checkAuthorPromises));
   if (!isEmpty(err3)) {
-    return res.status(HttpStatus.NOT_FOUND).send(`Error: ${err3}`);
+    return res.status(HttpStatus.NOT_FOUND).send(err3);
   }
   if (!isEmpty(req.body.authors) && isEmpty(authors)) {
-    return res
-      .status(HttpStatus.NOT_FOUND)
-      .send(`Error: Authors were NOT_FOUND`);
+    return res.status(HttpStatus.NOT_FOUND).send(`Authors were NOT_FOUND`);
   }
 
   // Check if all users exist
@@ -308,10 +302,10 @@ router.route("/update/:id").put(async (req, res) => {
   });
   const [err4, users] = await to(Promise.all(checkUsersPromises));
   if (!isEmpty(err4)) {
-    return res.status(HttpStatus.NOT_FOUND).send(`Error: ${err4}`);
+    return res.status(HttpStatus.NOT_FOUND).send(err4);
   }
   if (!isEmpty(req.body.users) && isEmpty(users)) {
-    return res.status(HttpStatus.NOT_FOUND).send(`Error: Users were NOT_FOUND`);
+    return res.status(HttpStatus.NOT_FOUND).send(`Users were NOT_FOUND`);
   }
 
   project.title = req.body.title || project.title;
@@ -322,14 +316,12 @@ router.route("/update/:id").put(async (req, res) => {
 
   const [err5, newProject] = await to(project.save());
   if (!isEmpty(err5)) {
-    return res
-      .status(HttpStatus.BAD_REQUEST)
-      .send(`Error while updating project: ${err5}`);
+    return res.status(HttpStatus.BAD_REQUEST).send(err5);
   }
   if (isEmpty(newProject)) {
     return res
       .status(HttpStatus.BAD_REQUEST)
-      .send("Error: Bad request updating project");
+      .send("Bad request updating project");
   }
   return res.status(HttpStatus.OK).send({ project: newProject });
 });
@@ -359,14 +351,12 @@ router.route("/update/:id").put(async (req, res) => {
 router.route("/:id").delete(async (req, res) => {
   const [err1, project] = await to(Project.findById(req.params.id));
   if (!isEmpty(err1)) {
-    return res
-      .status(HttpStatus.BAD_REQUEST)
-      .send(`Error while finding project: ${err1}`);
+    return res.status(HttpStatus.BAD_REQUEST).send(err1);
   }
   if (isEmpty(project)) {
     return res
       .status(HttpStatus.NOT_FOUND)
-      .send(`Error: Project with id ${req.params.id} NOT_FOUND`);
+      .send(`Project with id ${req.params.id} NOT_FOUND`);
   }
 
   if (project.deleted) {
@@ -377,14 +367,12 @@ router.route("/:id").delete(async (req, res) => {
 
   const [err2, newProject] = await to(project.save());
   if (!isEmpty(err2)) {
-    return res
-      .status(HttpStatus.BAD_REQUEST)
-      .send(`Error while deleting project: ${err2}`);
+    return res.status(HttpStatus.BAD_REQUEST).send(err2);
   }
   if (isEmpty(newProject)) {
     return res
       .status(HttpStatus.BAD_REQUEST)
-      .send("Error: Bad request deleting project");
+      .send("Bad request deleting project");
   }
   return res
     .status(HttpStatus.OK)

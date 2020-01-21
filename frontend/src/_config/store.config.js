@@ -13,9 +13,13 @@ const persistConfig = {
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 // Middlewares
-const middlewares = [applyMiddleware(thunk)];
+const middlewares = [thunk];
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 export default () => {
-  const store = createStore(persistedReducer, compose(...middlewares));
+  const store = createStore(
+    persistedReducer,
+    composeEnhancers(applyMiddleware(...middlewares))
+  );
   const persistor = persistStore(store);
   return { store, persistor };
 };

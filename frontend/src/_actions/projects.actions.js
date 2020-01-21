@@ -5,7 +5,7 @@ import createActionCreator from "../_utils/createActionCreator.util";
 
 const { projectsServices } = services;
 
-const getProjectsByUser = userId => async dispatch => {
+export const getProjectsByUser = userId => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     projectsConstants,
     "GET_USER_PROJECTS"
@@ -20,7 +20,7 @@ const getProjectsByUser = userId => async dispatch => {
   dispatch(actionSuccess(projects));
 };
 
-const getProjects = () => async dispatch => {
+export const getProjects = () => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     projectsConstants,
     "GET_PROJECTS"
@@ -35,7 +35,7 @@ const getProjects = () => async dispatch => {
   dispatch(actionSuccess(projects));
 };
 
-const getProject = projectId => async dispatch => {
+export const getProject = projectId => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     projectsConstants,
     "GET_PROJECT"
@@ -50,7 +50,7 @@ const getProject = projectId => async dispatch => {
   dispatch(actionSuccess(project));
 };
 
-const createProject = newProject => async dispatch => {
+export const createProject = newProject => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     projectsConstants,
     "CREATE_PROJECT"
@@ -65,7 +65,7 @@ const createProject = newProject => async dispatch => {
   dispatch(actionSuccess(project));
 };
 
-const updateProject = (projectId, newProject) => async dispatch => {
+export const updateProject = (projectId, newProject) => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     projectsConstants,
     "UPDATE_PROJECT"
@@ -82,7 +82,7 @@ const updateProject = (projectId, newProject) => async dispatch => {
   dispatch(actionSuccess(project));
 };
 
-const deleteProject = projectId => async dispatch => {
+export const deleteProject = projectId => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     projectsConstants,
     "DELETE_PROJECT"

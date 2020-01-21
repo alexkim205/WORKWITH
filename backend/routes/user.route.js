@@ -43,7 +43,7 @@ const validateUpdateUserInput = require("../validators/update.user.validator");
 router.route("/").get(async (req, res) => {
   const [err, users] = await to(User.find());
   if (!isEmpty(err)) {
-    return res.status(HttpStatus.BAD_REQUEST).send(`Error: ${err}`);
+    return res.status(HttpStatus.BAD_REQUEST).send(err);
   }
   if (isEmpty(users)) {
     return res.status(HttpStatus.NO_CONTENT).send();
@@ -78,12 +78,12 @@ router.route("/").get(async (req, res) => {
 router.route("/:id").get(async (req, res) => {
   const [err, user] = await to(User.findById(req.params.id));
   if (!isEmpty(err)) {
-    return res.status(HttpStatus.BAD_REQUEST).send(`Error: ${err}`);
+    return res.status(HttpStatus.BAD_REQUEST).send(err);
   }
   if (isEmpty(user)) {
     return res
       .status(HttpStatus.NOT_FOUND)
-      .send(`Error: User with id ${req.params.id} NOT_FOUND`);
+      .send(`User with id ${req.params.id} NOT_FOUND`);
   }
   return res.status(HttpStatus.OK).send({ user });
 });
@@ -113,7 +113,7 @@ router.route("/add").post(async (req, res) => {
   // Validate form data
   const err1 = validateRegisterInput(req.body);
   if (!isEmpty(err1)) {
-    return res.status(HttpStatus.UNPROCESSABLE_ENTITY).send(`Error: ${err1}`);
+    return res.status(HttpStatus.UNPROCESSABLE_ENTITY).send(err1);
   }
 
   const user = new User({
@@ -127,12 +127,12 @@ router.route("/add").post(async (req, res) => {
   const [err2, newUser] = await to(user.save());
 
   if (!isEmpty(err2)) {
-    return res.status(HttpStatus.BAD_REQUEST).send(`Error: ${err2}`);
+    return res.status(HttpStatus.BAD_REQUEST).send(err2);
   }
   if (isEmpty(newUser)) {
     return res
       .status(HttpStatus.BAD_REQUEST)
-      .send("Error: Bad request creating new user");
+      .send("Bad request creating new user");
   }
 
   const token = user.generateJwt();
@@ -172,22 +172,20 @@ router.route("/login").post(async (req, res) => {
   // Validate form data
   const err = validateLoginInput(req.body);
   if (!isEmpty(err)) {
-    return res.status(HttpStatus.UNPROCESSABLE_ENTITY).send(`Error: ${err}`);
+    return res.status(HttpStatus.UNPROCESSABLE_ENTITY).send(err);
   }
 
   // Cannot use async/await b/c passport uses done/next logic
   return passport.authenticate("local", (passportErr, user, info) => {
     if (!isEmpty(passportErr)) {
-      return res.status(HttpStatus.BAD_REQUEST).send(`Error: ${passportErr}`);
+      return res.status(HttpStatus.BAD_REQUEST).send(passportErr);
     }
     if (user) {
       const token = user.generateJwt();
       return res.status(HttpStatus.OK).send({ user, token });
     }
 
-    return res
-      .status(HttpStatus.NOT_FOUND)
-      .send(`Error: ${JSON.stringify(info)}`);
+    return res.status(HttpStatus.NOT_FOUND).send(JSON.stringify(info));
   })(req, res);
 });
 
@@ -224,19 +222,17 @@ router.route("/update/:id").put(async (req, res) => {
   req.body._id = req.params.id;
   const err = validateUpdateUserInput(req.body);
   if (!isEmpty(err)) {
-    return res.status(HttpStatus.UNPROCESSABLE_ENTITY).send(`Error: ${err}`);
+    return res.status(HttpStatus.UNPROCESSABLE_ENTITY).send(err);
   }
 
   const [err1, user] = await to(User.findById(req.params.id));
   if (!isEmpty(err1)) {
-    return res
-      .status(HttpStatus.BAD_REQUEST)
-      .send(`Error while finding user: ${err1}`);
+    return res.status(HttpStatus.BAD_REQUEST).send(err1);
   }
   if (isEmpty(user)) {
     return res
       .status(HttpStatus.NOT_FOUND)
-      .send(`Error: User with id ${req.params.id} NOT_FOUND`);
+      .send(`User with id ${req.params.id} NOT_FOUND`);
   }
 
   user.name = req.body.name || user.name;
@@ -244,14 +240,10 @@ router.route("/update/:id").put(async (req, res) => {
 
   const [err2, newUser] = await to(user.save());
   if (!isEmpty(err2)) {
-    return res
-      .status(HttpStatus.BAD_REQUEST)
-      .send(`Error while updating user: ${err2}`);
+    return res.status(HttpStatus.BAD_REQUEST).send(err2);
   }
   if (isEmpty(newUser)) {
-    return res
-      .status(HttpStatus.BAD_REQUEST)
-      .send("Error: Bad request updating user");
+    return res.status(HttpStatus.BAD_REQUEST).send("Bad request updating user");
   }
   return res.status(HttpStatus.OK).send({ user: newUser });
 });
@@ -281,14 +273,12 @@ router.route("/update/:id").put(async (req, res) => {
 router.route("/:id").delete(async (req, res) => {
   const [err1, user] = await to(User.findById(req.params.id));
   if (!isEmpty(err1)) {
-    return res
-      .status(HttpStatus.BAD_REQUEST)
-      .send(`Error while finding user: ${err1}`);
+    return res.status(HttpStatus.BAD_REQUEST).send(err1);
   }
   if (isEmpty(user)) {
     return res
       .status(HttpStatus.NOT_FOUND)
-      .send(`Error: User with id ${req.params.id} NOT_FOUND`);
+      .send(`User with id ${req.params.id} NOT_FOUND`);
   }
 
   if (user.deleted) {
@@ -299,14 +289,10 @@ router.route("/:id").delete(async (req, res) => {
 
   const [err2, newUser] = await to(user.save());
   if (!isEmpty(err2)) {
-    return res
-      .status(HttpStatus.BAD_REQUEST)
-      .send(`Error while deleting user: ${err2}`);
+    return res.status(HttpStatus.BAD_REQUEST).send(err2);
   }
   if (isEmpty(newUser)) {
-    return res
-      .status(HttpStatus.BAD_REQUEST)
-      .send("Error: Bad request deleting user");
+    return res.status(HttpStatus.BAD_REQUEST).send("Bad request deleting user");
   }
   return res
     .status(HttpStatus.OK)

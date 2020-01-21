@@ -1,15 +1,13 @@
-import HttpStatus from "../_constants/httpErrors.constants";
-
 const createActionCreator = (constants, constantPrefix) => ({
   actionPending: () => ({ type: constants[`${constantPrefix}_PENDING`] }),
   actionSuccess: payload => ({
     type: constants[`${constantPrefix}_SUCCESS`],
-    payload
+    payload,
+    error: null
   }),
-  actionError: (error, kind = HttpStatus.BAD_REQUEST) => ({
+  actionError: error => ({
     type: constants[`${constantPrefix}_ERROR`],
-    kind,
-    error
+    error: error.toJSON() // error drops message when stringified normally
   })
 });
 

@@ -43,7 +43,7 @@ const validateUpdateNoteInput = require("../validators/update.note.validator");
 router.route("/").get(async (req, res) => {
   const [err, notes] = await to(Note.find());
   if (!isEmpty(err)) {
-    return res.status(HttpStatus.BAD_REQUEST).send(`Error: ${err}`);
+    return res.status(HttpStatus.BAD_REQUEST).send(err);
   }
   if (isEmpty(notes)) {
     return res.status(HttpStatus.NO_CONTENT).send();
@@ -78,12 +78,12 @@ router.route("/").get(async (req, res) => {
 router.route("/:id").get(async (req, res) => {
   const [err, note] = await to(Note.findById(req.params.id));
   if (!isEmpty(err)) {
-    return res.status(HttpStatus.BAD_REQUEST).send(`Error: ${err}`);
+    return res.status(HttpStatus.BAD_REQUEST).send(err);
   }
   if (isEmpty(note)) {
     return res
       .status(HttpStatus.NOT_FOUND)
-      .send(`Error: Note with id ${req.params.id} NOT_FOUND`);
+      .send(`Note with id ${req.params.id} NOT_FOUND`);
   }
   return res.status(HttpStatus.OK).send({ note });
 });
@@ -123,13 +123,13 @@ router.route("/:id").get(async (req, res) => {
 router.route("/project/:id").get(async (req, res) => {
   const [err, notes] = await to(Note.find({ projectId: req.params.id }));
   if (err) {
-    return res.status(HttpStatus.BAD_REQUEST).send(`Error: ${err}`);
+    return res.status(HttpStatus.BAD_REQUEST).send(err);
   }
   if (!notes) {
     return res
       .status(HttpStatus.NOT_FOUND)
       .send(
-        `Error: There are no notes in the project with id ${req.params.id}; NOT_FOUND`
+        `There are no notes in the project with id ${req.params.id}; NOT_FOUND`
       );
   }
   return res.status(HttpStatus.OK).send({ notes });
@@ -162,7 +162,7 @@ router.route("/add").post(async (req, res) => {
   // Validate form data
   const err1 = validateAddNoteInput(req.body);
   if (!isEmpty(err1)) {
-    return res.status(HttpStatus.UNPROCESSABLE_ENTITY).send(`Error: ${err1}`);
+    return res.status(HttpStatus.UNPROCESSABLE_ENTITY).send(err1);
   }
 
   // Check if all authors exist
@@ -178,12 +178,10 @@ router.route("/add").post(async (req, res) => {
   });
   const [err2, authors] = await to(Promise.all(checkAuthorPromises));
   if (!isEmpty(err2)) {
-    return res.status(HttpStatus.NOT_FOUND).send(`Error: ${err2}`);
+    return res.status(HttpStatus.NOT_FOUND).send(err2);
   }
   if (isEmpty(authors)) {
-    return res
-      .status(HttpStatus.NOT_FOUND)
-      .send(`Error: Authors were NOT_FOUND`);
+    return res.status(HttpStatus.NOT_FOUND).send(`Authors were NOT_FOUND`);
   }
 
   // Check if all tagged users exist
@@ -204,23 +202,21 @@ router.route("/add").post(async (req, res) => {
   );
   const [err3, taggedUsers] = await to(Promise.all(checkTaggedUserPromises));
   if (!isEmpty(err3)) {
-    return res.status(HttpStatus.NOT_FOUND).send(`Error: ${err3}`);
+    return res.status(HttpStatus.NOT_FOUND).send(err3);
   }
   if (!isEmpty(req.body.taggedUsers) && isEmpty(taggedUsers)) {
-    return res
-      .status(HttpStatus.NOT_FOUND)
-      .send(`Error: Tagged users were NOT_FOUND`);
+    return res.status(HttpStatus.NOT_FOUND).send(`Tagged users were NOT_FOUND`);
   }
 
   // Check if project exists
   const [err4, project] = await to(Project.findById(req.body.projectId));
   if (!isEmpty(err4)) {
-    return res.status(HttpStatus.BAD_REQUEST).send(`Error: ${err4}`);
+    return res.status(HttpStatus.BAD_REQUEST).send(err4);
   }
   if (isEmpty(project)) {
     return res
       .status(HttpStatus.NOT_FOUND)
-      .send(`Error: Project with id ${req.body.projectId} was NOT_FOUND`);
+      .send(`Project with id ${req.body.projectId} was NOT_FOUND`);
   }
 
   const note = new Note({
@@ -235,12 +231,12 @@ router.route("/add").post(async (req, res) => {
 
   const [err5, newNote] = await to(note.save());
   if (!isEmpty(err5)) {
-    return res.status(HttpStatus.BAD_REQUEST).send(`Error: ${err5}`);
+    return res.status(HttpStatus.BAD_REQUEST).send(err5);
   }
   if (isEmpty(newNote)) {
     return res
       .status(HttpStatus.BAD_REQUEST)
-      .send("Error: Bad request creating new note");
+      .send("Bad request creating new note");
   }
   return res.status(HttpStatus.CREATED).send({ note: newNote });
 });
@@ -278,20 +274,18 @@ router.route("/update/:id").put(async (req, res) => {
   req.body._id = req.params.id;
   const err1 = validateUpdateNoteInput(req.body);
   if (!isEmpty(err1)) {
-    return res.status(HttpStatus.UNPROCESSABLE_ENTITY).send(`Error: ${err1}`);
+    return res.status(HttpStatus.UNPROCESSABLE_ENTITY).send(err1);
   }
 
   // Check that note exists
   const [err2, note] = await to(Note.findById(req.params.id));
   if (!isEmpty(err2)) {
-    return res
-      .status(HttpStatus.BAD_REQUEST)
-      .send(`Error while finding note: ${err2}`);
+    return res.status(HttpStatus.BAD_REQUEST).send(err2);
   }
   if (isEmpty(note)) {
     return res
       .status(HttpStatus.NOT_FOUND)
-      .send(`Error: Note with id ${req.params.id} NOT_FOUND`);
+      .send(`Note with id ${req.params.id} NOT_FOUND`);
   }
 
   // Check if all authors exist
@@ -308,12 +302,10 @@ router.route("/update/:id").put(async (req, res) => {
   });
   const [err3, authors] = await to(Promise.all(checkAuthorPromises));
   if (!isEmpty(err3)) {
-    return res.status(HttpStatus.NOT_FOUND).send(`Error: ${err3}`);
+    return res.status(HttpStatus.NOT_FOUND).send(err3);
   }
   if (!isEmpty(req.body.authors) && isEmpty(authors)) {
-    return res
-      .status(HttpStatus.NOT_FOUND)
-      .send(`Error: Authors were NOT_FOUND`);
+    return res.status(HttpStatus.NOT_FOUND).send(`Authors were NOT_FOUND`);
   }
 
   // Check if all tagged users exist
@@ -334,24 +326,22 @@ router.route("/update/:id").put(async (req, res) => {
   );
   const [err4, taggedUsers] = await to(Promise.all(checkTaggedUserPromises));
   if (!isEmpty(err4)) {
-    return res.status(HttpStatus.NOT_FOUND).send(`Error: ${err4}`);
+    return res.status(HttpStatus.NOT_FOUND).send(err4);
   }
   if (!isEmpty(req.body.taggedUsers) && isEmpty(taggedUsers)) {
-    return res
-      .status(HttpStatus.NOT_FOUND)
-      .send(`Error: Tagged users were NOT_FOUND`);
+    return res.status(HttpStatus.NOT_FOUND).send(`Tagged users were NOT_FOUND`);
   }
 
   // Check if project exists
   if (!isEmpty(req.body.projectId)) {
     const [err5, project] = await to(Project.findById(req.body.projectId));
     if (!isEmpty(err5)) {
-      return res.status(HttpStatus.BAD_REQUEST).send(`Error: ${err5}`);
+      return res.status(HttpStatus.BAD_REQUEST).send(err5);
     }
     if (isEmpty(project)) {
       return res
         .status(HttpStatus.NOT_FOUND)
-        .send(`Error: Project with id ${req.body.projectId} was NOT_FOUND`);
+        .send(`Project with id ${req.body.projectId} was NOT_FOUND`);
     }
   }
 
@@ -367,14 +357,10 @@ router.route("/update/:id").put(async (req, res) => {
 
   const [err6, newNote] = await to(note.save());
   if (!isEmpty(err6)) {
-    return res
-      .status(HttpStatus.BAD_REQUEST)
-      .send(`Error while updating note: ${err6}`);
+    return res.status(HttpStatus.BAD_REQUEST).send(err6);
   }
   if (isEmpty(newNote)) {
-    return res
-      .status(HttpStatus.BAD_REQUEST)
-      .send("Error: Bad request updating note");
+    return res.status(HttpStatus.BAD_REQUEST).send("Bad request updating note");
   }
   return res.status(HttpStatus.OK).send({ note: newNote });
 });
@@ -404,14 +390,12 @@ router.route("/update/:id").put(async (req, res) => {
 router.route("/:id").delete(async (req, res) => {
   const [err1, note] = await to(Note.findById(req.params.id));
   if (!isEmpty(err1)) {
-    return res
-      .status(HttpStatus.BAD_REQUEST)
-      .send(`Error while finding note: ${err1}`);
+    return res.status(HttpStatus.BAD_REQUEST).send(err1);
   }
   if (isEmpty(note)) {
     return res
       .status(HttpStatus.NOT_FOUND)
-      .send(`Error: Note with id ${req.params.id} NOT_FOUND`);
+      .send(`Note with id ${req.params.id} NOT_FOUND`);
   }
 
   if (note.deleted) {
@@ -422,14 +406,10 @@ router.route("/:id").delete(async (req, res) => {
 
   const [err2, newNote] = await to(note.save());
   if (!isEmpty(err2)) {
-    return res
-      .status(HttpStatus.BAD_REQUEST)
-      .send(`Error while deleting note: ${err2}`);
+    return res.status(HttpStatus.BAD_REQUEST).send(err2);
   }
   if (isEmpty(newNote)) {
-    return res
-      .status(HttpStatus.BAD_REQUEST)
-      .send("Error: Bad request deleting note");
+    return res.status(HttpStatus.BAD_REQUEST).send("Bad request deleting note");
   }
   return res
     .status(HttpStatus.OK)

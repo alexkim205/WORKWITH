@@ -6,6 +6,7 @@ Array [
     "type": "notes/create-note-pending",
   },
   Object {
+    "error": null,
     "payload": Object {
       "note": Object {
         "__v": 1,
@@ -37,6 +38,7 @@ Array [
     "type": "notes/delete-note-pending",
   },
   Object {
+    "error": null,
     "payload": undefined,
     "type": "notes/delete-note-success",
   },
@@ -49,6 +51,7 @@ Array [
     "type": "notes/get-note-pending",
   },
   Object {
+    "error": null,
     "payload": Object {
       "note": Object {
         "__v": 1,
@@ -80,6 +83,7 @@ Array [
     "type": "notes/get-notes-pending",
   },
   Object {
+    "error": null,
     "payload": Object {
       "notes": Array [
         Object {
@@ -113,6 +117,7 @@ Array [
     "type": "notes/get-project-notes-pending",
   },
   Object {
+    "error": null,
     "payload": Object {
       "notes": Array [
         Object {
@@ -146,6 +151,7 @@ Array [
     "type": "notes/update-note-pending",
   },
   Object {
+    "error": null,
     "payload": Object {
       "note": Object {
         "__v": 1,

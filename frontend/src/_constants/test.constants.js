@@ -46,7 +46,7 @@ const newNote = {
 const createNewNoteFromUserAndProjectIds = (userId, projectId) =>
   _.assign(newNote, { authors: [userId], projectId });
 
-const updateNote = {
+const newUpdateNote = {
   title: "New Title",
   body: "I like my new body.",
   authors: ["5e02eeaf6ebf6452d426c135"],
@@ -56,7 +56,7 @@ const updateNote = {
 };
 
 const createUpdateNoteFromUserId = userId =>
-  _.assign(updateNote, { authors: [userId], taggedUsers: [userId] });
+  _.assign(newUpdateNote, { authors: [userId], taggedUsers: [userId] });
 
 const projects = {
   projects: [
@@ -96,7 +96,7 @@ const newProject = {
 const createNewProjectFromUserId = userId =>
   _.assign(newProject, { authors: [userId] });
 
-const updateProject = {
+const newUpdateProject = {
   private: true
 };
 
@@ -168,7 +168,7 @@ const newUser2 = {
   password2: "Theworstpassword!12345"
 };
 
-const updateUser = {
+const newUpdateUser = {
   name: "Alex the Great"
 };
 
@@ -179,14 +179,14 @@ const usersTestConstants = {
   loginCredentials,
   newUser,
   newUser2,
-  updateUser
+  newUpdateUser
 };
 
 const projectsTestConstants = {
   projects,
   project,
   newProject,
-  updateProject,
+  newUpdateProject,
   createNewProjectFromUserId,
   createUpdateNoteFromUserId
 };
@@ -195,7 +195,7 @@ const notesTestConstants = {
   notes,
   note,
   newNote,
-  updateNote,
+  newUpdateNote,
   createNewNoteFromUserAndProjectIds,
   createUpdateNoteFromUserId
 };

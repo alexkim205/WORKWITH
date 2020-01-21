@@ -4,9 +4,51 @@
 
 - Breakdown components
 - Create detailed routing outline
-- Figure out clear TDD pipeline for frontend
-- Write frontend tests for services
-  - Decide if I want to use mock http (more time to implement, but best practice) or serve client server (less time)
+
+## 1/21/2020
+
+- Made registration and login using auth forms work
+
+## 1/20/2020
+
+- Fixed bug with jumping auth button at initial state
+- Removed useless animatingOut prop from flipped button and fullscreenloader components
+- Add timeout to disable button until animation end
+
+## 1/16/2020
+
+- Refactored auth field animations
+
+## 1/15/2020
+
+- Animations in auth page
+- Fixed bug with fields being removed in register state
+
+## 1/13/2020
+
+- Added a cooler animation for loading, pending, success
+- Add error handling to client services
+- Fix snapshots for App.js and users.actions
+- Remove `Error:` prefixes from server error responses
+- TODO: make sure server errors correspond to client errors
+- TODO: map server field errors to corresponding form fields client
+
+## 1/10/2020
+
+- Fixed animations for full screen pending loader
+
+## 1/9/2020
+
+- Add login and register forms for auth page
+- Create Flip hook, context, and provider
+- Jank animating between auth pages
+
+## 1/8/2020
+
+- Figure out animations using react-flip-toolkit
+- Add routing for projects dashboard
+- Add functional projects page component
+- Add redux selectors for auth
 
 ## 1/7/2020
 
@@ -14,6 +56,7 @@
 - Unit test actions separately
 - Finish action tests
 - Finish writing backend tests for projects (finish backend tests)
+- Create detailed routing and pages outline in App/index.js
 
 ## 1/5/2020
 

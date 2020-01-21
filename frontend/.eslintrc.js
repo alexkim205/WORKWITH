@@ -21,7 +21,7 @@ module.exports = {
   plugins: ["react", "prettier"],
   rules: {
     // "linebreak-style": ["error", "windows"],
-    "no-underscore-dangle": [2, { allow: ["_id"] }],
+    "no-underscore-dangle": [0],
     "react/jsx-filename-extension": [1, { extensions: [".js", ".jsx"] }],
     "import/no-extraneous-dependencies": ["error", { devDependencies: true }],
     "prettier/prettier": ["error"]
