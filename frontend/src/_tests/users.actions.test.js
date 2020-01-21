@@ -4,6 +4,7 @@ import {
   getUser,
   login,
   register,
+  logout,
   updateUser,
   deleteUser
 } from "../_actions/users.actions";
@@ -37,6 +38,10 @@ describe("User Actions", () => {
   });
   it("it should REGISTER a user", async () => {
     await store.dispatch(register(newUser));
+    expect(store.getActions()).toMatchSnapshot();
+  });
+  it("it should LOGOUT a user", async () => {
+    await store.dispatch(logout());
     expect(store.getActions()).toMatchSnapshot();
   });
   it("it should UPDATE a user", async () => {

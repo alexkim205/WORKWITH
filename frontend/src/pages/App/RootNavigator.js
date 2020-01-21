@@ -31,7 +31,6 @@ const RootNavigator = ({ location, search }) => {
       ]),
     [location.pathname, location.search, flipState, isPending]
   );
-  // console.log(flipKeyParams.join("-"));
   return (
     <Flipper
       flipKey={flipKeyParams.join("-")}

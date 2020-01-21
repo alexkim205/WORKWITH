@@ -91,6 +91,14 @@ Array [
 ]
 `;
 
+exports[`User Actions it should LOGOUT a user 1`] = `
+Array [
+  Object {
+    "type": "users/logout-success",
+  },
+]
+`;
+
 exports[`User Actions it should REGISTER a user 1`] = `
 Array [
   Object {

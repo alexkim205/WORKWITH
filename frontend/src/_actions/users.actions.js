@@ -50,6 +50,10 @@ export const login = (email, password) => async dispatch => {
   dispatch(actionSuccess(user));
 };
 
+export const logout = () => async dispatch => {
+  dispatch({ type: usersConstants.LOGOUT_SUCCESS });
+};
+
 export const register = newUser => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     usersConstants,
@@ -100,6 +104,7 @@ export default {
   getUser,
   login,
   register,
+  logout,
   updateUser,
   deleteUser
 };

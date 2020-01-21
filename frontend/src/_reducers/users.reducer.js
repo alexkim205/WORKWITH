@@ -16,7 +16,14 @@ const parts = [
   createReducerPart(userConstants, "UPDATE_USER", "user"),
   createReducerPart(userConstants, "DELETE_USER"),
   createReducerPart(userConstants, "LOGIN", "user"), // user object has token field
-  createReducerPart(userConstants, "REGISTER", "user") // user object has token field
+  createReducerPart(userConstants, "REGISTER", "user"), // user object has token field
+  {
+    LOGOUT_SUCCESS: () => ({
+      pending: false,
+      error: null,
+      user: null
+    })
+  }
 ];
 
 export default createReducer(initialState, _.assign({}, ...parts));
