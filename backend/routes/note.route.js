@@ -39,6 +39,8 @@ const validateUpdateNoteInput = require("../validators/update.note.validator");
  *                type: array
  *                items:
  *                  $ref: '#/components/schemas/Note'
+ *        "401":
+ *          $ref: '#/components/responses/UnauthorizedError'
  */
 router.route("/").get(async (req, res) => {
   const [err, notes] = await to(Note.find());
@@ -74,6 +76,8 @@ router.route("/").get(async (req, res) => {
  *                $ref: '#/components/schemas/Note'
  *        "404":
  *          description: NOT_FOUND. Note not found
+ *        "401":
+ *          $ref: '#/components/responses/UnauthorizedError'
  */
 router.route("/:id").get(async (req, res) => {
   const [err, note] = await to(Note.findById(req.params.id));
@@ -119,6 +123,8 @@ router.route("/:id").get(async (req, res) => {
  *                type: array
  *                items:
  *                  $ref: '#/components/schemas/Note'
+ *        "401":
+ *          $ref: '#/components/responses/UnauthorizedError'
  */
 router.route("/project/:id").get(async (req, res) => {
   const [err, notes] = await to(Note.find({ projectId: req.params.id }));
@@ -157,6 +163,8 @@ router.route("/project/:id").get(async (req, res) => {
  *                $ref: '#/components/schemas/Note'
  *        "404":
  *          description: NOT_FOUND. Either authors or project with projectId doesn't exist
+ *        "401":
+ *          $ref: '#/components/responses/UnauthorizedError'
  */
 router.route("/add").post(async (req, res) => {
   // Validate form data
@@ -268,6 +276,8 @@ router.route("/add").post(async (req, res) => {
  *            application/json:
  *              schema:
  *                $ref: '#/components/schemas/Note'
+ *        "401":
+ *          $ref: '#/components/responses/UnauthorizedError'
  */
 router.route("/update/:id").put(async (req, res) => {
   // Validate form data
@@ -386,6 +396,8 @@ router.route("/update/:id").put(async (req, res) => {
  *            type: string
  *        "404":
  *          description: NOT_FOUND. Note not found
+ *        "401":
+ *          $ref: '#/components/responses/UnauthorizedError'
  */
 router.route("/:id").delete(async (req, res) => {
   const [err1, note] = await to(Note.findById(req.params.id));

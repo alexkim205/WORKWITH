@@ -15,6 +15,23 @@ const swaggerOptions = {
         email: "alexgkim205@gmail.com"
       }
     },
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT"
+        }
+      },
+      responses: {
+        UnauthorizedError: {
+          description: "Bearer token is missing or invalid"
+        }
+      }
+    },
+    security: {
+      bearerAuth: []
+    },
     servers: [
       {
         url: `http://localhost:${process.env.DEVELOPMENT_API_PORT}/api/v1.0.0`

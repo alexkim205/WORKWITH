@@ -40,6 +40,8 @@ const validateUpdateUserInput = require("../validators/update.user.validator");
  *                type: array
  *                items:
  *                  $ref: '#/components/schemas/User'
+ *        "401":
+ *          $ref: '#/components/responses/UnauthorizedError'
  */
 router.route("/").get(async (req, res) => {
   const [err, users] = await to(User.find());
@@ -77,6 +79,8 @@ router.route("/").get(async (req, res) => {
  *                $ref: '#/components/schemas/User'
  *        "404":
  *          description: NOT_FOUND. User not found
+ *        "401":
+ *          $ref: '#/components/responses/UnauthorizedError'
  */
 router.route("/:id").get(async (req, res) => {
   const [err, user] = await to(User.findById(req.params.id));
@@ -111,6 +115,8 @@ router.route("/:id").get(async (req, res) => {
  *            application/json:
  *              schema:
  *                $ref: '#/components/schemas/User'
+ *        "401":
+ *          $ref: '#/components/responses/UnauthorizedError'
  */
 router.route("/add").post(async (req, res) => {
   // Validate form data
@@ -124,7 +130,6 @@ router.route("/add").post(async (req, res) => {
     email: req.body.email
   });
 
-  // Explicitly set salt and hash
   user.setPassword(req.body.password);
 
   const [err2, newUser] = await to(user.save());
@@ -170,6 +175,8 @@ router.route("/add").post(async (req, res) => {
  *                        type: string
  *        "404":
  *          description: NOT_FOUND. User not found
+ *        "401":
+ *          $ref: '#/components/responses/UnauthorizedError'
  *
  */
 router.route("/login").post(async (req, res) => {
@@ -221,6 +228,8 @@ router.route("/login").post(async (req, res) => {
  *            application/json:
  *              schema:
  *                $ref: '#/components/schemas/User'
+ *        "401":
+ *          $ref: '#/components/responses/UnauthorizedError'
  */
 router.route("/update/:id").put(async (req, res) => {
   // Validate form data
@@ -274,6 +283,8 @@ router.route("/update/:id").put(async (req, res) => {
  *            type: string
  *        "404":
  *          description: NOT_FOUND. User not found
+ *        "401":
+ *          $ref: '#/components/responses/UnauthorizedError'
  */
 router.route("/:id").delete(async (req, res) => {
   const [err1, user] = await to(User.findById(req.params.id));

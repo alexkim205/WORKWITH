@@ -38,6 +38,8 @@ const validateUpdateProjectInput = require("../validators/update.project.validat
  *                type: array
  *                items:
  *                  $ref: '#/components/schemas/Project'
+ *        "401":
+ *          $ref: '#/components/responses/UnauthorizedError'
  */
 router.route("/").get(async (req, res) => {
   const [err, projects] = await to(Project.find());
@@ -73,6 +75,8 @@ router.route("/").get(async (req, res) => {
  *                $ref: '#/components/schemas/Project'
  *        "404":
  *          description: NOT_FOUND. Project not found
+ *        "401":
+ *          $ref: '#/components/responses/UnauthorizedError'
  */
 router.route("/:id").get(async (req, res) => {
   const [err, project] = await to(Project.findById(req.params.id));
@@ -118,6 +122,8 @@ router.route("/:id").get(async (req, res) => {
  *                type: array
  *                items:
  *                  $ref: '#/components/schemas/Project'
+ *        "401":
+ *          $ref: '#/components/responses/UnauthorizedError'
  */
 router.route("/user/:id").get(async (req, res) => {
   // https://stackoverflow.com/questions/18148166/find-document-with-array-that-contains-a-specific-value
@@ -155,6 +161,8 @@ router.route("/user/:id").get(async (req, res) => {
  *            application/json:
  *              schema:
  *                $ref: '#/components/schemas/Project'
+ *        "401":
+ *          $ref: '#/components/responses/UnauthorizedError'
  */
 router.route("/add").post(async (req, res) => {
   // Validate form data
@@ -248,6 +256,8 @@ router.route("/add").post(async (req, res) => {
  *            application/json:
  *              schema:
  *                $ref: '#/components/schemas/Project'
+ *        "401":
+ *          $ref: '#/components/responses/UnauthorizedError'
  */
 router.route("/update/:id").put(async (req, res) => {
   // Validate form data
@@ -347,6 +357,8 @@ router.route("/update/:id").put(async (req, res) => {
  *            type: string
  *        "404":
  *          description: NOT_FOUND. Project not found
+ *        "401":
+ *          $ref: '#/components/responses/UnauthorizedError'
  */
 router.route("/:id").delete(async (req, res) => {
   const [err1, project] = await to(Project.findById(req.params.id));
