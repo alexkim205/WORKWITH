@@ -29,10 +29,7 @@ describe("Note", () => {
     await app.tListen();
 
     // Create user to associate notes with
-    const newUser = new User({
-      name: user.name,
-      email: user.email
-    });
+    const newUser = new User(_.pick(user, ["name", "email"]));
     newUser.setPassword(user.password);
     const [userErr, returnedUser] = await to(newUser.save());
     if (!_.isEmpty(userErr)) {

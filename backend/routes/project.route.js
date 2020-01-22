@@ -11,6 +11,8 @@ const _ = require("lodash");
 const { HttpStatus } = require("../_constants/error.constants");
 const User = require("../models/user.model");
 const Project = require("../models/project.model");
+const Role = require("../_utils/roles.util");
+const authorize = require("../_utils/authorize.util");
 const validateAddProjectInput = require("../validators/add.project.validator");
 const validateUpdateProjectInput = require("../validators/update.project.validator");
 
@@ -21,6 +23,8 @@ const validateUpdateProjectInput = require("../validators/update.project.validat
  *    get:
  *      summary: Get projects
  *      tags: [Projects]
+ *      security:
+ *        - bearerAuth: []
  *      responses:
  *        "200":
  *          description: OK. Returns a list of projects
@@ -41,7 +45,7 @@ const validateUpdateProjectInput = require("../validators/update.project.validat
  *        "401":
  *          $ref: '#/components/responses/UnauthorizedError'
  */
-router.route("/").get(async (req, res) => {
+const getProjects = async (req, res) => {
   const [err, projects] = await to(Project.find());
   if (!_.isEmpty(err)) {
     return res.status(HttpStatus.BAD_REQUEST).send(err);
@@ -50,7 +54,8 @@ router.route("/").get(async (req, res) => {
     return res.status(HttpStatus.NO_CONTENT).send();
   }
   return res.status(HttpStatus.OK).send({ projects });
-});
+};
+router.route("/").get(authorize(Role.ADMIN), getProjects);
 
 /**
  * @swagger
@@ -59,6 +64,8 @@ router.route("/").get(async (req, res) => {
  *    get:
  *      summary: Get a project by ID
  *      tags: [Projects]
+ *      security:
+ *        - bearerAuth: []
  *      parameters:
  *        - in: path
  *          name: id
@@ -78,7 +85,7 @@ router.route("/").get(async (req, res) => {
  *        "401":
  *          $ref: '#/components/responses/UnauthorizedError'
  */
-router.route("/:id").get(async (req, res) => {
+const getProject = async (req, res) => {
   const [err, project] = await to(Project.findById(req.params.id));
   if (!_.isEmpty(err)) {
     return res.status(HttpStatus.BAD_REQUEST).send(err);
@@ -89,7 +96,8 @@ router.route("/:id").get(async (req, res) => {
       .send(`Project with id ${req.params.id} NOT_FOUND`);
   }
   return res.status(HttpStatus.OK).send({ project });
-});
+};
+router.route("/:id").get(authorize(), getProject);
 
 /**
  * @swagger
@@ -98,6 +106,8 @@ router.route("/:id").get(async (req, res) => {
  *    get:
  *      summary: Get projects by user ID
  *      tags: [Projects]
+ *      security:
+ *        - bearerAuth: []
  *      parameters:
  *        - in: path
  *          name: id
@@ -125,7 +135,7 @@ router.route("/:id").get(async (req, res) => {
  *        "401":
  *          $ref: '#/components/responses/UnauthorizedError'
  */
-router.route("/user/:id").get(async (req, res) => {
+const getProjectsByUser = async (req, res) => {
   // https://stackoverflow.com/questions/18148166/find-document-with-array-that-contains-a-specific-value
   const [err, projects] = await to(Project.find({ users: req.params.id }));
   if (!_.isEmpty(err)) {
@@ -139,7 +149,8 @@ router.route("/user/:id").get(async (req, res) => {
       );
   }
   return res.status(HttpStatus.OK).send({ projects });
-});
+};
+router.route("/user/:id").get(authorize(), getProjectsByUser);
 
 /**
  * @swagger
@@ -148,6 +159,8 @@ router.route("/user/:id").get(async (req, res) => {
  *    post:
  *      summary: Create a new project
  *      tags: [Projects]
+ *      security:
+ *        - bearerAuth: []
  *      requestBody:
  *        required: true
  *        content:
@@ -164,7 +177,7 @@ router.route("/user/:id").get(async (req, res) => {
  *        "401":
  *          $ref: '#/components/responses/UnauthorizedError'
  */
-router.route("/add").post(async (req, res) => {
+const createProject = async (req, res) => {
   // Validate form data
   const err1 = validateAddProjectInput(req.body);
   if (!_.isEmpty(err1)) {
@@ -224,7 +237,8 @@ router.route("/add").post(async (req, res) => {
       .send("Bad request creating new project");
   }
   return res.status(HttpStatus.CREATED).send({ project: newProject });
-});
+};
+router.route("/add").post(authorize([Role.ADMIN, Role.USER]), createProject);
 
 /**
  * @swagger
@@ -233,6 +247,8 @@ router.route("/add").post(async (req, res) => {
  *    put:
  *      summary: Update a project by ID
  *      tags: [Projects]
+ *      security:
+ *        - bearerAuth: []
  *      parameters:
  *        - in: path
  *          name: id
@@ -256,7 +272,7 @@ router.route("/add").post(async (req, res) => {
  *        "401":
  *          $ref: '#/components/responses/UnauthorizedError'
  */
-router.route("/update/:id").put(async (req, res) => {
+const updateProject = async (req, res) => {
   // Validate form data
   req.body._id = req.params.id;
   const err1 = validateUpdateProjectInput(req.body);
@@ -331,7 +347,10 @@ router.route("/update/:id").put(async (req, res) => {
       .send("Bad request updating project");
   }
   return res.status(HttpStatus.OK).send({ project: newProject });
-});
+};
+router
+  .route("/update/:id")
+  .put(authorize([Role.ADMIN, Role.USER]), updateProject);
 
 /**
  * @swagger
@@ -340,6 +359,8 @@ router.route("/update/:id").put(async (req, res) => {
  *    delete:
  *      summary: Delete a project by ID
  *      tags: [Projects]
+ *      security:
+ *        - bearerAuth: []
  *      parameters:
  *        - in: path
  *          name: id
@@ -357,7 +378,7 @@ router.route("/update/:id").put(async (req, res) => {
  *        "401":
  *          $ref: '#/components/responses/UnauthorizedError'
  */
-router.route("/:id").delete(async (req, res) => {
+const deleteProject = async (req, res) => {
   const [err1, project] = await to(Project.findById(req.params.id));
   if (!_.isEmpty(err1)) {
     return res.status(HttpStatus.BAD_REQUEST).send(err1);
@@ -386,6 +407,7 @@ router.route("/:id").delete(async (req, res) => {
   return res
     .status(HttpStatus.OK)
     .send(`Project with id ${req.params.id} successfully deleted.`);
-});
+};
+router.route("/:id").delete(authorize([Role.ADMIN, Role.USER]), deleteProject);
 
 module.exports = router;

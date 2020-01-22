@@ -2,8 +2,16 @@
 
 ## Backlog Todo
 
-- Breakdown components
-- Create detailed routing outline
+- Change error responses to send object with 'message' fields
+- Refactor out all errors into reusable error types
+
+## 1/22/2020
+
+- Add role authorization and authentication in backend
+- Protect routes
+- TODO: Update tests to have tokens in header
+- TODO: Figure out how to check if user is authorized to get notes, in other words,determine relationship between User and Note in routes or models.
+  - For now, just check for existence of token for note and project routes.
 
 ## 1/21/2020
 
@@ -12,6 +20,7 @@
 - Fix payload in returned JWT to include user
 - Return safe user model
 - Fix binding of salt and hash to model instance
+- Add /me route and corresponding action
 
 ## 1/20/2020
 

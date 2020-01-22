@@ -4,6 +4,7 @@ const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 const _ = require("lodash");
 const { switchEnvs } = require("../_config/getEnv.config");
+const Role = require("../_utils/roles.util");
 
 const { Schema } = mongoose;
 
@@ -16,6 +17,7 @@ const { Schema } = mongoose;
  *        required:
  *          - name
  *          - email
+ *          - role
  *          - hash
  *          - salt
  *        properties:
@@ -32,6 +34,9 @@ const { Schema } = mongoose;
  *            type: string
  *            format: email
  *            description: The user's email address. It must be unique.
+ *          role:
+ *            type: string
+ *            description: The user's role. Admin, User, or Guest.
  *          deleted:
  *            type: boolean
  *            default: false
@@ -58,6 +63,7 @@ const { Schema } = mongoose;
  *          name: Alex Kim
  *          username: alexkim
  *          email: alexkim@dev.com
+ *          role: User
  *          createdAt: 2019-12-19T08:20:42.974Z
  *          updatedAt: 2019-12-19T08:20:42.974Z
  *      UserRegister:
@@ -123,6 +129,11 @@ const userSchema = new Schema(
       unique: true,
       trim: true
     },
+    role: {
+      type: String,
+      enum: _.values(Role),
+      default: Role.USER
+    },
     deleted: { type: Boolean, default: false },
     hash: String,
     salt: String
@@ -139,22 +150,23 @@ userSchema.methods.setPassword = function(password) {
     .toString("hex");
 };
 
-userSchema.methods.validPassword = function(password, userHash, userSalt) {
+userSchema.methods.validPassword = function(password) {
   const hash = crypto
-    .pbkdf2Sync(password, userSalt, 1000, 64, "sha512")
+    .pbkdf2Sync(password, this.salt, 1000, 64, "sha512")
     .toString("hex");
-  return userHash === hash;
+  return this.hash === hash;
+};
+
+userSchema.methods.getSafeUser = function() {
+  return _.pick(this, ["_id", "name", "email", "role"]);
 };
 
 userSchema.methods.generateJwt = function() {
   return jwt.sign(
-    {
-      _id: this._id,
-      email: this.email,
-      name: this.name
-    },
+    this.getSafeUser(),
     switchEnvs({
-      generic: process.env.JWT_SECRET,
+      generic: process.env.PRODUCTION_JWT_SECRET,
+      dev: process.env.DEVELOPMENT_JWT_SECRET,
       test: process.env.TESTING_JWT_SECRET,
       testConnection: process.env.TESTING_JWT_SECRET
     }),
@@ -162,10 +174,6 @@ userSchema.methods.generateJwt = function() {
       expiresIn: 60 * 60 * 24 // expires in 24 hours
     }
   );
-};
-
-userSchema.methods.getSafeUser = function() {
-  return _.pick(this, ["_id", "name", "email"]);
 };
 
 const User = mongoose.model("User", userSchema);

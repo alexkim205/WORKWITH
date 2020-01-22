@@ -12,6 +12,8 @@ const { HttpStatus } = require("../_constants/error.constants");
 const User = require("../models/user.model");
 const Project = require("../models/project.model");
 const Note = require("../models/note.model");
+const Role = require("../_utils/roles.util");
+const authorize = require("../_utils/authorize.util");
 const validateAddNoteInput = require("../validators/add.note.validator");
 const validateUpdateNoteInput = require("../validators/update.note.validator");
 
@@ -22,6 +24,8 @@ const validateUpdateNoteInput = require("../validators/update.note.validator");
  *    get:
  *      summary: Get notes
  *      tags: [Notes]
+ *      security:
+ *        - bearerAuth: []
  *      responses:
  *        "200":
  *          description: OK. Returns a list of notes
@@ -42,7 +46,7 @@ const validateUpdateNoteInput = require("../validators/update.note.validator");
  *        "401":
  *          $ref: '#/components/responses/UnauthorizedError'
  */
-router.route("/").get(async (req, res) => {
+const getNotes = async (req, res) => {
   const [err, notes] = await to(Note.find());
   if (!_.isEmpty(err)) {
     return res.status(HttpStatus.BAD_REQUEST).send(err);
@@ -51,7 +55,8 @@ router.route("/").get(async (req, res) => {
     return res.status(HttpStatus.NO_CONTENT).send();
   }
   return res.status(HttpStatus.OK).send({ notes });
-});
+};
+router.route("/").get(authorize(Role.ADMIN), getNotes);
 
 /**
  * @swagger
@@ -60,6 +65,8 @@ router.route("/").get(async (req, res) => {
  *    get:
  *      summary: Get a note by ID
  *      tags: [Notes]
+ *      security:
+ *        - bearerAuth: []
  *      parameters:
  *        - in: path
  *          name: id
@@ -79,7 +86,7 @@ router.route("/").get(async (req, res) => {
  *        "401":
  *          $ref: '#/components/responses/UnauthorizedError'
  */
-router.route("/:id").get(async (req, res) => {
+const getNote = async (req, res) => {
   const [err, note] = await to(Note.findById(req.params.id));
   if (!_.isEmpty(err)) {
     return res.status(HttpStatus.BAD_REQUEST).send(err);
@@ -90,7 +97,8 @@ router.route("/:id").get(async (req, res) => {
       .send(`Note with id ${req.params.id} NOT_FOUND`);
   }
   return res.status(HttpStatus.OK).send({ note });
-});
+};
+router.route("/:id").get(authorize(), getNote);
 
 /**
  * @swagger
@@ -99,6 +107,8 @@ router.route("/:id").get(async (req, res) => {
  *    get:
  *      summary: Get notes by project ID
  *      tags: [Notes]
+ *      security:
+ *        - bearerAuth: []
  *      parameters:
  *        - in: path
  *          name: id
@@ -126,7 +136,7 @@ router.route("/:id").get(async (req, res) => {
  *        "401":
  *          $ref: '#/components/responses/UnauthorizedError'
  */
-router.route("/project/:id").get(async (req, res) => {
+const getNotesByProject = async (req, res) => {
   const [err, notes] = await to(Note.find({ projectId: req.params.id }));
   if (err) {
     return res.status(HttpStatus.BAD_REQUEST).send(err);
@@ -139,7 +149,8 @@ router.route("/project/:id").get(async (req, res) => {
       );
   }
   return res.status(HttpStatus.OK).send({ notes });
-});
+};
+router.route("/project/:id").get(authorize(), getNotesByProject);
 
 /**
  * @swagger
@@ -148,6 +159,8 @@ router.route("/project/:id").get(async (req, res) => {
  *    post:
  *      summary: Create a new note
  *      tags: [Notes]
+ *      security:
+ *        - bearerAuth: []
  *      requestBody:
  *        required: true
  *        content:
@@ -166,7 +179,7 @@ router.route("/project/:id").get(async (req, res) => {
  *        "401":
  *          $ref: '#/components/responses/UnauthorizedError'
  */
-router.route("/add").post(async (req, res) => {
+const createNote = async (req, res) => {
   // Validate form data
   const err1 = validateAddNoteInput(req.body);
   if (!_.isEmpty(err1)) {
@@ -249,7 +262,8 @@ router.route("/add").post(async (req, res) => {
       .send("Bad request creating new note");
   }
   return res.status(HttpStatus.CREATED).send({ note: newNote });
-});
+};
+router.route("/add").post(authorize([Role.ADMIN, Role.USER]), createNote);
 
 /**
  * @swagger
@@ -258,6 +272,8 @@ router.route("/add").post(async (req, res) => {
  *    put:
  *      summary: Update a note by ID
  *      tags: [Notes]
+ *      security:
+ *        - bearerAuth: []
  *      parameters:
  *        - in: path
  *          name: id
@@ -281,7 +297,7 @@ router.route("/add").post(async (req, res) => {
  *        "401":
  *          $ref: '#/components/responses/UnauthorizedError'
  */
-router.route("/update/:id").put(async (req, res) => {
+const updateNote = async (req, res) => {
   // Validate form data
   req.body._id = req.params.id;
   const err1 = validateUpdateNoteInput(req.body);
@@ -375,7 +391,8 @@ router.route("/update/:id").put(async (req, res) => {
     return res.status(HttpStatus.BAD_REQUEST).send("Bad request updating note");
   }
   return res.status(HttpStatus.OK).send({ note: newNote });
-});
+};
+router.route("/update/:id").put(authorize([Role.ADMIN, Role.USER]), updateNote);
 
 /**
  * @swagger
@@ -384,6 +401,8 @@ router.route("/update/:id").put(async (req, res) => {
  *    delete:
  *      summary: Delete a note by ID
  *      tags: [Notes]
+ *      security:
+ *        - bearerAuth: []
  *      parameters:
  *        - in: path
  *          name: id
@@ -401,7 +420,7 @@ router.route("/update/:id").put(async (req, res) => {
  *        "401":
  *          $ref: '#/components/responses/UnauthorizedError'
  */
-router.route("/:id").delete(async (req, res) => {
+const deleteNote = async (req, res) => {
   const [err1, note] = await to(Note.findById(req.params.id));
   if (!_.isEmpty(err1)) {
     return res.status(HttpStatus.BAD_REQUEST).send(err1);
@@ -428,6 +447,7 @@ router.route("/:id").delete(async (req, res) => {
   return res
     .status(HttpStatus.OK)
     .send(`Note with id ${req.params.id} successfully deleted.`);
-});
+};
+router.route("/:id").delete(authorize([Role.ADMIN, Role.USER]), deleteNote);
 
 module.exports = router;

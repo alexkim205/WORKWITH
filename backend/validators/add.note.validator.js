@@ -15,7 +15,6 @@ const validateAddNoteInput = data => {
   formattedData.body = !_.isEmpty(data.body) ? data.body : "";
   formattedData.minimized = !_.isEmpty(data.minimized) ? data.minimized : "";
   formattedData.private = !_.isEmpty(data.private) ? data.private : "";
-  formattedData.deleted = !_.isEmpty(data.deleted) ? data.deleted : "";
 
   // Project ID checks
   if (Validator.isEmpty(formattedData.projectId)) {

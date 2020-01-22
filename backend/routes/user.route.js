@@ -11,6 +11,8 @@ const passport = require("passport");
 const _ = require("lodash");
 const { HttpStatus } = require("../_constants/error.constants");
 const User = require("../models/user.model");
+const Role = require("../_utils/roles.util");
+const authorize = require("../_utils/authorize.util");
 const validateRegisterInput = require("../validators/register.validator");
 const validateLoginInput = require("../validators/login.validator");
 const validateUpdateUserInput = require("../validators/update.user.validator");
@@ -22,6 +24,8 @@ const validateUpdateUserInput = require("../validators/update.user.validator");
  *    get:
  *      summary: Get users
  *      tags: [Users]
+ *      security:
+ *        - bearerAuth: []
  *      responses:
  *        "200":
  *          description: OK. Returns a list of user schemas
@@ -42,7 +46,7 @@ const validateUpdateUserInput = require("../validators/update.user.validator");
  *        "401":
  *          $ref: '#/components/responses/UnauthorizedError'
  */
-router.route("/").get(async (req, res) => {
+const getUsers = async (req, res) => {
   const [err, users] = await to(User.find());
   if (!_.isEmpty(err)) {
     return res.status(HttpStatus.BAD_REQUEST).send(err);
@@ -53,7 +57,8 @@ router.route("/").get(async (req, res) => {
   return res
     .status(HttpStatus.OK)
     .json({ users: _.map(users, user => user.getSafeUser()) });
-});
+};
+router.route("/").get(authorize(Role.ADMIN), getUsers);
 
 /**
  * @swagger
@@ -62,6 +67,8 @@ router.route("/").get(async (req, res) => {
  *    get:
  *      summary: Get a user by ID
  *      tags: [Users]
+ *      security:
+ *        - bearerAuth: []
  *      parameters:
  *        - in: path
  *          name: id
@@ -81,7 +88,14 @@ router.route("/").get(async (req, res) => {
  *        "401":
  *          $ref: '#/components/responses/UnauthorizedError'
  */
-router.route("/:id").get(async (req, res) => {
+const getUser = async (req, res) => {
+  // Only admins can access other user records
+  if (
+    parseInt(req.params.id, 10) !== req.user._id &&
+    req.user.role !== Role.ADMIN
+  ) {
+    return res.status(HttpStatus.UNAUTHORIZED).send("Request is UNAUTHORIZED");
+  }
   const [err, user] = await to(User.findById(req.params.id));
   if (!_.isEmpty(err)) {
     return res.status(HttpStatus.BAD_REQUEST).send(err);
@@ -92,7 +106,8 @@ router.route("/:id").get(async (req, res) => {
       .send(`User with id ${req.params.id} NOT_FOUND`);
   }
   return res.status(HttpStatus.OK).send({ user: user.getSafeUser() });
-});
+};
+router.route("/:id").get(authorize([Role.ADMIN, Role.USER]), getUser);
 
 /**
  * @swagger
@@ -117,7 +132,7 @@ router.route("/:id").get(async (req, res) => {
  *        "401":
  *          $ref: '#/components/responses/UnauthorizedError'
  */
-router.route("/add").post(async (req, res) => {
+const register = async (req, res) => {
   // Validate form data
   const err1 = validateRegisterInput(req.body);
   if (!_.isEmpty(err1)) {
@@ -142,7 +157,8 @@ router.route("/add").post(async (req, res) => {
   return res
     .status(HttpStatus.CREATED)
     .send({ user: user.getSafeUser(), token: user.generateJwt() });
-});
+};
+router.route("/add").post(register);
 
 /**
  * @swagger
@@ -175,7 +191,7 @@ router.route("/add").post(async (req, res) => {
  *          $ref: '#/components/responses/UnauthorizedError'
  *
  */
-router.route("/login").post(async (req, res) => {
+const login = async (req, res) => {
   // Validate form data
   const err = validateLoginInput(req.body);
   if (!_.isEmpty(err)) {
@@ -195,7 +211,8 @@ router.route("/login").post(async (req, res) => {
 
     return res.status(HttpStatus.NOT_FOUND).send(JSON.stringify(info));
   })(req, res);
-});
+};
+router.route("/login").post(login);
 
 /**
  * @swagger
@@ -204,6 +221,8 @@ router.route("/login").post(async (req, res) => {
  *    put:
  *      summary: Update a user by ID
  *      tags: [Users]
+ *      security:
+ *        - bearerAuth: []
  *      parameters:
  *        - in: path
  *          name: id
@@ -227,7 +246,14 @@ router.route("/login").post(async (req, res) => {
  *        "401":
  *          $ref: '#/components/responses/UnauthorizedError'
  */
-router.route("/update/:id").put(async (req, res) => {
+const updateUser = async (req, res) => {
+  // Only admins can update other user records
+  if (
+    parseInt(req.params.id, 10) !== req.user._id &&
+    req.user.role !== Role.ADMIN
+  ) {
+    return res.status(HttpStatus.UNAUTHORIZED).send("Request is UNAUTHORIZED");
+  }
   // Validate form data
   req.body._id = req.params.id;
   const err = validateUpdateUserInput(req.body);
@@ -256,7 +282,8 @@ router.route("/update/:id").put(async (req, res) => {
     return res.status(HttpStatus.BAD_REQUEST).send("Bad request updating user");
   }
   return res.status(HttpStatus.OK).send({ user: newUser.getSafeUser() });
-});
+};
+router.route("/update/:id").put(authorize([Role.ADMIN, Role.USER]), updateUser);
 
 /**
  * @swagger
@@ -265,6 +292,8 @@ router.route("/update/:id").put(async (req, res) => {
  *    delete:
  *      summary: Delete a user by ID
  *      tags: [Users]
+ *      security:
+ *        - bearerAuth: []
  *      parameters:
  *        - in: path
  *          name: id
@@ -282,7 +311,14 @@ router.route("/update/:id").put(async (req, res) => {
  *        "401":
  *          $ref: '#/components/responses/UnauthorizedError'
  */
-router.route("/:id").delete(async (req, res) => {
+const deleteUser = async (req, res) => {
+  // Only admins can access other user records
+  if (
+    parseInt(req.params.id, 10) !== req.user._id &&
+    req.user.role !== Role.ADMIN
+  ) {
+    return res.status(HttpStatus.UNAUTHORIZED).send("Request is UNAUTHORIZED");
+  }
   const [err1, user] = await to(User.findById(req.params.id));
   if (!_.isEmpty(err1)) {
     return res.status(HttpStatus.BAD_REQUEST).send(err1);
@@ -309,6 +345,7 @@ router.route("/:id").delete(async (req, res) => {
   return res
     .status(HttpStatus.OK)
     .send(`User with id ${req.params.id} successfully deleted.`);
-});
+};
+router.route("/:id").delete(authorize([Role.ADMIN, Role.USER]), deleteUser);
 
 module.exports = router;

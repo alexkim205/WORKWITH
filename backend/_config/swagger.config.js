@@ -29,9 +29,6 @@ const swaggerOptions = {
         }
       }
     },
-    security: {
-      bearerAuth: []
-    },
     servers: [
       {
         url: `http://localhost:${process.env.DEVELOPMENT_API_PORT}/api/v1.0.0`
