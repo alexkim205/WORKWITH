@@ -8,6 +8,10 @@
 ## 1/21/2020
 
 - Made registration and login using auth forms work
+- Remove sensitive info from register/login client requests
+- Fix payload in returned JWT to include user
+- Return safe user model
+- Fix binding of salt and hash to model instance
 
 ## 1/20/2020
 

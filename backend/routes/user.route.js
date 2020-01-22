@@ -9,6 +9,7 @@ const to = require("await-to-js").default;
 const router = require("express").Router();
 const isEmpty = require("is-empty");
 const passport = require("passport");
+const _ = require("lodash");
 const { HttpStatus } = require("../_constants/error.constants");
 const User = require("../models/user.model");
 const validateRegisterInput = require("../validators/register.validator");
@@ -48,7 +49,9 @@ router.route("/").get(async (req, res) => {
   if (isEmpty(users)) {
     return res.status(HttpStatus.NO_CONTENT).send();
   }
-  return res.status(HttpStatus.OK).json({ users });
+  return res
+    .status(HttpStatus.OK)
+    .json({ users: _.map(users, user => user.getSafeUser()) });
 });
 
 /**
@@ -85,7 +88,7 @@ router.route("/:id").get(async (req, res) => {
       .status(HttpStatus.NOT_FOUND)
       .send(`User with id ${req.params.id} NOT_FOUND`);
   }
-  return res.status(HttpStatus.OK).send({ user });
+  return res.status(HttpStatus.OK).send({ user: user.getSafeUser() });
 });
 
 /**
@@ -122,7 +125,7 @@ router.route("/add").post(async (req, res) => {
   });
 
   // Explicitly set salt and hash
-  [user.salt, user.hash] = user.setPassword(req.body.password);
+  user.setPassword(req.body.password);
 
   const [err2, newUser] = await to(user.save());
 
@@ -135,8 +138,9 @@ router.route("/add").post(async (req, res) => {
       .send("Bad request creating new user");
   }
 
-  const token = user.generateJwt();
-  return res.status(HttpStatus.CREATED).send({ user: newUser, token });
+  return res
+    .status(HttpStatus.CREATED)
+    .send({ user: user.getSafeUser(), token: user.generateJwt() });
 });
 
 /**
@@ -181,8 +185,9 @@ router.route("/login").post(async (req, res) => {
       return res.status(HttpStatus.BAD_REQUEST).send(passportErr);
     }
     if (user) {
-      const token = user.generateJwt();
-      return res.status(HttpStatus.OK).send({ user, token });
+      return res
+        .status(HttpStatus.OK)
+        .send({ user: user.getSafeUser(), token: user.generateJwt() });
     }
 
     return res.status(HttpStatus.NOT_FOUND).send(JSON.stringify(info));
@@ -245,7 +250,7 @@ router.route("/update/:id").put(async (req, res) => {
   if (isEmpty(newUser)) {
     return res.status(HttpStatus.BAD_REQUEST).send("Bad request updating user");
   }
-  return res.status(HttpStatus.OK).send({ user: newUser });
+  return res.status(HttpStatus.OK).send({ user: newUser.getSafeUser() });
 });
 
 /**

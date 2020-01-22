@@ -1,6 +1,8 @@
+/* eslint-disable func-names */
 const mongoose = require("mongoose");
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
+const _ = require("lodash");
 const { switchEnvs } = require("../_config/getEnv.config");
 
 const { Schema } = mongoose;
@@ -130,38 +132,40 @@ const userSchema = new Schema(
   }
 );
 
-userSchema.methods.setPassword = password => {
+userSchema.methods.setPassword = function(password) {
   this.salt = crypto.randomBytes(16).toString("hex");
   this.hash = crypto
     .pbkdf2Sync(password, this.salt, 1000, 64, "sha512")
     .toString("hex");
-  return [this.salt, this.hash];
 };
 
-userSchema.methods.validPassword = (password, userHash, userSalt) => {
+userSchema.methods.validPassword = function(password, userHash, userSalt) {
   const hash = crypto
     .pbkdf2Sync(password, userSalt, 1000, 64, "sha512")
     .toString("hex");
   return userHash === hash;
 };
 
-userSchema.methods.generateJwt = () => {
-  const expiry = new Date();
-  expiry.setDate(expiry.getDate() + 7);
-
+userSchema.methods.generateJwt = function() {
   return jwt.sign(
     {
       _id: this._id,
       email: this.email,
-      name: this.name,
-      exp: parseInt(expiry.getTime() / 1000, 10)
+      name: this.name
     },
     switchEnvs({
       generic: process.env.JWT_SECRET,
       test: "TESTING_JWT_SECRET_KEY",
       testConnection: "TESTING_JWT_SECRET_KEY"
-    })
+    }),
+    {
+      expiresIn: 60 * 60 * 24 // expires in 24 hours
+    }
   );
+};
+
+userSchema.methods.getSafeUser = function() {
+  return _.pick(this, ["_id", "name", "email"]);
 };
 
 const User = mongoose.model("User", userSchema);
