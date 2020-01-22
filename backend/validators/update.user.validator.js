@@ -1,17 +1,17 @@
-const isEmpty = require("is-empty");
+const _ = require("lodash");
 const Validator = require("../_utils/validator.util");
 
 const validateUpdateUserInput = data => {
   const errors = {};
   const formattedData = {};
 
-  formattedData._id = !isEmpty(data._id) ? data._id : "";
-  formattedData.name = !isEmpty(data.name) ? data.name : "";
-  formattedData.email = !isEmpty(data.email) ? data.email : "";
-  formattedData.deleted = !isEmpty(data.deleted) ? data.deleted : "";
+  formattedData._id = !_.isEmpty(data._id) ? data._id : "";
+  formattedData.name = !_.isEmpty(data.name) ? data.name : "";
+  formattedData.email = !_.isEmpty(data.email) ? data.email : "";
+  formattedData.deleted = typeof data.deleted !== "undefined" ? "true" : "";
 
   // Delete checks
-  if (!isEmpty(formattedData.deleted)) {
+  if (!_.isEmpty(formattedData.deleted)) {
     errors.deleted =
       "Delete field cannot be updated; Please use the DELETE endpoint";
   }
@@ -40,7 +40,7 @@ const validateUpdateUserInput = data => {
     errors.email = "Email is invalid";
   }
 
-  return !isEmpty(errors) ? JSON.stringify(errors) : "";
+  return !_.isEmpty(errors) ? JSON.stringify(errors) : "";
 };
 
 module.exports = validateUpdateUserInput;

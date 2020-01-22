@@ -5,7 +5,6 @@ const chai = require("chai");
 const chaiHttp = require("chai-http");
 const _ = require("lodash");
 const to = require("await-to-js").default;
-const isEmpty = require("is-empty");
 
 const app = require("../server");
 const User = require("../models/user.model");
@@ -34,9 +33,9 @@ describe("Note", () => {
       name: user.name,
       email: user.email
     });
-    [newUser.salt, newUser.hash] = newUser.setPassword(user.password);
+    newUser.setPassword(user.password);
     const [userErr, returnedUser] = await to(newUser.save());
-    if (!isEmpty(userErr)) {
+    if (!_.isEmpty(userErr)) {
       throw new Error(`Error: ${userErr}`);
     }
     userId = returnedUser._id.toString();
@@ -47,7 +46,7 @@ describe("Note", () => {
       authors: [userId]
     });
     const [projectErr, returnedProject] = await to(newProject.save());
-    if (!isEmpty(projectErr)) {
+    if (!_.isEmpty(projectErr)) {
       throw new Error(`Error: ${userErr}`);
     }
     projectId = returnedProject._id.toString();
@@ -167,10 +166,10 @@ describe("Note", () => {
     before(async () => {
       // Find id of note we created above
       const [err, foundNote] = await to(Note.findOne({ title: note.title }));
-      if (!isEmpty(err)) {
+      if (!_.isEmpty(err)) {
         throw new Error(`Error: ${err}`);
       }
-      if (isEmpty(foundNote)) {
+      if (_.isEmpty(foundNote)) {
         throw new Error(`Error: Note with title ${note.title} NOT_FOUND`);
       }
       noteId = foundNote._id.toString();

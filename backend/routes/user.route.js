@@ -7,7 +7,6 @@
 
 const to = require("await-to-js").default;
 const router = require("express").Router();
-const isEmpty = require("is-empty");
 const passport = require("passport");
 const _ = require("lodash");
 const { HttpStatus } = require("../_constants/error.constants");
@@ -45,10 +44,10 @@ const validateUpdateUserInput = require("../validators/update.user.validator");
  */
 router.route("/").get(async (req, res) => {
   const [err, users] = await to(User.find());
-  if (!isEmpty(err)) {
+  if (!_.isEmpty(err)) {
     return res.status(HttpStatus.BAD_REQUEST).send(err);
   }
-  if (isEmpty(users)) {
+  if (_.isEmpty(users)) {
     return res.status(HttpStatus.NO_CONTENT).send();
   }
   return res
@@ -84,10 +83,10 @@ router.route("/").get(async (req, res) => {
  */
 router.route("/:id").get(async (req, res) => {
   const [err, user] = await to(User.findById(req.params.id));
-  if (!isEmpty(err)) {
+  if (!_.isEmpty(err)) {
     return res.status(HttpStatus.BAD_REQUEST).send(err);
   }
-  if (isEmpty(user)) {
+  if (_.isEmpty(user)) {
     return res
       .status(HttpStatus.NOT_FOUND)
       .send(`User with id ${req.params.id} NOT_FOUND`);
@@ -121,23 +120,20 @@ router.route("/:id").get(async (req, res) => {
 router.route("/add").post(async (req, res) => {
   // Validate form data
   const err1 = validateRegisterInput(req.body);
-  if (!isEmpty(err1)) {
+  if (!_.isEmpty(err1)) {
     return res.status(HttpStatus.UNPROCESSABLE_ENTITY).send(err1);
   }
 
-  const user = new User({
-    name: req.body.name,
-    email: req.body.email
-  });
+  const user = new User(_.pick(req.body, ["name", "email"]));
 
   user.setPassword(req.body.password);
 
   const [err2, newUser] = await to(user.save());
 
-  if (!isEmpty(err2)) {
+  if (!_.isEmpty(err2)) {
     return res.status(HttpStatus.BAD_REQUEST).send(err2);
   }
-  if (isEmpty(newUser)) {
+  if (_.isEmpty(newUser)) {
     return res
       .status(HttpStatus.BAD_REQUEST)
       .send("Bad request creating new user");
@@ -182,13 +178,13 @@ router.route("/add").post(async (req, res) => {
 router.route("/login").post(async (req, res) => {
   // Validate form data
   const err = validateLoginInput(req.body);
-  if (!isEmpty(err)) {
+  if (!_.isEmpty(err)) {
     return res.status(HttpStatus.UNPROCESSABLE_ENTITY).send(err);
   }
 
   // Cannot use async/await b/c passport uses done/next logic
   return passport.authenticate("local", (passportErr, user, info) => {
-    if (!isEmpty(passportErr)) {
+    if (!_.isEmpty(passportErr)) {
       return res.status(HttpStatus.BAD_REQUEST).send(passportErr);
     }
     if (user) {
@@ -235,15 +231,15 @@ router.route("/update/:id").put(async (req, res) => {
   // Validate form data
   req.body._id = req.params.id;
   const err = validateUpdateUserInput(req.body);
-  if (!isEmpty(err)) {
+  if (!_.isEmpty(err)) {
     return res.status(HttpStatus.UNPROCESSABLE_ENTITY).send(err);
   }
 
   const [err1, user] = await to(User.findById(req.params.id));
-  if (!isEmpty(err1)) {
+  if (!_.isEmpty(err1)) {
     return res.status(HttpStatus.BAD_REQUEST).send(err1);
   }
-  if (isEmpty(user)) {
+  if (_.isEmpty(user)) {
     return res
       .status(HttpStatus.NOT_FOUND)
       .send(`User with id ${req.params.id} NOT_FOUND`);
@@ -253,10 +249,10 @@ router.route("/update/:id").put(async (req, res) => {
   user.email = req.body.email || user.email;
 
   const [err2, newUser] = await to(user.save());
-  if (!isEmpty(err2)) {
+  if (!_.isEmpty(err2)) {
     return res.status(HttpStatus.BAD_REQUEST).send(err2);
   }
-  if (isEmpty(newUser)) {
+  if (_.isEmpty(newUser)) {
     return res.status(HttpStatus.BAD_REQUEST).send("Bad request updating user");
   }
   return res.status(HttpStatus.OK).send({ user: newUser.getSafeUser() });
@@ -288,10 +284,10 @@ router.route("/update/:id").put(async (req, res) => {
  */
 router.route("/:id").delete(async (req, res) => {
   const [err1, user] = await to(User.findById(req.params.id));
-  if (!isEmpty(err1)) {
+  if (!_.isEmpty(err1)) {
     return res.status(HttpStatus.BAD_REQUEST).send(err1);
   }
-  if (isEmpty(user)) {
+  if (_.isEmpty(user)) {
     return res
       .status(HttpStatus.NOT_FOUND)
       .send(`User with id ${req.params.id} NOT_FOUND`);
@@ -304,10 +300,10 @@ router.route("/:id").delete(async (req, res) => {
   user.deleted = true;
 
   const [err2, newUser] = await to(user.save());
-  if (!isEmpty(err2)) {
+  if (!_.isEmpty(err2)) {
     return res.status(HttpStatus.BAD_REQUEST).send(err2);
   }
-  if (isEmpty(newUser)) {
+  if (_.isEmpty(newUser)) {
     return res.status(HttpStatus.BAD_REQUEST).send("Bad request deleting user");
   }
   return res

@@ -1,20 +1,21 @@
-const isEmpty = require("is-empty");
+const _ = require("lodash");
 const Validator = require("../_utils/validator.util");
 
 const validateUpdateProjectInput = data => {
   const errors = {};
   const formattedData = {};
 
-  formattedData._id = !isEmpty(data._id) ? data._id : "";
-  formattedData.title = !isEmpty(data.title) ? data.title : "";
-  formattedData.authors = !isEmpty(data.authors) ? data.authors : "";
-  formattedData.users = !isEmpty(data.users) ? data.users : "";
-  formattedData.body = !isEmpty(data.body) ? data.body : "";
-  formattedData.private = !isEmpty(data.private) ? data.private : "";
-  formattedData.deleted = !isEmpty(data.deleted) ? data.deleted : "";
+  formattedData._id = !_.isEmpty(data._id) ? data._id : "";
+  formattedData.title = !_.isEmpty(data.title) ? data.title : "";
+  formattedData.authors = !_.isEmpty(data.authors) ? data.authors : "";
+  formattedData.users = !_.isEmpty(data.users) ? data.users : "";
+  formattedData.body = !_.isEmpty(data.body) ? data.body : "";
+  formattedData.private =
+    typeof data.private !== "undefined" ? data.private : "";
+  formattedData.deleted = typeof data.deleted !== "undefined" ? "true" : "";
 
   // Delete checks
-  if (!isEmpty(formattedData.deleted)) {
+  if (!_.isEmpty(formattedData.deleted)) {
     errors.deleted =
       "Delete field cannot be updated; Please use the DELETE endpoint";
   }
@@ -40,13 +41,13 @@ const validateUpdateProjectInput = data => {
 
   // Authors check
   if (
-    !isEmpty(formattedData.authors) &&
+    !_.isEmpty(formattedData.authors) &&
     !Validator.isArray(formattedData.authors)
   ) {
     errors.authors = "Authors field is not an array";
   }
   if (
-    !isEmpty(formattedData.authors) &&
+    !_.isEmpty(formattedData.authors) &&
     Validator.isArray(formattedData.authors)
   ) {
     const authorIdErrors = formattedData.authors
@@ -56,19 +57,22 @@ const validateUpdateProjectInput = data => {
           : "";
       })
       .join();
-    if (!isEmpty(authorIdErrors)) {
+    if (!_.isEmpty(authorIdErrors)) {
       errors.authors = authorIdErrors;
     }
   }
 
   // Users check
   if (
-    !isEmpty(formattedData.users) &&
+    !_.isEmpty(formattedData.users) &&
     !Validator.isArray(formattedData.users)
   ) {
     errors.users = "Users field is not an array";
   }
-  if (!isEmpty(formattedData.users) && Validator.isArray(formattedData.users)) {
+  if (
+    !_.isEmpty(formattedData.users) &&
+    Validator.isArray(formattedData.users)
+  ) {
     const userIdErrors = formattedData.users
       .map((userId, i) => {
         return !Validator.isObjectId(userId)
@@ -76,19 +80,19 @@ const validateUpdateProjectInput = data => {
           : "";
       })
       .join();
-    if (!isEmpty(userIdErrors)) {
+    if (!_.isEmpty(userIdErrors)) {
       errors.users = userIdErrors;
     }
   }
 
   // Private check
   if (
-    !isEmpty(formattedData.private) &&
+    !_.isEmpty(formattedData.private) &&
     !Validator.isRealBoolean(formattedData.private)
   ) {
     errors.private = "Private field must be a boolean";
   }
-  return !isEmpty(errors) ? JSON.stringify(errors) : "";
+  return !_.isEmpty(errors) ? JSON.stringify(errors) : "";
 };
 
 module.exports = validateUpdateProjectInput;

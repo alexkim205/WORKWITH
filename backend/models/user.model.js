@@ -155,8 +155,8 @@ userSchema.methods.generateJwt = function() {
     },
     switchEnvs({
       generic: process.env.JWT_SECRET,
-      test: "TESTING_JWT_SECRET_KEY",
-      testConnection: "TESTING_JWT_SECRET_KEY"
+      test: process.env.TESTING_JWT_SECRET,
+      testConnection: process.env.TESTING_JWT_SECRET
     }),
     {
       expiresIn: 60 * 60 * 24 // expires in 24 hours

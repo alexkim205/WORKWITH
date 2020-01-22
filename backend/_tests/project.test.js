@@ -5,7 +5,6 @@ const chai = require("chai");
 const chaiHttp = require("chai-http");
 const _ = require("lodash");
 const to = require("await-to-js").default;
-const isEmpty = require("is-empty");
 
 const app = require("../server");
 const User = require("../models/user.model");
@@ -33,9 +32,9 @@ describe("Project", () => {
       name: user.name,
       email: user.email
     });
-    [newUser.salt, newUser.hash] = newUser.setPassword(user.password);
+    newUser.setPassword(user.password);
     const [userErr, returnedUser] = await to(newUser.save());
-    if (!isEmpty(userErr)) {
+    if (!_.isEmpty(userErr)) {
       throw new Error(`Error: ${userErr}`);
     }
     userId = returnedUser._id.toString();
@@ -142,10 +141,10 @@ describe("Project", () => {
       const [err, foundProject] = await to(
         Project.findOne({ title: project.title })
       );
-      if (!isEmpty(err)) {
+      if (!_.isEmpty(err)) {
         throw new Error(`Error: ${err}`);
       }
-      if (isEmpty(foundProject)) {
+      if (_.isEmpty(foundProject)) {
         throw new Error(`Error: Project with title ${project.title} NOT_FOUND`);
       }
       projectId = foundProject._id.toString();

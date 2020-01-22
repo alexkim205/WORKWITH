@@ -5,7 +5,6 @@ const chai = require("chai");
 const chaiHttp = require("chai-http");
 const _ = require("lodash");
 const to = require("await-to-js").default;
-const isEmpty = require("is-empty");
 
 const app = require("../server");
 const User = require("../models/user.model");
@@ -137,10 +136,10 @@ describe("User", () => {
     before(async () => {
       // Find id of user we created above
       const [err, foundUser] = await to(User.findOne({ email: user.email }));
-      if (!isEmpty(err)) {
+      if (!_.isEmpty(err)) {
         throw new Error(`Error: ${err}`);
       }
-      if (isEmpty(foundUser)) {
+      if (_.isEmpty(foundUser)) {
         throw new Error(`Error: User with email ${user.email} NOT_FOUND`);
       }
       userId = foundUser._id.toString();

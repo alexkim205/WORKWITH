@@ -1,14 +1,14 @@
-const isEmpty = require("is-empty");
+const _ = require("lodash");
 const Validator = require("../_utils/validator.util");
 
 const validateRegisterInput = data => {
   const errors = {};
   const formattedData = {};
 
-  formattedData.name = !isEmpty(data.name) ? data.name : "";
-  formattedData.email = !isEmpty(data.email) ? data.email : "";
-  formattedData.password = !isEmpty(data.password) ? data.password : "";
-  formattedData.password2 = !isEmpty(data.password2) ? data.password2 : "";
+  formattedData.name = !_.isEmpty(data.name) ? data.name : "";
+  formattedData.email = !_.isEmpty(data.email) ? data.email : "";
+  formattedData.password = !_.isEmpty(data.password) ? data.password : "";
+  formattedData.password2 = !_.isEmpty(data.password2) ? data.password2 : "";
 
   // Name checks
   if (Validator.isEmpty(formattedData.name)) {
@@ -35,7 +35,7 @@ const validateRegisterInput = data => {
   if (!Validator.equals(formattedData.password, formattedData.password2)) {
     errors.password2 = "Passwords must match";
   }
-  return !isEmpty(errors) ? JSON.stringify(errors) : "";
+  return !_.isEmpty(errors) ? JSON.stringify(errors) : "";
 };
 
 module.exports = validateRegisterInput;

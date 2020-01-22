@@ -1,4 +1,4 @@
-const isEmpty = require("is-empty");
+const _ = require("lodash");
 const Validator = require("../_utils/validator.util");
 
 const validateAddNoteInput = data => {
@@ -6,16 +6,16 @@ const validateAddNoteInput = data => {
   const formattedData = {};
 
   // Convert empty fields to an empty string so we can use validator functions
-  formattedData.projectId = !isEmpty(data.projectId) ? data.projectId : "";
-  formattedData.title = !isEmpty(data.title) ? data.title : "";
-  formattedData.authors = !isEmpty(data.authors) ? data.authors : "";
-  formattedData.taggedUsers = !isEmpty(data.taggedUsers)
+  formattedData.projectId = !_.isEmpty(data.projectId) ? data.projectId : "";
+  formattedData.title = !_.isEmpty(data.title) ? data.title : "";
+  formattedData.authors = !_.isEmpty(data.authors) ? data.authors : "";
+  formattedData.taggedUsers = !_.isEmpty(data.taggedUsers)
     ? data.taggedUsers
     : "";
-  formattedData.body = !isEmpty(data.body) ? data.body : "";
-  formattedData.minimized = !isEmpty(data.minimized) ? data.minimized : "";
-  formattedData.private = !isEmpty(data.private) ? data.private : "";
-  formattedData.deleted = !isEmpty(data.deleted) ? data.deleted : "";
+  formattedData.body = !_.isEmpty(data.body) ? data.body : "";
+  formattedData.minimized = !_.isEmpty(data.minimized) ? data.minimized : "";
+  formattedData.private = !_.isEmpty(data.private) ? data.private : "";
+  formattedData.deleted = !_.isEmpty(data.deleted) ? data.deleted : "";
 
   // Project ID checks
   if (Validator.isEmpty(formattedData.projectId)) {
@@ -29,11 +29,11 @@ const validateAddNoteInput = data => {
   }
 
   // Authors check
-  if (isEmpty(formattedData.authors)) {
+  if (_.isEmpty(formattedData.authors)) {
     errors.authors = "Author(s) field is required";
   }
   if (
-    !isEmpty(formattedData.authors) &&
+    !_.isEmpty(formattedData.authors) &&
     !Validator.isArray(formattedData.authors)
   ) {
     errors.authors = "Authors field is not an array";
@@ -41,7 +41,7 @@ const validateAddNoteInput = data => {
 
   // Tagged Users check
   if (
-    !isEmpty(formattedData.taggedUsers) &&
+    !_.isEmpty(formattedData.taggedUsers) &&
     !Validator.isArray(formattedData.taggedUsers)
   ) {
     errors.taggedUsers = "Tagged users field is not an array";
@@ -49,7 +49,7 @@ const validateAddNoteInput = data => {
 
   // Minimized check
   if (
-    !isEmpty(formattedData.minimized) &&
+    !_.isEmpty(formattedData.minimized) &&
     !Validator.isRealBoolean(formattedData.minimized)
   ) {
     errors.minimized = "Minimized field must be a boolean";
@@ -57,19 +57,19 @@ const validateAddNoteInput = data => {
 
   // Private check
   if (
-    !isEmpty(formattedData.private) &&
+    !_.isEmpty(formattedData.private) &&
     !Validator.isRealBoolean(formattedData.private)
   ) {
     errors.private = "Private field must be a boolean";
   }
 
   // Delete checks
-  if (!isEmpty(formattedData.deleted)) {
+  if (!_.isEmpty(formattedData.deleted)) {
     errors.deleted =
       "Delete field cannot be updated; Please use the DELETE endpoint";
   }
 
-  return !isEmpty(errors) ? JSON.stringify(errors) : "";
+  return !_.isEmpty(errors) ? JSON.stringify(errors) : "";
 };
 
 module.exports = validateAddNoteInput;

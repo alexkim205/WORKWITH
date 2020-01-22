@@ -7,7 +7,7 @@
 
 const to = require("await-to-js").default;
 const router = require("express").Router();
-const isEmpty = require("is-empty");
+const _ = require("lodash");
 const { HttpStatus } = require("../_constants/error.constants");
 const User = require("../models/user.model");
 const Project = require("../models/project.model");
@@ -43,10 +43,10 @@ const validateUpdateProjectInput = require("../validators/update.project.validat
  */
 router.route("/").get(async (req, res) => {
   const [err, projects] = await to(Project.find());
-  if (!isEmpty(err)) {
+  if (!_.isEmpty(err)) {
     return res.status(HttpStatus.BAD_REQUEST).send(err);
   }
-  if (isEmpty(projects)) {
+  if (_.isEmpty(projects)) {
     return res.status(HttpStatus.NO_CONTENT).send();
   }
   return res.status(HttpStatus.OK).send({ projects });
@@ -80,10 +80,10 @@ router.route("/").get(async (req, res) => {
  */
 router.route("/:id").get(async (req, res) => {
   const [err, project] = await to(Project.findById(req.params.id));
-  if (!isEmpty(err)) {
+  if (!_.isEmpty(err)) {
     return res.status(HttpStatus.BAD_REQUEST).send(err);
   }
-  if (isEmpty(project)) {
+  if (_.isEmpty(project)) {
     return res
       .status(HttpStatus.NOT_FOUND)
       .send(`Project with id ${req.params.id} NOT_FOUND`);
@@ -128,10 +128,10 @@ router.route("/:id").get(async (req, res) => {
 router.route("/user/:id").get(async (req, res) => {
   // https://stackoverflow.com/questions/18148166/find-document-with-array-that-contains-a-specific-value
   const [err, projects] = await to(Project.find({ users: req.params.id }));
-  if (!isEmpty(err)) {
+  if (!_.isEmpty(err)) {
     return res.status(HttpStatus.BAD_REQUEST).send(err);
   }
-  if (isEmpty(projects)) {
+  if (_.isEmpty(projects)) {
     return res
       .status(HttpStatus.NO_CONTENT)
       .send(
@@ -167,61 +167,58 @@ router.route("/user/:id").get(async (req, res) => {
 router.route("/add").post(async (req, res) => {
   // Validate form data
   const err1 = validateAddProjectInput(req.body);
-  if (!isEmpty(err1)) {
+  if (!_.isEmpty(err1)) {
     return res.status(HttpStatus.UNPROCESSABLE_ENTITY).send(err1);
   }
 
   // Check if all authors exist
   const checkAuthorPromises = req.body.authors.map(async authorId => {
     const [errAuthor, user] = await to(User.findById(authorId));
-    if (!isEmpty(errAuthor)) {
+    if (!_.isEmpty(errAuthor)) {
       throw new Error(errAuthor);
     }
-    if (isEmpty(user)) {
+    if (_.isEmpty(user)) {
       throw new Error(`Author with id ${authorId} was NOT_FOUND`);
     }
     return user;
   });
   const [err2, authors] = await to(Promise.all(checkAuthorPromises));
-  if (!isEmpty(err2)) {
+  if (!_.isEmpty(err2)) {
     return res.status(HttpStatus.NOT_FOUND).send(err2);
   }
-  if (isEmpty(authors)) {
+  if (_.isEmpty(authors)) {
     return res.status(HttpStatus.NOT_FOUND).send(`Authors were NOT_FOUND`);
   }
 
   // Check if all users exist
-  req.body.users = isEmpty(req.body.users) ? [] : req.body.users;
+  req.body.users = _.isEmpty(req.body.users) ? [] : req.body.users;
   const checkUsersPromises = req.body.users.map(async userId => {
     const [errUser, user] = await to(User.findById(userId));
-    if (!isEmpty(errUser)) {
+    if (!_.isEmpty(errUser)) {
       throw new Error(errUser);
     }
-    if (isEmpty(user)) {
+    if (_.isEmpty(user)) {
       throw new Error(`User with id ${userId} was NOT_FOUND`);
     }
     return user;
   });
   const [err3, users] = await to(Promise.all(checkUsersPromises));
-  if (!isEmpty(err3)) {
+  if (!_.isEmpty(err3)) {
     return res.status(HttpStatus.NOT_FOUND).send(err3);
   }
-  if (!isEmpty(req.body.users) && isEmpty(users)) {
+  if (!_.isEmpty(req.body.users) && _.isEmpty(users)) {
     return res.status(HttpStatus.NOT_FOUND).send(`Users were NOT_FOUND`);
   }
 
-  const project = new Project({
-    title: req.body.title,
-    authors: req.body.authors,
-    users: req.body.users,
-    private: req.body.private
-  });
+  const project = new Project(
+    _.pick(req.body, ["title", "authors", "users", "private"])
+  );
 
   const [err4, newProject] = await to(project.save());
-  if (!isEmpty(err4)) {
+  if (!_.isEmpty(err4)) {
     return res.status(HttpStatus.BAD_REQUEST).send(err4);
   }
-  if (isEmpty(newProject)) {
+  if (_.isEmpty(newProject)) {
     return res
       .status(HttpStatus.BAD_REQUEST)
       .send("Bad request creating new project");
@@ -263,72 +260,72 @@ router.route("/update/:id").put(async (req, res) => {
   // Validate form data
   req.body._id = req.params.id;
   const err1 = validateUpdateProjectInput(req.body);
-  if (!isEmpty(err1)) {
+  if (!_.isEmpty(err1)) {
     return res.status(HttpStatus.UNPROCESSABLE_ENTITY).send(err1);
   }
 
   // Check that project exists
   const [err2, project] = await to(Project.findById(req.params.id));
-  if (!isEmpty(err2)) {
+  if (!_.isEmpty(err2)) {
     return res.status(HttpStatus.BAD_REQUEST).send(err2);
   }
-  if (isEmpty(project)) {
+  if (_.isEmpty(project)) {
     return res
       .status(HttpStatus.NOT_FOUND)
       .send(`Project with id ${req.params.id} NOT_FOUND`);
   }
 
   // Check if all authors exist
-  req.body.authors = isEmpty(req.body.authors) ? [] : req.body.authors;
+  req.body.authors = _.isEmpty(req.body.authors) ? [] : req.body.authors;
   const checkAuthorPromises = req.body.authors.map(async authorId => {
     const [errAuthor, user] = await to(User.findById(authorId));
-    if (!isEmpty(errAuthor)) {
+    if (!_.isEmpty(errAuthor)) {
       throw new Error(errAuthor);
     }
-    if (isEmpty(user)) {
+    if (_.isEmpty(user)) {
       throw new Error(`Author with id ${authorId} was NOT_FOUND`);
     }
     return user;
   });
   const [err3, authors] = await to(Promise.all(checkAuthorPromises));
-  if (!isEmpty(err3)) {
+  if (!_.isEmpty(err3)) {
     return res.status(HttpStatus.NOT_FOUND).send(err3);
   }
-  if (!isEmpty(req.body.authors) && isEmpty(authors)) {
+  if (!_.isEmpty(req.body.authors) && _.isEmpty(authors)) {
     return res.status(HttpStatus.NOT_FOUND).send(`Authors were NOT_FOUND`);
   }
 
   // Check if all users exist
-  req.body.users = isEmpty(req.body.users) ? [] : req.body.users;
+  req.body.users = _.isEmpty(req.body.users) ? [] : req.body.users;
   const checkUsersPromises = req.body.users.map(async userId => {
     const [errUser, user] = await to(User.findById(userId));
-    if (!isEmpty(errUser)) {
+    if (!_.isEmpty(errUser)) {
       throw new Error(errUser);
     }
-    if (isEmpty(user)) {
+    if (_.isEmpty(user)) {
       throw new Error(`User with id ${userId} was NOT_FOUND`);
     }
     return user;
   });
   const [err4, users] = await to(Promise.all(checkUsersPromises));
-  if (!isEmpty(err4)) {
+  if (!_.isEmpty(err4)) {
     return res.status(HttpStatus.NOT_FOUND).send(err4);
   }
-  if (!isEmpty(req.body.users) && isEmpty(users)) {
+  if (!_.isEmpty(req.body.users) && _.isEmpty(users)) {
     return res.status(HttpStatus.NOT_FOUND).send(`Users were NOT_FOUND`);
   }
 
   project.title = req.body.title || project.title;
   project.authors = req.body.users || project.users;
-  project.private = isEmpty(req.body.private)
+  project.private = _.isEmpty(req.body.private)
     ? project.private
     : req.body.private;
 
   const [err5, newProject] = await to(project.save());
-  if (!isEmpty(err5)) {
+  if (!_.isEmpty(err5)) {
     return res.status(HttpStatus.BAD_REQUEST).send(err5);
   }
-  if (isEmpty(newProject)) {
+  if (_.isEmpty(newProject)) {
     return res
       .status(HttpStatus.BAD_REQUEST)
       .send("Bad request updating project");
@@ -362,10 +359,10 @@ router.route("/update/:id").put(async (req, res) => {
  */
 router.route("/:id").delete(async (req, res) => {
   const [err1, project] = await to(Project.findById(req.params.id));
-  if (!isEmpty(err1)) {
+  if (!_.isEmpty(err1)) {
     return res.status(HttpStatus.BAD_REQUEST).send(err1);
   }
-  if (isEmpty(project)) {
+  if (_.isEmpty(project)) {
     return res
       .status(HttpStatus.NOT_FOUND)
       .send(`Project with id ${req.params.id} NOT_FOUND`);
@@ -378,10 +375,10 @@ router.route("/:id").delete(async (req, res) => {
   project.deleted = true;
 
   const [err2, newProject] = await to(project.save());
-  if (!isEmpty(err2)) {
+  if (!_.isEmpty(err2)) {
     return res.status(HttpStatus.BAD_REQUEST).send(err2);
   }
-  if (isEmpty(newProject)) {
+  if (_.isEmpty(newProject)) {
     return res
       .status(HttpStatus.BAD_REQUEST)
       .send("Bad request deleting project");
