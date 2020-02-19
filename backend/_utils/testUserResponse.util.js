@@ -7,7 +7,7 @@ const testUserResponse = (res, userToCompare, withToken = false) => {
   if (withToken) {
     expect(res.body).to.have.property("token");
   }
-  expect(res.body.user).to.have.keys("_id", "name", "email");
+  expect(res.body.user).to.have.keys("_id", "name", "email", "role");
   expect(res.body.user.name).to.equal(userToCompare.name);
   expect(res.body.user.email).to.equal(userToCompare.email);
 };

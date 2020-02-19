@@ -1,4 +1,4 @@
-import React, { useState, useRef, Fragment } from "react";
+import React, { Fragment, useState, useRef, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { Flipper, Flipped } from "react-flip-toolkit";
 import _ from "lodash";
@@ -7,7 +7,7 @@ import useAction from "../../_utils/useAction.util";
 import { useFlip } from "../../_utils/FlipProvider.util";
 import { validEmailRegex } from "../../_utils/formCheckRegexes.util";
 import { FormError } from "../../_config/errors";
-import { login, register } from "../../_actions/users.actions";
+import { login, register, logout } from "../../_actions/users.actions";
 import FullScreenLoader from "../../components/FullScreenLoader";
 import {
   loaderBackgroundColor,
@@ -36,6 +36,7 @@ const AuthBox = () => {
   });
   const _login = useAction(login);
   const _register = useAction(register);
+  const _logout = useAction(logout);
   const backgroundRefs = _.mapValues(fieldState, useRef);
   const AUTH_STATE = {
     LOGIN: {
@@ -128,7 +129,7 @@ const AuthBox = () => {
           errors[name] = getValidationString[name](fieldState[name]);
         }
       });
-    errors.server = "";
+    // errors.server = errors.server;
     setState(prevState => ({
       ...prevState,
       formErrors: errors
@@ -162,8 +163,12 @@ const AuthBox = () => {
     const { name, value } = e.target;
     setFieldState(prevState => ({ ...prevState, [name]: value }));
   };
+  useEffect(() => {
+    // Logout if this page is requested
+    _logout();
+  }, []);
 
-  const selectRenderFields = () => (
+  const renderFields = () => (
     <Fragment>
       {_.values(FIELDS).map((field, i) => (
         <Input.Wrapper ref={field.backgroundRef} key={i}>
@@ -223,7 +228,7 @@ const AuthBox = () => {
         <Flipper flipKey={state.authState} spring={"veryGentle"}>
           <div className="form">
             <Input.Error>{state.formErrors.server}</Input.Error>
-            <div className="fields-box">{selectRenderFields()}</div>
+            <div className="fields-box">{renderFields()}</div>
             <div className="button-box">
               <FlippedButton
                 flipId="auth-box"
@@ -231,9 +236,10 @@ const AuthBox = () => {
                 onClick={() => {
                   setPending(true);
                 }}
+                scale
+                opacity
               >
                 {state.authState}
-                {/* {!state.changingState && state.authState} */}
               </FlippedButton>
             </div>
             <LinkButton onClick={getAuthState().switch}>

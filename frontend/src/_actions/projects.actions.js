@@ -15,7 +15,7 @@ export const getProjectsByUser = userId => async dispatch => {
   const [err, projects] = await to(projectsServices.getProjectsByUser(userId));
   if (err) {
     dispatch(actionError(err));
-    throw err;
+    return;
   }
   dispatch(actionSuccess(projects));
 };
@@ -30,7 +30,7 @@ export const getProjects = () => async dispatch => {
   const [err, projects] = await to(projectsServices.getProjects());
   if (err) {
     dispatch(actionError(err));
-    throw err;
+    return;
   }
   dispatch(actionSuccess(projects));
 };

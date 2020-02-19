@@ -4,14 +4,58 @@
 
 - Change error responses to send object with 'message' fields
 - Refactor out all errors into reusable error types
+- Add authorization tests
+
+## 2/18/2020
+
+- Add testing-offline start script to serve mock data when I'm on a train and can't connect to online Mongod.
+- Fix breakpoints, use humblebee custom breakpoints instead of styled-components-breakpoints
+- Beautiful grid <-> list animations
+- Worked a bit on toggle switch components
+
+## 2/12/2020
+
+- Added debounce hook for project search input
+- Fix get projects by user frontend error
+- Styling of project cards
+
+## 2/5/2020
+
+- Add fuzzy searching for projects with fuse.js
+- Adjust sorting algorithm
+
+## 2/3/2020
+
+- Added request and response interceptors to add tokens and handle server errors, respectively.
+- Fix user, project, and note services to return object
+
+## 1/29/2020
+
+- Add user creating project/note to authors and users/taggedUsers arrays. Change way validateAdd{Project|Note}Input validates.
+
+## 1/28/2020
+
+- Fix user selector
+- Add token authentication to service calls
+- Make get project by user work on Projects page
+- Refactor and cleanup fullscreen loader
+- Nice looking animation to transform fullscreen loader into logout button on Projects page
+- TODO: work on user navbar
+- TODO: fix bad request on register
+
+## 1/23/2020
+
+- Figure out how to check if user is authorized to get notes, in other words, determine relationship between User and Note in routes or models.
+  - Protect project routes by crosschecking user ids. Just authorize note routes for now.
+- Add role field to model and role checking to route
+- Add tokens to headers of test requests (use mock admin user for now)
+- Updated user action snapshot tests
+- TODO: Projects page
 
 ## 1/22/2020
 
 - Add role authorization and authentication in backend
 - Protect routes
-- TODO: Update tests to have tokens in header
-- TODO: Figure out how to check if user is authorized to get notes, in other words,determine relationship between User and Note in routes or models.
-  - For now, just check for existence of token for note and project routes.
 
 ## 1/21/2020
 

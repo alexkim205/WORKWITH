@@ -1,51 +1,67 @@
 import React, { useMemo } from "react";
 import PropTypes from "prop-types";
-import styled from "styled-components";
 import { Route } from "react-router-dom";
 import { Flipper, Flipped } from "react-flip-toolkit";
 import _ from "lodash";
 
 import { useFlip } from "../../_utils/FlipProvider.util";
-
 import Projects from "../Projects";
 import Auth from "../Auth";
 
-const Header = styled.header`
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid black;
-  width: 100%;
-  position: relative;
-  background-color: #f1f1f1;
-  z-index: 10;
-`;
-
-const RootNavigator = ({ location, search }) => {
+const RootNavigator = ({ location }) => {
   const { flipState, isPending } = useFlip();
   const flipKeyParams = useMemo(
     () =>
       _.compact([
         location.pathname,
-        location.search,
+        location.search.replace("?", ""),
         flipState.toString(),
         isPending.toString()
       ]),
     [location.pathname, location.search, flipState, isPending]
   );
+  // console.log(flipKeyParams.join("-"));
   return (
     <Flipper
       flipKey={flipKeyParams.join("-")}
-      decisionData={{ location, search, flipState }}
+      decisionData={{ location, flipState, isPending }}
       // spring={{
       //   stiffness: 110,
-      //   dampness: 10
+      //   dampness: 30
       // }}
       sprint="veryGentle"
+      handleEnterUpdateDelete={({
+        hideEnteringElements,
+        animateEnteringElements,
+        animateExitingElements,
+        animateFlippedElements
+      }) => {
+        hideEnteringElements();
+        animateExitingElements().then(
+          Promise.all[(animateEnteringElements(), animateFlippedElements())]
+        );
+
+        // then(
+        //   Promise.all[(animateEnteringElements(), animateFlippedElements())]
+        // );
+        // Promise.all([animateExitingElements(), animateFlippedElements()]).then(
+        //   animateEnteringElements
+        // );
+        // animateFlippedElements().then(animateEnteringElements);
+      }}
+      // debug
     >
       <Route
         exact
         path={"/auth"}
         render={() => (
-          <Flipped flipId="page">
+          <Flipped
+            flipId="page"
+            // eslint-disable-next-line no-unused-vars
+            shouldFlip={({ location: prevLoc }, { location: currLoc }) =>
+              currLoc === "/auth"
+            }
+          >
             <div>
               <Auth />
             </div>
@@ -58,7 +74,6 @@ const RootNavigator = ({ location, search }) => {
         render={() => (
           <Flipped flipId="page">
             <div>
-              <Header />
               <Projects />
             </div>
           </Flipped>

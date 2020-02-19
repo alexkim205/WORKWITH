@@ -1,6 +1,7 @@
 import { createStore, applyMiddleware, compose } from "redux";
 import thunk from "redux-thunk";
 import { persistStore, persistReducer } from "redux-persist";
+import { composeWithDevTools } from "redux-devtools-extension";
 import storage from "redux-persist/lib/storage"; // defaults to localStorage for web
 
 import rootReducer from "../_reducers";
@@ -14,7 +15,11 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 // Middlewares
 const middlewares = [thunk];
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const composeEnhancers =
+  process.env.REACT_APP_ENV === "development"
+    ? composeWithDevTools({ trace: true, traceLimit: 25 })
+    : compose;
+
 export default () => {
   const store = createStore(
     persistedReducer,

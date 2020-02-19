@@ -6,7 +6,8 @@ const initialState = {
   pending: false,
   error: null,
   users: [],
-  user: null
+  user: null,
+  token: null
 };
 
 const parts = [
@@ -15,13 +16,14 @@ const parts = [
   createReducerPart(userConstants, "GET_USER", "user"),
   createReducerPart(userConstants, "UPDATE_USER", "user"),
   createReducerPart(userConstants, "DELETE_USER"),
-  createReducerPart(userConstants, "LOGIN", "user"), // user object has token field
-  createReducerPart(userConstants, "REGISTER", "user"), // user object has token field
+  createReducerPart(userConstants, "LOGIN", ["user", "token"]), // user object has token field
+  createReducerPart(userConstants, "REGISTER", ["user", "token"]), // user object has token field
   {
-    LOGOUT_SUCCESS: () => ({
+    [userConstants.LOGOUT_SUCCESS]: () => ({
       pending: false,
       error: null,
-      user: null
+      user: null,
+      token: null
     })
   }
 ];

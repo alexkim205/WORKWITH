@@ -1,5 +1,6 @@
 const _ = require("lodash");
 const Validator = require("../_utils/validator.util");
+const Role = require("../_utils/roles.util");
 
 const validateRegisterInput = data => {
   const errors = {};
@@ -9,6 +10,7 @@ const validateRegisterInput = data => {
   formattedData.email = !_.isEmpty(data.email) ? data.email : "";
   formattedData.password = !_.isEmpty(data.password) ? data.password : "";
   formattedData.password2 = !_.isEmpty(data.password2) ? data.password2 : "";
+  formattedData.role = !_.isEmpty(data.role) ? data.role : "";
 
   // Name checks
   if (Validator.isEmpty(formattedData.name)) {
@@ -34,6 +36,14 @@ const validateRegisterInput = data => {
   }
   if (!Validator.equals(formattedData.password, formattedData.password2)) {
     errors.password2 = "Passwords must match";
+  }
+
+  // Role checks
+  if (
+    !Validator.isEmpty(formattedData.role) &&
+    !_.includes(_.values(Role), formattedData.role)
+  ) {
+    errors.role = "Role is invalid";
   }
   return !_.isEmpty(errors) ? JSON.stringify(errors) : "";
 };

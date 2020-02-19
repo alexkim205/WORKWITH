@@ -1,23 +1,24 @@
 import theme from "styled-theming";
-import { darken } from "polished";
+import { darken, lighten } from "polished";
 
-const ACCENT = "#1affc4";
-const DARK = "#111";
-const LIGHT = "#fff";
+const GREEN = "#1affc4";
+const BLACK = "#111";
+const PURPLE = "#4922D8";
+const WHITE = "#fff";
 
 export const mainColor = theme("mode", {
-  light: LIGHT,
-  dark: DARK
+  light: GREEN,
+  dark: GREEN
 });
 
 export const secondaryColor = theme("mode", {
-  light: ACCENT,
-  dark: ACCENT
+  light: PURPLE,
+  dark: PURPLE
 });
 
 export const textColor = theme("mode", {
-  light: DARK,
-  dark: LIGHT
+  light: BLACK,
+  dark: WHITE
 });
 
 export const backgroundColor = theme("mode", {
@@ -31,17 +32,18 @@ export const buttonColor = theme("mode", {
 });
 
 export const buttonTextColor = theme("mode", {
-  light: "#fff",
-  dark: "#000"
+  light: WHITE,
+  dark: BLACK
 });
 
 export const linkButtonTextColor = theme("mode", {
-  light: darken(0.3, ACCENT),
-  dark: ACCENT
+  light: darken(0.3, GREEN),
+  dark: GREEN
 });
 
 export const loaderBackgroundColor = theme("mode", {
-  light: "#FFB1A4",
+  // light: "#FFB1A4",
+  light: "#00007e",
   dark: darken(0.6, "#ceceff")
 });
 
@@ -56,6 +58,20 @@ export const successColor = theme("mode", {
 });
 
 export const pendingColor = theme("mode", {
-  light: "#023f92",
-  dark: "#023f92"
+  light: "#FFB1A4",
+  dark: "#FFB1A4"
 });
+
+export const borderColor = theme("mode", {
+  light: "#C4C4C4",
+  dark: lighten(0.5, BLACK)
+});
+
+export const breakpoints = {
+  xxs: 0,
+  xs: 380,
+  s: 576,
+  m: 700,
+  l: 992,
+  xl: 1200
+};

@@ -13,20 +13,6 @@ export const useFlip = () => useContext(FlipContext);
 const FlipProvider = ({ children }) => {
   const [flipState, setFlipState] = useState(false);
   const [isPending, setPending] = useState(false);
-  // const parameters = useSelector(
-  //   createSelector(
-  //     state => state.users.pending,
-  //     state => state.users.error,
-  //     state => state.projects.pending,
-  //     state => state.projects.error,
-  //     state => state.notes.pending,
-  //     state => state.notes.error,
-  //     (...props) =>
-  //       _(props)
-  //         .map(e => !_.isNull(e))
-  //         .join("-")
-  //   )
-  // );
   const flip = () => {
     setFlipState(prevState => !prevState);
   };

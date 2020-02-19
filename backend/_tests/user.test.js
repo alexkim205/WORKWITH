@@ -4,11 +4,10 @@ process.env.NODE_ENV = "testing";
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const _ = require("lodash");
-const to = require("await-to-js").default;
 
 const app = require("../server");
 const User = require("../models/user.model");
-const { user } = require("../_constants/test.constants");
+const { admin: user } = require("../_constants/test.constants");
 const { getApiBase } = require("../_config/getEnv.config");
 const { HttpStatus } = require("../_constants/error.constants");
 const testUserResponse = require("../_utils/testUserResponse.util");
@@ -25,12 +24,13 @@ describe("User", () => {
   });
 
   let userId;
+  let userToken;
 
   describe("GET /users", () => {
     before(async () => User.deleteMany({}));
-    it("it should GET all users", async () => {
+    it("it should not GET all users", async () => {
       const res = await chai.request(app).get(`${getApiBase()}/users`);
-      expect(res).to.have.status(HttpStatus.NO_CONTENT);
+      expect(res).to.have.status(HttpStatus.UNAUTHORIZED);
       expect(res).to.not.have.nested.property("body[0]");
     });
   });
@@ -131,43 +131,6 @@ describe("User", () => {
     });
   });
 
-  describe("GET /users/:id", () => {
-    const createApiBase = id => `${getApiBase()}/users/${id}`;
-    before(async () => {
-      // Find id of user we created above
-      const [err, foundUser] = await to(User.findOne({ email: user.email }));
-      if (!_.isEmpty(err)) {
-        throw new Error(`Error: ${err}`);
-      }
-      if (_.isEmpty(foundUser)) {
-        throw new Error(`Error: User with email ${user.email} NOT_FOUND`);
-      }
-      userId = foundUser._id.toString();
-    });
-
-    it("it should not GET user with non ObjectId", async () => {
-      const res = await chai
-        .request(app)
-        .get(createApiBase("idthereforeiamnot"));
-      expect(res.statusCode).to.equal(HttpStatus.BAD_REQUEST);
-      expect(res).to.not.have.nested.property("body[0]");
-    });
-    it("it should not GET user that doesn't exist", async () => {
-      const res = await chai
-        .request(app)
-        .get(createApiBase("5e0441c26044dfb8d86d8cc0"));
-      expect(res.statusCode).to.equal(HttpStatus.NOT_FOUND);
-      expect(res).to.not.have.nested.property("body[0]");
-    });
-
-    it("it should GET existing user", async () => {
-      const res = await chai.request(app).get(createApiBase(userId));
-      expect(res.statusCode).to.equal(HttpStatus.OK);
-      testUserResponse(res, user);
-      expect(res.body.user._id).to.equal(userId);
-    });
-  });
-
   describe("POST /users/login", () => {
     const apiBase = `${getApiBase()}/users/login`;
     const credentials = _.pick(user, ["email", "password"]);
@@ -230,6 +193,38 @@ describe("User", () => {
         .send(credentials);
       expect(res.statusCode).to.equal(HttpStatus.OK);
       testUserResponse(res, user, true);
+      userId = res.body.user._id.toString();
+      userToken = res.body.token;
+    });
+  });
+
+  describe("GET /users/:id", () => {
+    const createApiBase = id => `${getApiBase()}/users/${id}`;
+
+    it("it should not GET user with non ObjectId", async () => {
+      const res = await chai
+        .request(app)
+        .get(createApiBase("idthereforeiamnot"))
+        .set("authorization", `Bearer ${userToken}`);
+      expect(res.statusCode).to.equal(HttpStatus.BAD_REQUEST);
+      expect(res).to.not.have.nested.property("body[0]");
+    });
+    it("it should not GET user that doesn't exist", async () => {
+      const res = await chai
+        .request(app)
+        .get(createApiBase("5e0441c26044dfb8d86d8cc0"))
+        .set("authorization", `Bearer ${userToken}`);
+      expect(res.statusCode).to.equal(HttpStatus.NOT_FOUND);
+      expect(res).to.not.have.nested.property("body[0]");
+    });
+    it("it should GET existing user", async () => {
+      const res = await chai
+        .request(app)
+        .get(createApiBase(userId))
+        .set("authorization", `Bearer ${userToken}`);
+      expect(res.statusCode).to.equal(HttpStatus.OK);
+      testUserResponse(res, user);
+      expect(res.body.user._id).to.equal(userId);
     });
   });
 
@@ -243,7 +238,8 @@ describe("User", () => {
       const res = await chai
         .request(app)
         .put(createApiBase("idthereforeiamnot"))
-        .send(userUpdate);
+        .send(userUpdate)
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.UNPROCESSABLE_ENTITY);
       expect(res).to.not.have.nested.property("body[0]");
     });
@@ -251,7 +247,8 @@ describe("User", () => {
       const res = await chai
         .request(app)
         .put(createApiBase("5e0441c26044dfb8d86d8cc0"))
-        .send(userUpdate);
+        .send(userUpdate)
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.NOT_FOUND);
       expect(res).to.not.have.nested.property("body[0]");
     });
@@ -260,7 +257,8 @@ describe("User", () => {
       const res = await chai
         .request(app)
         .put(createApiBase(userId))
-        .send(newUserUpdate);
+        .send(newUserUpdate)
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.UNPROCESSABLE_ENTITY);
       expect(res).to.not.have.nested.property("body[0]");
     });
@@ -268,7 +266,8 @@ describe("User", () => {
       const res = await chai
         .request(app)
         .put(createApiBase(userId))
-        .send({});
+        .send({})
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.UNPROCESSABLE_ENTITY);
       expect(res).to.not.have.nested.property("body[0]");
     });
@@ -277,7 +276,8 @@ describe("User", () => {
       const res = await chai
         .request(app)
         .put(createApiBase(userId))
-        .send(newUserUpdate);
+        .send(newUserUpdate)
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.UNPROCESSABLE_ENTITY);
       expect(res).to.not.have.nested.property("body[0]");
     });
@@ -286,7 +286,8 @@ describe("User", () => {
       const res = await chai
         .request(app)
         .put(createApiBase(userId))
-        .send(newUserUpdate);
+        .send(newUserUpdate)
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.OK);
       testUserResponse(res, _.assign({}, user, newUserUpdate));
     });
@@ -295,7 +296,8 @@ describe("User", () => {
       const res = await chai
         .request(app)
         .put(createApiBase(userId))
-        .send(newUserUpdate);
+        .send(newUserUpdate)
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.OK);
       testUserResponse(res, userUpdate);
     });
@@ -303,7 +305,8 @@ describe("User", () => {
       const res = await chai
         .request(app)
         .put(createApiBase(userId))
-        .send(user);
+        .send(user)
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.OK);
       testUserResponse(res, user);
     });
@@ -314,24 +317,32 @@ describe("User", () => {
     it("it should not DELETE user with non ObjectId", async () => {
       const res = await chai
         .request(app)
-        .delete(createApiBase("idthereforeiamnot"));
+        .delete(createApiBase("idthereforeiamnot"))
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.BAD_REQUEST);
       expect(res).to.not.have.nested.property("body[0]");
     });
     it("it should not DELETE user that doesn't exist", async () => {
       const res = await chai
         .request(app)
-        .delete(createApiBase("5e0441c26044dfb8d86d8cc0"));
+        .delete(createApiBase("5e0441c26044dfb8d86d8cc0"))
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.NOT_FOUND);
       expect(res).to.not.have.nested.property("body[0]");
     });
     it("it should DELETE user that hasn't been deleted", async () => {
-      const res = await chai.request(app).delete(createApiBase(userId));
+      const res = await chai
+        .request(app)
+        .delete(createApiBase(userId))
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.OK);
       expect(res).to.not.have.nested.property("body[0]");
     });
     it("it should DELETE user that is already deleted", async () => {
-      const res = await chai.request(app).delete(createApiBase(userId));
+      const res = await chai
+        .request(app)
+        .delete(createApiBase(userId))
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.OK);
       expect(res).to.not.have.nested.property("body[0]");
     });

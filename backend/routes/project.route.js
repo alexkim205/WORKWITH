@@ -95,9 +95,17 @@ const getProject = async (req, res) => {
       .status(HttpStatus.NOT_FOUND)
       .send(`Project with id ${req.params.id} NOT_FOUND`);
   }
+  const requestUserId = parseInt(req.user._id, 10);
+  // Only admins can access other user projects
+  if (
+    !_.includes(project.users, requestUserId) &&
+    req.user.role !== Role.ADMIN
+  ) {
+    return res.status(HttpStatus.UNAUTHORIZED).send("Request is UNAUTHORIZED");
+  }
   return res.status(HttpStatus.OK).send({ project });
 };
-router.route("/:id").get(authorize(), getProject);
+router.route("/:id").get(authorize([Role.ADMIN, Role.USER]), getProject);
 
 /**
  * @swagger
@@ -136,6 +144,10 @@ router.route("/:id").get(authorize(), getProject);
  *          $ref: '#/components/responses/UnauthorizedError'
  */
 const getProjectsByUser = async (req, res) => {
+  // Only admins can get other users' projects
+  if (req.params.id !== req.user._id && req.user.role !== Role.ADMIN) {
+    return res.status(HttpStatus.UNAUTHORIZED).send("Request is UNAUTHORIZED");
+  }
   // https://stackoverflow.com/questions/18148166/find-document-with-array-that-contains-a-specific-value
   const [err, projects] = await to(Project.find({ users: req.params.id }));
   if (!_.isEmpty(err)) {
@@ -150,7 +162,9 @@ const getProjectsByUser = async (req, res) => {
   }
   return res.status(HttpStatus.OK).send({ projects });
 };
-router.route("/user/:id").get(authorize(), getProjectsByUser);
+router
+  .route("/user/:id")
+  .get(authorize([Role.ADMIN, Role.USER]), getProjectsByUser);
 
 /**
  * @swagger
@@ -183,6 +197,15 @@ const createProject = async (req, res) => {
   if (!_.isEmpty(err1)) {
     return res.status(HttpStatus.UNPROCESSABLE_ENTITY).send(err1);
   }
+  // Add requesting user to authors and users arrays
+  req.body.authors = req.body.authors || [];
+  req.body.users = req.body.users || [];
+  if (!_.includes(req.body.authors, req.user._id)) {
+    req.body.authors = [...req.body.authors, req.user._id];
+  }
+  if (!_.includes(req.body.users, req.user._id)) {
+    req.body.users = [...req.body.users, req.user._id];
+  }
 
   // Check if all authors exist
   const checkAuthorPromises = req.body.authors.map(async authorId => {
@@ -204,7 +227,6 @@ const createProject = async (req, res) => {
   }
 
   // Check if all users exist
-  req.body.users = _.isEmpty(req.body.users) ? [] : req.body.users;
   const checkUsersPromises = req.body.users.map(async userId => {
     const [errUser, user] = await to(User.findById(userId));
     if (!_.isEmpty(errUser)) {
@@ -289,6 +311,15 @@ const updateProject = async (req, res) => {
     return res
       .status(HttpStatus.NOT_FOUND)
       .send(`Project with id ${req.params.id} NOT_FOUND`);
+  }
+
+  const requestUserId = req.user._id;
+  // Only admins can access other user projects
+  if (
+    !_.includes(project.users, requestUserId) &&
+    req.user.role !== Role.ADMIN
+  ) {
+    return res.status(HttpStatus.UNAUTHORIZED).send("Request is UNAUTHORIZED");
   }
 
   // Check if all authors exist
@@ -387,6 +418,15 @@ const deleteProject = async (req, res) => {
     return res
       .status(HttpStatus.NOT_FOUND)
       .send(`Project with id ${req.params.id} NOT_FOUND`);
+  }
+
+  const requestUserId = parseInt(req.user._id, 10);
+  // Only admins can access other user projects
+  if (
+    !_.includes(project.users, requestUserId) &&
+    req.user.role !== Role.ADMIN
+  ) {
+    return res.status(HttpStatus.UNAUTHORIZED).send("Request is UNAUTHORIZED");
   }
 
   if (project.deleted) {

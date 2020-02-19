@@ -8,24 +8,22 @@ Array [
   Object {
     "error": null,
     "payload": Object {
-      "note": Object {
-        "__v": 1,
-        "_id": "5e02f1b53e741a3e18c4027b",
-        "authors": Array [
-          "5e02eeaf6ebf6452d426c135",
-        ],
-        "body": "I like my new body.",
-        "createdAt": "2019-12-25T05:20:53.800Z",
-        "deleted": false,
-        "minimized": true,
-        "private": false,
-        "projectId": "5e02efdd94748b21482e6010",
-        "taggedUsers": Array [
-          "5e02eeaf6ebf6452d426c135",
-        ],
-        "title": "New Title",
-        "updatedAt": "2019-12-30T09:07:10.417Z",
-      },
+      "__v": 1,
+      "_id": "5e02f1b53e741a3e18c4027b",
+      "authors": Array [
+        "5e02eeaf6ebf6452d426c135",
+      ],
+      "body": "I like my new body.",
+      "createdAt": "2019-12-25T05:20:53.800Z",
+      "deleted": false,
+      "minimized": true,
+      "private": false,
+      "projectId": "5e02efdd94748b21482e6010",
+      "taggedUsers": Array [
+        "5e02eeaf6ebf6452d426c135",
+      ],
+      "title": "New Title",
+      "updatedAt": "2019-12-30T09:07:10.417Z",
     },
     "type": "notes/create-note-success",
   },
@@ -53,24 +51,22 @@ Array [
   Object {
     "error": null,
     "payload": Object {
-      "note": Object {
-        "__v": 1,
-        "_id": "5e02f1b53e741a3e18c4027b",
-        "authors": Array [
-          "5e02eeaf6ebf6452d426c135",
-        ],
-        "body": "I like my new body.",
-        "createdAt": "2019-12-25T05:20:53.800Z",
-        "deleted": false,
-        "minimized": true,
-        "private": false,
-        "projectId": "5e02efdd94748b21482e6010",
-        "taggedUsers": Array [
-          "5e02eeaf6ebf6452d426c135",
-        ],
-        "title": "New Title",
-        "updatedAt": "2019-12-30T09:07:10.417Z",
-      },
+      "__v": 1,
+      "_id": "5e02f1b53e741a3e18c4027b",
+      "authors": Array [
+        "5e02eeaf6ebf6452d426c135",
+      ],
+      "body": "I like my new body.",
+      "createdAt": "2019-12-25T05:20:53.800Z",
+      "deleted": false,
+      "minimized": true,
+      "private": false,
+      "projectId": "5e02efdd94748b21482e6010",
+      "taggedUsers": Array [
+        "5e02eeaf6ebf6452d426c135",
+      ],
+      "title": "New Title",
+      "updatedAt": "2019-12-30T09:07:10.417Z",
     },
     "type": "notes/get-note-success",
   },
@@ -84,76 +80,8 @@ Array [
   },
   Object {
     "error": null,
-    "payload": Object {
-      "notes": Array [
-        Object {
-          "__v": 1,
-          "_id": "5e02f1b53e741a3e18c4027b",
-          "authors": Array [
-            "5e02eeaf6ebf6452d426c135",
-          ],
-          "body": "I like my new body.",
-          "createdAt": "2019-12-25T05:20:53.800Z",
-          "deleted": false,
-          "minimized": true,
-          "private": false,
-          "projectId": "5e02efdd94748b21482e6010",
-          "taggedUsers": Array [
-            "5e02eeaf6ebf6452d426c135",
-          ],
-          "title": "New Title",
-          "updatedAt": "2019-12-30T09:07:10.417Z",
-        },
-      ],
-    },
-    "type": "notes/get-notes-success",
-  },
-]
-`;
-
-exports[`Note Actions it should GET notes by project 1`] = `
-Array [
-  Object {
-    "type": "notes/get-project-notes-pending",
-  },
-  Object {
-    "error": null,
-    "payload": Object {
-      "notes": Array [
-        Object {
-          "__v": 1,
-          "_id": "5e02f1b53e741a3e18c4027b",
-          "authors": Array [
-            "5e02eeaf6ebf6452d426c135",
-          ],
-          "body": "I like my new body.",
-          "createdAt": "2019-12-25T05:20:53.800Z",
-          "deleted": false,
-          "minimized": true,
-          "private": false,
-          "projectId": "5e02efdd94748b21482e6010",
-          "taggedUsers": Array [
-            "5e02eeaf6ebf6452d426c135",
-          ],
-          "title": "New Title",
-          "updatedAt": "2019-12-30T09:07:10.417Z",
-        },
-      ],
-    },
-    "type": "notes/get-project-notes-success",
-  },
-]
-`;
-
-exports[`Note Actions it should UPDATE a note 1`] = `
-Array [
-  Object {
-    "type": "notes/update-note-pending",
-  },
-  Object {
-    "error": null,
-    "payload": Object {
-      "note": Object {
+    "payload": Array [
+      Object {
         "__v": 1,
         "_id": "5e02f1b53e741a3e18c4027b",
         "authors": Array [
@@ -171,6 +99,68 @@ Array [
         "title": "New Title",
         "updatedAt": "2019-12-30T09:07:10.417Z",
       },
+    ],
+    "type": "notes/get-notes-success",
+  },
+]
+`;
+
+exports[`Note Actions it should GET notes by project 1`] = `
+Array [
+  Object {
+    "type": "notes/get-project-notes-pending",
+  },
+  Object {
+    "error": null,
+    "payload": Array [
+      Object {
+        "__v": 1,
+        "_id": "5e02f1b53e741a3e18c4027b",
+        "authors": Array [
+          "5e02eeaf6ebf6452d426c135",
+        ],
+        "body": "I like my new body.",
+        "createdAt": "2019-12-25T05:20:53.800Z",
+        "deleted": false,
+        "minimized": true,
+        "private": false,
+        "projectId": "5e02efdd94748b21482e6010",
+        "taggedUsers": Array [
+          "5e02eeaf6ebf6452d426c135",
+        ],
+        "title": "New Title",
+        "updatedAt": "2019-12-30T09:07:10.417Z",
+      },
+    ],
+    "type": "notes/get-project-notes-success",
+  },
+]
+`;
+
+exports[`Note Actions it should UPDATE a note 1`] = `
+Array [
+  Object {
+    "type": "notes/update-note-pending",
+  },
+  Object {
+    "error": null,
+    "payload": Object {
+      "__v": 1,
+      "_id": "5e02f1b53e741a3e18c4027b",
+      "authors": Array [
+        "5e02eeaf6ebf6452d426c135",
+      ],
+      "body": "I like my new body.",
+      "createdAt": "2019-12-25T05:20:53.800Z",
+      "deleted": false,
+      "minimized": true,
+      "private": false,
+      "projectId": "5e02efdd94748b21482e6010",
+      "taggedUsers": Array [
+        "5e02eeaf6ebf6452d426c135",
+      ],
+      "title": "New Title",
+      "updatedAt": "2019-12-30T09:07:10.417Z",
     },
     "type": "notes/update-note-success",
   },

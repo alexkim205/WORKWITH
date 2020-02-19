@@ -17,9 +17,6 @@ const validateAddProjectInput = data => {
   }
 
   // Authors check
-  if (_.isEmpty(formattedData.authors)) {
-    errors.authors = "Author(s) field is required";
-  }
   if (
     !_.isEmpty(formattedData.authors) &&
     !Validator.isArray(formattedData.authors)

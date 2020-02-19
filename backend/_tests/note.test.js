@@ -21,6 +21,7 @@ chai.use(chaiHttp);
 describe("Note", () => {
   let sendableNote; // note with authors and projectId filled out
   let userId;
+  let userToken;
   let projectId;
   let noteId;
 
@@ -31,11 +32,16 @@ describe("Note", () => {
     // Create user to associate notes with
     const newUser = new User(_.pick(user, ["name", "email"]));
     newUser.setPassword(user.password);
-    const [userErr, returnedUser] = await to(newUser.save());
+    const [userErr] = await to(newUser.save());
     if (!_.isEmpty(userErr)) {
       throw new Error(`Error: ${userErr}`);
     }
-    userId = returnedUser._id.toString();
+    const res = await chai
+      .request(app)
+      .post(`${getApiBase()}/users/login`)
+      .send(_.pick(user, ["email", "password"]));
+    userId = res.body.user._id.toString();
+    userToken = res.body.token;
 
     // Create project that notes can exist in
     const newProject = new Project({
@@ -59,9 +65,9 @@ describe("Note", () => {
 
   describe("GET /notes", () => {
     before(async () => Note.deleteMany({}));
-    it("it should GET all notes", async () => {
+    it("it should not GET all notes", async () => {
       const res = await chai.request(app).get(`${getApiBase()}/notes`);
-      expect(res).to.have.status(HttpStatus.NO_CONTENT);
+      expect(res).to.have.status(HttpStatus.UNAUTHORIZED);
       expect(res).to.not.have.nested.property("body[0]");
     });
   });
@@ -74,7 +80,8 @@ describe("Note", () => {
       const res = await chai
         .request(app)
         .post(apiBase)
-        .send(newNote);
+        .send(newNote)
+        .set("authorization", `Bearer ${userToken}`);
       expect(res).to.have.status(HttpStatus.UNPROCESSABLE_ENTITY);
       expect(res).to.not.have.nested.property("body[0]");
     });
@@ -83,7 +90,8 @@ describe("Note", () => {
       const res = await chai
         .request(app)
         .post(apiBase)
-        .send(newNote);
+        .send(newNote)
+        .set("authorization", `Bearer ${userToken}`);
       expect(res).to.have.status(HttpStatus.UNPROCESSABLE_ENTITY);
       expect(res).to.not.have.nested.property("body[0]");
     });
@@ -92,7 +100,8 @@ describe("Note", () => {
       const res = await chai
         .request(app)
         .post(apiBase)
-        .send(newNote);
+        .send(newNote)
+        .set("authorization", `Bearer ${userToken}`);
       expect(res).to.have.status(HttpStatus.UNPROCESSABLE_ENTITY);
       expect(res).to.not.have.nested.property("body[0]");
     });
@@ -103,7 +112,8 @@ describe("Note", () => {
       const res = await chai
         .request(app)
         .post(apiBase)
-        .send(newNote);
+        .send(newNote)
+        .set("authorization", `Bearer ${userToken}`);
       expect(res).to.have.status(HttpStatus.UNPROCESSABLE_ENTITY);
       expect(res).to.not.have.nested.property("body[0]");
     });
@@ -112,7 +122,8 @@ describe("Note", () => {
       const res = await chai
         .request(app)
         .post(apiBase)
-        .send(newNote);
+        .send(newNote)
+        .set("authorization", `Bearer ${userToken}`);
       expect(res).to.have.status(HttpStatus.UNPROCESSABLE_ENTITY);
       expect(res).to.not.have.nested.property("body[0]");
     });
@@ -123,7 +134,8 @@ describe("Note", () => {
       const res = await chai
         .request(app)
         .post(apiBase)
-        .send(newNote);
+        .send(newNote)
+        .set("authorization", `Bearer ${userToken}`);
       expect(res).to.have.status(HttpStatus.NOT_FOUND);
       expect(res).to.not.have.nested.property("body[0]");
     });
@@ -134,7 +146,8 @@ describe("Note", () => {
       const res = await chai
         .request(app)
         .post(apiBase)
-        .send(newNote);
+        .send(newNote)
+        .set("authorization", `Bearer ${userToken}`);
       expect(res).to.have.status(HttpStatus.NOT_FOUND);
       expect(res).to.not.have.nested.property("body[0]");
     });
@@ -145,7 +158,8 @@ describe("Note", () => {
       const res = await chai
         .request(app)
         .post(apiBase)
-        .send(newNote);
+        .send(newNote)
+        .set("authorization", `Bearer ${userToken}`);
       expect(res).to.have.status(HttpStatus.NOT_FOUND);
       expect(res).to.not.have.nested.property("body[0]");
     });
@@ -153,41 +167,38 @@ describe("Note", () => {
       const res = await chai
         .request(app)
         .post(apiBase)
-        .send(sendableNote);
+        .send(sendableNote)
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.CREATED);
       testNoteResponse(res, sendableNote);
+      noteId = res.body.note._id.toString();
     });
   });
   describe("GET /notes/:id", () => {
     const createApiBase = id => `${getApiBase()}/notes/${id}`;
-    before(async () => {
-      // Find id of note we created above
-      const [err, foundNote] = await to(Note.findOne({ title: note.title }));
-      if (!_.isEmpty(err)) {
-        throw new Error(`Error: ${err}`);
-      }
-      if (_.isEmpty(foundNote)) {
-        throw new Error(`Error: Note with title ${note.title} NOT_FOUND`);
-      }
-      noteId = foundNote._id.toString();
-    });
+
     it("it should not GET note with non ObjectId", async () => {
       const res = await chai
         .request(app)
-        .get(createApiBase("idthereforeiamnot"));
+        .get(createApiBase("idthereforeiamnot"))
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.BAD_REQUEST);
       expect(res).to.not.have.nested.property("body[0]");
     });
     it("it should not GET note that doesn't exist", async () => {
       const res = await chai
         .request(app)
-        .get(createApiBase("5e0441c26044dfb8d86d8cc0"));
+        .get(createApiBase("5e0441c26044dfb8d86d8cc0"))
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.NOT_FOUND);
       expect(res).to.not.have.nested.property("body[0]");
     });
 
     it("it should GET existing note", async () => {
-      const res = await chai.request(app).get(createApiBase(noteId));
+      const res = await chai
+        .request(app)
+        .get(createApiBase(noteId))
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.OK);
       testNoteResponse(res, sendableNote);
       expect(res.body.note._id).to.equal(noteId);
@@ -208,7 +219,8 @@ describe("Note", () => {
       const res = await chai
         .request(app)
         .put(createApiBase("idthereforeiamnot"))
-        .send(createNoteUpdate(userId));
+        .send(createNoteUpdate(userId))
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.UNPROCESSABLE_ENTITY);
       expect(res).to.not.have.nested.property("body[0]");
     });
@@ -216,7 +228,8 @@ describe("Note", () => {
       const res = await chai
         .request(app)
         .put(createApiBase("5e0441c26044dfb8d86d8cc0"))
-        .send(createNoteUpdate(userId));
+        .send(createNoteUpdate(userId))
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.NOT_FOUND);
       expect(res).to.not.have.nested.property("body[0]");
     });
@@ -227,7 +240,8 @@ describe("Note", () => {
       const res = await chai
         .request(app)
         .put(createApiBase("noteId"))
-        .send(newNoteUpdate);
+        .send(newNoteUpdate)
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.UNPROCESSABLE_ENTITY);
       expect(res).to.not.have.nested.property("body[0]");
     });
@@ -238,7 +252,8 @@ describe("Note", () => {
       const res = await chai
         .request(app)
         .put(createApiBase(userId))
-        .send(newNoteUpdate);
+        .send(newNoteUpdate)
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.NOT_FOUND);
       expect(res).to.not.have.nested.property("body[0]");
     });
@@ -249,7 +264,8 @@ describe("Note", () => {
       const res = await chai
         .request(app)
         .put(createApiBase(noteId))
-        .send(newNoteUpdate);
+        .send(newNoteUpdate)
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.UNPROCESSABLE_ENTITY);
       expect(res).to.not.have.nested.property("body[0]");
     });
@@ -257,7 +273,8 @@ describe("Note", () => {
       const res = await chai
         .request(app)
         .put(createApiBase(noteId))
-        .send({});
+        .send({})
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.UNPROCESSABLE_ENTITY);
       expect(res).to.not.have.nested.property("body[0]");
     });
@@ -268,7 +285,8 @@ describe("Note", () => {
       const res = await chai
         .request(app)
         .put(createApiBase(noteId))
-        .send(newNoteUpdate);
+        .send(newNoteUpdate)
+        .set("authorization", `Bearer ${userToken}`);
       expect(res).to.have.status(HttpStatus.UNPROCESSABLE_ENTITY);
       expect(res).to.not.have.nested.property("body[0]");
     });
@@ -279,7 +297,8 @@ describe("Note", () => {
       const res = await chai
         .request(app)
         .put(createApiBase(noteId))
-        .send(newNoteUpdate);
+        .send(newNoteUpdate)
+        .set("authorization", `Bearer ${userToken}`);
       expect(res).to.have.status(HttpStatus.UNPROCESSABLE_ENTITY);
       expect(res).to.not.have.nested.property("body[0]");
     });
@@ -290,7 +309,8 @@ describe("Note", () => {
       const res = await chai
         .request(app)
         .put(createApiBase(userId))
-        .send(newNoteUpdate);
+        .send(newNoteUpdate)
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.NOT_FOUND);
       expect(res).to.not.have.nested.property("body[0]");
     });
@@ -301,7 +321,8 @@ describe("Note", () => {
       const res = await chai
         .request(app)
         .put(createApiBase(noteId))
-        .send(newNoteUpdate);
+        .send(newNoteUpdate)
+        .set("authorization", `Bearer ${userToken}`);
       expect(res).to.have.status(HttpStatus.UNPROCESSABLE_ENTITY);
       expect(res).to.not.have.nested.property("body[0]");
     });
@@ -312,7 +333,8 @@ describe("Note", () => {
       const res = await chai
         .request(app)
         .put(createApiBase(noteId))
-        .send(newNoteUpdate);
+        .send(newNoteUpdate)
+        .set("authorization", `Bearer ${userToken}`);
       expect(res).to.have.status(HttpStatus.UNPROCESSABLE_ENTITY);
       expect(res).to.not.have.nested.property("body[0]");
     });
@@ -323,7 +345,8 @@ describe("Note", () => {
       const res = await chai
         .request(app)
         .put(createApiBase(noteId))
-        .send(newNoteUpdate);
+        .send(newNoteUpdate)
+        .set("authorization", `Bearer ${userToken}`);
       expect(res).to.have.status(HttpStatus.UNPROCESSABLE_ENTITY);
       expect(res).to.not.have.nested.property("body[0]");
     });
@@ -333,7 +356,8 @@ describe("Note", () => {
       const res = await chai
         .request(app)
         .put(createApiBase(noteId))
-        .send(newNoteUpdate);
+        .send(newNoteUpdate)
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.OK);
       testNoteResponse(res, noteToCheck);
       expect(res.body.note._id).to.equal(noteId);
@@ -345,24 +369,32 @@ describe("Note", () => {
     it("it should not DELETE note with non ObjectId", async () => {
       const res = await chai
         .request(app)
-        .delete(createApiBase("idthereforeiamnot"));
+        .delete(createApiBase("idthereforeiamnot"))
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.BAD_REQUEST);
       expect(res).to.not.have.nested.property("body[0]");
     });
     it("it should not DELETE note that doesn't exist", async () => {
       const res = await chai
         .request(app)
-        .delete(createApiBase("5e0441c26044dfb8d86d8cc0"));
+        .delete(createApiBase("5e0441c26044dfb8d86d8cc0"))
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.NOT_FOUND);
       expect(res).to.not.have.nested.property("body[0]");
     });
     it("it should DELETE note that hasn't been deleted", async () => {
-      const res = await chai.request(app).delete(createApiBase(noteId));
+      const res = await chai
+        .request(app)
+        .delete(createApiBase(noteId))
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.OK);
       expect(res).to.not.have.nested.property("body[0]");
     });
     it("it should DELETE note that is already deleted", async () => {
-      const res = await chai.request(app).delete(createApiBase(noteId));
+      const res = await chai
+        .request(app)
+        .delete(createApiBase(noteId))
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.OK);
       expect(res).to.not.have.nested.property("body[0]");
     });

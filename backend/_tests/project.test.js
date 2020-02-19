@@ -10,7 +10,7 @@ const app = require("../server");
 const User = require("../models/user.model");
 const Project = require("../models/project.model");
 const Note = require("../models/note.model");
-const { user, project } = require("../_constants/test.constants");
+const { admin: user, project } = require("../_constants/test.constants");
 const { getApiBase } = require("../_config/getEnv.config");
 const { HttpStatus } = require("../_constants/error.constants");
 const testProjectResponse = require("../_utils/testProjectResponse.util");
@@ -21,6 +21,7 @@ chai.use(chaiHttp);
 describe("Project", () => {
   let sendableProject; // project with authors filled out
   let userId;
+  let userToken;
   let projectId;
 
   before(async () => {
@@ -28,13 +29,18 @@ describe("Project", () => {
     await app.tListen();
 
     // Create user to associate notes with
-    const newUser = new User(_.pick(user, ["name", "email"]));
+    const newUser = new User(_.pick(user, ["name", "email", "role"]));
     newUser.setPassword(user.password);
-    const [userErr, returnedUser] = await to(newUser.save());
+    const [userErr] = await to(newUser.save());
     if (!_.isEmpty(userErr)) {
       throw new Error(`Error: ${userErr}`);
     }
-    userId = returnedUser._id.toString();
+    const res = await chai
+      .request(app)
+      .post(`${getApiBase()}/users/login`)
+      .send(_.pick(user, ["email", "password"]));
+    userId = res.body.user._id.toString();
+    userToken = res.body.token;
 
     sendableProject = _.assign({}, project, {
       authors: [userId],
@@ -50,9 +56,9 @@ describe("Project", () => {
 
   describe("GET /projects", () => {
     before(async () => Project.deleteMany({}));
-    it("it should GET all projects", async () => {
+    it("it should not GET all projects", async () => {
       const res = await chai.request(app).get(`${getApiBase()}/projects`);
-      expect(res).to.have.status(HttpStatus.NO_CONTENT);
+      expect(res).to.have.status(HttpStatus.UNAUTHORIZED);
       expect(res).to.not.have.nested.property("body[0]");
     });
   });
@@ -60,15 +66,6 @@ describe("Project", () => {
   describe("POST /project/add", () => {
     before(async () => Project.deleteMany({}));
     const apiBase = `${getApiBase()}/projects/add`;
-    it("it should not POST a project without authors field", async () => {
-      const newNote = _.omit(sendableProject, ["authors"]);
-      const res = await chai
-        .request(app)
-        .post(apiBase)
-        .send(newNote);
-      expect(res).to.have.status(HttpStatus.UNPROCESSABLE_ENTITY);
-      expect(res).to.not.have.nested.property("body[0]");
-    });
     it("it should not POST a project without authors field of array type", async () => {
       const newNote = _.assign({}, sendableProject, {
         authors: "imnotanarray"
@@ -76,7 +73,8 @@ describe("Project", () => {
       const res = await chai
         .request(app)
         .post(apiBase)
-        .send(newNote);
+        .send(newNote)
+        .set("authorization", `Bearer ${userToken}`);
       expect(res).to.have.status(HttpStatus.UNPROCESSABLE_ENTITY);
       expect(res).to.not.have.nested.property("body[0]");
     });
@@ -87,7 +85,8 @@ describe("Project", () => {
       const res = await chai
         .request(app)
         .post(apiBase)
-        .send(newNote);
+        .send(newNote)
+        .set("authorization", `Bearer ${userToken}`);
       expect(res).to.have.status(HttpStatus.UNPROCESSABLE_ENTITY);
       expect(res).to.not.have.nested.property("body[0]");
     });
@@ -96,7 +95,8 @@ describe("Project", () => {
       const res = await chai
         .request(app)
         .post(apiBase)
-        .send(newNote);
+        .send(newNote)
+        .set("authorization", `Bearer ${userToken}`);
       expect(res).to.have.status(HttpStatus.UNPROCESSABLE_ENTITY);
       expect(res).to.not.have.nested.property("body[0]");
     });
@@ -107,7 +107,8 @@ describe("Project", () => {
       const res = await chai
         .request(app)
         .post(apiBase)
-        .send(newNote);
+        .send(newNote)
+        .set("authorization", `Bearer ${userToken}`);
       expect(res).to.have.status(HttpStatus.NOT_FOUND);
       expect(res).to.not.have.nested.property("body[0]");
     });
@@ -118,7 +119,8 @@ describe("Project", () => {
       const res = await chai
         .request(app)
         .post(apiBase)
-        .send(newNote);
+        .send(newNote)
+        .set("authorization", `Bearer ${userToken}`);
       expect(res).to.have.status(HttpStatus.NOT_FOUND);
       expect(res).to.not.have.nested.property("body[0]");
     });
@@ -126,43 +128,38 @@ describe("Project", () => {
       const res = await chai
         .request(app)
         .post(apiBase)
-        .send(sendableProject);
+        .send(sendableProject)
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.CREATED);
       testProjectResponse(res, sendableProject);
+      projectId = res.body.project._id.toString();
     });
   });
   describe("GET /projects/:id", () => {
     const createApiBase = id => `${getApiBase()}/projects/${id}`;
-    before(async () => {
-      // Find id of project we created above
-      const [err, foundProject] = await to(
-        Project.findOne({ title: project.title })
-      );
-      if (!_.isEmpty(err)) {
-        throw new Error(`Error: ${err}`);
-      }
-      if (_.isEmpty(foundProject)) {
-        throw new Error(`Error: Project with title ${project.title} NOT_FOUND`);
-      }
-      projectId = foundProject._id.toString();
-    });
+
     it("it should not GET project with non ObjectId", async () => {
       const res = await chai
         .request(app)
-        .get(createApiBase("idthereforeiamnot"));
+        .get(createApiBase("idthereforeiamnot"))
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.BAD_REQUEST);
       expect(res).to.not.have.nested.property("body[0]");
     });
     it("it should not GET project that doesn't exist", async () => {
       const res = await chai
         .request(app)
-        .get(createApiBase("5e0441c26044dfb8d86d8cc0"));
+        .get(createApiBase("5e0441c26044dfb8d86d8cc0"))
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.NOT_FOUND);
       expect(res).to.not.have.nested.property("body[0]");
     });
 
     it("it should GET existing project", async () => {
-      const res = await chai.request(app).get(createApiBase(projectId));
+      const res = await chai
+        .request(app)
+        .get(createApiBase(projectId))
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.OK);
       testProjectResponse(res, sendableProject);
       expect(res.body.project._id).to.equal(projectId);
@@ -180,7 +177,8 @@ describe("Project", () => {
       const res = await chai
         .request(app)
         .put(createApiBase("idthereforeiamnot"))
-        .send(createProjectUpdate(userId));
+        .send(createProjectUpdate(userId))
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.UNPROCESSABLE_ENTITY);
       expect(res).to.not.have.nested.property("body[0]");
     });
@@ -188,7 +186,8 @@ describe("Project", () => {
       const res = await chai
         .request(app)
         .put(createApiBase("5e0441c26044dfb8d86d8cc0"))
-        .send(createProjectUpdate(userId));
+        .send(createProjectUpdate(userId))
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.NOT_FOUND);
       expect(res).to.not.have.nested.property("body[0]");
     });
@@ -199,7 +198,8 @@ describe("Project", () => {
       const res = await chai
         .request(app)
         .put(createApiBase(projectId))
-        .send(newProjectUpdate);
+        .send(newProjectUpdate)
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.UNPROCESSABLE_ENTITY);
       expect(res).to.not.have.nested.property("body[0]");
     });
@@ -210,7 +210,8 @@ describe("Project", () => {
       const res = await chai
         .request(app)
         .put(createApiBase(projectId))
-        .send(newProjectUpdate);
+        .send(newProjectUpdate)
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.NOT_FOUND);
       expect(res).to.not.have.nested.property("body[0]");
     });
@@ -221,7 +222,8 @@ describe("Project", () => {
       const res = await chai
         .request(app)
         .put(createApiBase(projectId))
-        .send(newProjectUpdate);
+        .send(newProjectUpdate)
+        .set("authorization", `Bearer ${userToken}`);
       expect(res).to.have.status(HttpStatus.UNPROCESSABLE_ENTITY);
       expect(res).to.not.have.nested.property("body[0]");
     });
@@ -232,7 +234,8 @@ describe("Project", () => {
       const res = await chai
         .request(app)
         .put(createApiBase(projectId))
-        .send(newProjectUpdate);
+        .send(newProjectUpdate)
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.UNPROCESSABLE_ENTITY);
       expect(res).to.not.have.nested.property("body[0]");
     });
@@ -243,7 +246,8 @@ describe("Project", () => {
       const res = await chai
         .request(app)
         .put(createApiBase(projectId))
-        .send(newProjectUpdate);
+        .send(newProjectUpdate)
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.NOT_FOUND);
       expect(res).to.not.have.nested.property("body[0]");
     });
@@ -254,7 +258,8 @@ describe("Project", () => {
       const res = await chai
         .request(app)
         .put(createApiBase(projectId))
-        .send(newProjectUpdate);
+        .send(newProjectUpdate)
+        .set("authorization", `Bearer ${userToken}`);
       expect(res).to.have.status(HttpStatus.UNPROCESSABLE_ENTITY);
       expect(res).to.not.have.nested.property("body[0]");
     });
@@ -265,7 +270,8 @@ describe("Project", () => {
       const res = await chai
         .request(app)
         .put(createApiBase(projectId))
-        .send(newProjectUpdate);
+        .send(newProjectUpdate)
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.UNPROCESSABLE_ENTITY);
       expect(res).to.not.have.nested.property("body[0]");
     });
@@ -273,7 +279,8 @@ describe("Project", () => {
       const res = await chai
         .request(app)
         .put(createApiBase(projectId))
-        .send({});
+        .send({})
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.UNPROCESSABLE_ENTITY);
       expect(res).to.not.have.nested.property("body[0]");
     });
@@ -284,7 +291,8 @@ describe("Project", () => {
       const res = await chai
         .request(app)
         .put(createApiBase(projectId))
-        .send(newProjectUpdate);
+        .send(newProjectUpdate)
+        .set("authorization", `Bearer ${userToken}`);
       expect(res).to.have.status(HttpStatus.UNPROCESSABLE_ENTITY);
       expect(res).to.not.have.nested.property("body[0]");
     });
@@ -294,7 +302,8 @@ describe("Project", () => {
       const res = await chai
         .request(app)
         .put(createApiBase(projectId))
-        .send(newProjectUpdate);
+        .send(newProjectUpdate)
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.OK);
       testProjectResponse(res, projectToCheck);
       expect(res.body.project._id).to.equal(projectId);
@@ -306,24 +315,32 @@ describe("Project", () => {
     it("it should not DELETE project with non ObjectId", async () => {
       const res = await chai
         .request(app)
-        .delete(createApiBase("idthereforeiamnot"));
+        .delete(createApiBase("idthereforeiamnot"))
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.BAD_REQUEST);
       expect(res).to.not.have.nested.property("body[0]");
     });
     it("it should not DELETE project that doesn't exist", async () => {
       const res = await chai
         .request(app)
-        .delete(createApiBase("5e0441c26044dfb8d86d8cc0"));
+        .delete(createApiBase("5e0441c26044dfb8d86d8cc0"))
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.NOT_FOUND);
       expect(res).to.not.have.nested.property("body[0]");
     });
     it("it should DELETE project that hasn't been deleted", async () => {
-      const res = await chai.request(app).delete(createApiBase(projectId));
+      const res = await chai
+        .request(app)
+        .delete(createApiBase(projectId))
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.OK);
       expect(res).to.not.have.nested.property("body[0]");
     });
     it("it should DELETE project that is already deleted", async () => {
-      const res = await chai.request(app).delete(createApiBase(projectId));
+      const res = await chai
+        .request(app)
+        .delete(createApiBase(projectId))
+        .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.OK);
       expect(res).to.not.have.nested.property("body[0]");
     });

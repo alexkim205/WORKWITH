@@ -21,17 +21,10 @@ Array [
   Object {
     "error": null,
     "payload": Object {
-      "user": Object {
-        "__v": 0,
-        "_id": "5e0bb5c61c90231c34596f83",
-        "createdAt": "2019-12-31T20:55:34.424Z",
-        "deleted": false,
-        "email": "alexkim@dev.com",
-        "hash": "8a68a2ca14e41925e745d3f5a14550a427aa05c4bc00248e63dc45d12e10e2e3f7e1e09822dd544c1f808dd71eb1aa6538b96408ff73d2ecfd9b54b204fad705",
-        "name": "Alex Kim",
-        "salt": "563ad7a2ec596b8bdca6cc5b3040e302",
-        "updatedAt": "2019-12-31T20:55:34.424Z",
-      },
+      "_id": "5e0bb5c61c90231c34596f83",
+      "email": "alexkim@dev.com",
+      "name": "Alex Kim",
+      "role": "ADMIN",
     },
     "type": "users/get-user-success",
   },
@@ -45,21 +38,14 @@ Array [
   },
   Object {
     "error": null,
-    "payload": Object {
-      "users": Array [
-        Object {
-          "__v": 0,
-          "_id": "5e0bb5c61c90231c34596f83",
-          "createdAt": "2019-12-31T20:55:34.424Z",
-          "deleted": false,
-          "email": "alexkim@dev.com",
-          "hash": "8a68a2ca14e41925e745d3f5a14550a427aa05c4bc00248e63dc45d12e10e2e3f7e1e09822dd544c1f808dd71eb1aa6538b96408ff73d2ecfd9b54b204fad705",
-          "name": "Alex Kim",
-          "salt": "563ad7a2ec596b8bdca6cc5b3040e302",
-          "updatedAt": "2019-12-31T20:55:34.424Z",
-        },
-      ],
-    },
+    "payload": Array [
+      Object {
+        "_id": "5e0bb5c61c90231c34596f83",
+        "email": "alexkim@dev.com",
+        "name": "Alex Kim",
+        "role": "ADMIN",
+      },
+    ],
     "type": "users/get-users-success",
   },
 ]
@@ -75,15 +61,10 @@ Array [
     "payload": Object {
       "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Nzg1NDYxMjUsImlhdCI6MTU3Nzk0MTMyNX0.ksgtQ8uDQ3322tOhQ4jIkzZjH6B0luhLA1NRKGCG00w",
       "user": Object {
-        "__v": 0,
         "_id": "5e0bb5c61c90231c34596f83",
-        "createdAt": "2019-12-31T20:55:34.424Z",
-        "deleted": false,
         "email": "alexkim@dev.com",
-        "hash": "8a68a2ca14e41925e745d3f5a14550a427aa05c4bc00248e63dc45d12e10e2e3f7e1e09822dd544c1f808dd71eb1aa6538b96408ff73d2ecfd9b54b204fad705",
-        "name": "Alex the Great",
-        "salt": "563ad7a2ec596b8bdca6cc5b3040e302",
-        "updatedAt": "2019-12-31T21:00:15.298Z",
+        "name": "Alex Kim",
+        "role": "ADMIN",
       },
     },
     "type": "users/login-success",
@@ -109,15 +90,10 @@ Array [
     "payload": Object {
       "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Nzg1NDYxMjUsImlhdCI6MTU3Nzk0MTMyNX0.ksgtQ8uDQ3322tOhQ4jIkzZjH6B0luhLA1NRKGCG00w",
       "user": Object {
-        "__v": 0,
         "_id": "5e0bb5c61c90231c34596f83",
-        "createdAt": "2019-12-31T20:55:34.424Z",
-        "deleted": false,
         "email": "alexkim@dev.com",
-        "hash": "8a68a2ca14e41925e745d3f5a14550a427aa05c4bc00248e63dc45d12e10e2e3f7e1e09822dd544c1f808dd71eb1aa6538b96408ff73d2ecfd9b54b204fad705",
-        "name": "Alex the Great",
-        "salt": "563ad7a2ec596b8bdca6cc5b3040e302",
-        "updatedAt": "2019-12-31T21:00:15.298Z",
+        "name": "Alex Kim",
+        "role": "ADMIN",
       },
     },
     "type": "users/register-success",
@@ -133,17 +109,10 @@ Array [
   Object {
     "error": null,
     "payload": Object {
-      "user": Object {
-        "__v": 0,
-        "_id": "5e0bb5c61c90231c34596f83",
-        "createdAt": "2019-12-31T20:55:34.424Z",
-        "deleted": false,
-        "email": "alexkim@dev.com",
-        "hash": "8a68a2ca14e41925e745d3f5a14550a427aa05c4bc00248e63dc45d12e10e2e3f7e1e09822dd544c1f808dd71eb1aa6538b96408ff73d2ecfd9b54b204fad705",
-        "name": "Alex Kim",
-        "salt": "563ad7a2ec596b8bdca6cc5b3040e302",
-        "updatedAt": "2019-12-31T20:55:34.424Z",
-      },
+      "_id": "5e0bb5c61c90231c34596f83",
+      "email": "alexkim@dev.com",
+      "name": "Alex Kim",
+      "role": "ADMIN",
     },
     "type": "users/update-user-success",
   },

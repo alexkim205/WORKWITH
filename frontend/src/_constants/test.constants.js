@@ -61,12 +61,61 @@ const createUpdateNoteFromUserId = userId =>
 const projects = {
   projects: [
     {
-      authors: [],
-      users: ["5df9778c0f65fddc651e6167", "5df97791556bc5bc928b32fb"],
+      authors: ["5e0bb5c61c90231c34596f83"],
+      users: [
+        "5e0bb5c61c90231c34596f83",
+        "5df9778c0f65fddc651e6167",
+        "5df97791556bc5bc928b32fb"
+      ],
       private: true,
       deleted: false,
       _id: "5e02efdd94748b21482e6010",
-      title: "My Project",
+      title: "Hera",
+      createdAt: "2019-12-25T05:13:01.264Z",
+      updatedAt: "2019-12-25T05:31:27.794Z",
+      __v: 0
+    },
+    {
+      authors: ["5e0bb5c61c90231c34596f83"],
+      users: [
+        "5e0bb5c61c90231c34596f83",
+        "5df9778c0f65fddc651e6167",
+        "5df97791556bc5bc928b32fb"
+      ],
+      private: true,
+      deleted: false,
+      _id: "5e4c34e5890521be2c2de2fe",
+      title: "Poseidon",
+      createdAt: "2019-12-25T05:13:01.264Z",
+      updatedAt: "2019-12-25T05:31:27.794Z",
+      __v: 0
+    },
+    {
+      authors: ["5e0bb5c61c90231c34596f83"],
+      users: [
+        "5e0bb5c61c90231c34596f83",
+        "5df9778c0f65fddc651e6167",
+        "5df97791556bc5bc928b32fb"
+      ],
+      private: true,
+      deleted: false,
+      _id: "5e4c34e91ff8893429ff8ce6",
+      title: "Hades",
+      createdAt: "2019-12-25T05:13:01.264Z",
+      updatedAt: "2019-12-25T05:31:27.794Z",
+      __v: 0
+    },
+    {
+      authors: ["5e0bb5c61c90231c34596f83"],
+      users: [
+        "5e0bb5c61c90231c34596f83",
+        "5df9778c0f65fddc651e6167",
+        "5df97791556bc5bc928b32fb"
+      ],
+      private: true,
+      deleted: false,
+      _id: "5e4c34f192e646c363c3a803",
+      title: "Dionysus",
       createdAt: "2019-12-25T05:13:01.264Z",
       updatedAt: "2019-12-25T05:31:27.794Z",
       __v: 0
@@ -103,47 +152,29 @@ const newUpdateProject = {
 const users = {
   users: [
     {
-      deleted: false,
       _id: "5e0bb5c61c90231c34596f83",
       name: "Alex Kim",
       email: "alexkim@dev.com",
-      salt: "563ad7a2ec596b8bdca6cc5b3040e302",
-      hash:
-        "8a68a2ca14e41925e745d3f5a14550a427aa05c4bc00248e63dc45d12e10e2e3f7e1e09822dd544c1f808dd71eb1aa6538b96408ff73d2ecfd9b54b204fad705",
-      createdAt: "2019-12-31T20:55:34.424Z",
-      updatedAt: "2019-12-31T20:55:34.424Z",
-      __v: 0
+      role: "ADMIN"
     }
   ]
 };
 
 const user = {
   user: {
-    deleted: false,
     _id: "5e0bb5c61c90231c34596f83",
     name: "Alex Kim",
     email: "alexkim@dev.com",
-    salt: "563ad7a2ec596b8bdca6cc5b3040e302",
-    hash:
-      "8a68a2ca14e41925e745d3f5a14550a427aa05c4bc00248e63dc45d12e10e2e3f7e1e09822dd544c1f808dd71eb1aa6538b96408ff73d2ecfd9b54b204fad705",
-    createdAt: "2019-12-31T20:55:34.424Z",
-    updatedAt: "2019-12-31T20:55:34.424Z",
-    __v: 0
+    role: "ADMIN"
   }
 };
 
 const userWithToken = {
   user: {
-    deleted: false,
     _id: "5e0bb5c61c90231c34596f83",
-    name: "Alex the Great",
+    name: "Alex Kim",
     email: "alexkim@dev.com",
-    salt: "563ad7a2ec596b8bdca6cc5b3040e302",
-    hash:
-      "8a68a2ca14e41925e745d3f5a14550a427aa05c4bc00248e63dc45d12e10e2e3f7e1e09822dd544c1f808dd71eb1aa6538b96408ff73d2ecfd9b54b204fad705",
-    createdAt: "2019-12-31T20:55:34.424Z",
-    updatedAt: "2019-12-31T21:00:15.298Z",
-    __v: 0
+    role: "ADMIN"
   },
   token:
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Nzg1NDYxMjUsImlhdCI6MTU3Nzk0MTMyNX0.ksgtQ8uDQ3322tOhQ4jIkzZjH6B0luhLA1NRKGCG00w"
@@ -158,7 +189,8 @@ const newUser = {
   name: "Alex Kim",
   email: "alexkim@dev.com",
   password: "Theworstpassword!12345",
-  password2: "Theworstpassword!12345"
+  password2: "Theworstpassword!12345",
+  role: "ADMIN"
 };
 
 const newUser2 = {

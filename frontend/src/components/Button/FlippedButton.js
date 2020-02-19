@@ -75,16 +75,17 @@ const FlippedButton = ({
 
   return (
     <Fragment>
-      <Flipped flipId={flipId} stagger="field" scale transformOrigin="50% 50%">
+      <Flipped
+        flipId={flipId}
+        stagger="field"
+        transformOrigin="50% 50%"
+        {...flipProps}
+      >
         <FlippedButtonContainer
           flipToBackgroundColorCallback={flipToBackgroundColorCallback}
           ref={buttonContainerRef}
         >
-          <Flipped
-            inverseFlipId={flipId}
-            transformOrigin="50% 50%"
-            {...flipProps}
-          >
+          <Flipped inverseFlipId={flipId} transformOrigin="50% 50%">
             <div>
               <Button onClick={onClick} disabled={buttonPending}>
                 {children}

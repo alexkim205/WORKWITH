@@ -90,10 +90,7 @@ router.route("/").get(authorize(Role.ADMIN), getUsers);
  */
 const getUser = async (req, res) => {
   // Only admins can access other user records
-  if (
-    parseInt(req.params.id, 10) !== req.user._id &&
-    req.user.role !== Role.ADMIN
-  ) {
+  if (req.params.id !== req.user._id && req.user.role !== Role.ADMIN) {
     return res.status(HttpStatus.UNAUTHORIZED).send("Request is UNAUTHORIZED");
   }
   const [err, user] = await to(User.findById(req.params.id));
@@ -139,7 +136,7 @@ const register = async (req, res) => {
     return res.status(HttpStatus.UNPROCESSABLE_ENTITY).send(err1);
   }
 
-  const user = new User(_.pick(req.body, ["name", "email"]));
+  const user = new User(_.pick(req.body, ["name", "email", "role"]));
 
   user.setPassword(req.body.password);
 
@@ -248,10 +245,7 @@ router.route("/login").post(login);
  */
 const updateUser = async (req, res) => {
   // Only admins can update other user records
-  if (
-    parseInt(req.params.id, 10) !== req.user._id &&
-    req.user.role !== Role.ADMIN
-  ) {
+  if (req.params.id !== req.user._id && req.user.role !== Role.ADMIN) {
     return res.status(HttpStatus.UNAUTHORIZED).send("Request is UNAUTHORIZED");
   }
   // Validate form data
@@ -313,10 +307,7 @@ router.route("/update/:id").put(authorize([Role.ADMIN, Role.USER]), updateUser);
  */
 const deleteUser = async (req, res) => {
   // Only admins can access other user records
-  if (
-    parseInt(req.params.id, 10) !== req.user._id &&
-    req.user.role !== Role.ADMIN
-  ) {
+  if (req.params.id !== req.user._id && req.user.role !== Role.ADMIN) {
     return res.status(HttpStatus.UNAUTHORIZED).send("Request is UNAUTHORIZED");
   }
   const [err1, user] = await to(User.findById(req.params.id));

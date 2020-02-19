@@ -1,126 +1,222 @@
 import React, { Fragment, useState, useEffect } from "react";
-// import { useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useLocation, useHistory } from "react-router-dom";
-import styled from "styled-components";
 import _ from "lodash";
+import qs from "qs";
 import { Flipped } from "react-flip-toolkit";
-// import useAction from "../../_utils/useAction.util";
-// import { getProjectsByUser } from "../../_actions/projects.actions";
-// import { getCurrentUserAndToken } from "../../_selectors/users.selectors";
-// import {
-//   getProjects,
-//   getProjectsPendingAndError
-// } from "../../_selectors/projects.selectors";
+import Fuse from "fuse.js";
+import {
+  IoMdGrid,
+  IoMdList,
+  IoMdCalendar,
+  IoIosArrowRoundDown,
+  IoIosArrowRoundUp
+} from "react-icons/io";
 
-const CardGrid = styled.ul`
-  display: ${props => (props.display === "grid" ? "grid" : "block")};
-  grid-gap: 2rem;
-  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
-  margin: 0;
-  padding: 0;
-  list-style: none;
+import fuseOptions from "../../_config/fuse.config";
+import useAction from "../../_utils/useAction.util";
+import useDebounce from "../../_utils/useDebounce.util";
+import useWindowWidth from "../../_utils/useWindowWidth.util";
+import { breakpoints } from "../../_constants/theme.constants";
+import { getProjectsByUser } from "../../_actions/projects.actions";
+import { getCurrentUserAndToken } from "../../_selectors/users.selectors";
+import {
+  getProjects,
+  getProjectsPendingAndError
+} from "../../_selectors/projects.selectors";
+import { Background, StyledProjects } from "./Projects.style";
+import { LinkButton } from "../../components/Button";
+import { Input } from "../../components/Form";
+import ToggleSwitch from "../../components/ToggleSwitch";
+import ProjectCard from "./ProjectCard";
 
-  > li {
-    display: block;
-    margin-bottom: ${props => (props.display === "grid" ? 0 : "1.5rem")};
-    height: ${props => (props.display === "grid" ? "auto" : "5.75rem")};
-  }
-`;
-
-const Container = styled.div`
-  width: 100%;
-  background-color: pink;
-`;
-
-const Projects = () => {
+const ProjectsBox = () => {
+  const windowWidth = useWindowWidth();
   const [state, setState] = useState({
     filter: "",
-    display: "grid",
-    sort: "created", // ["created", "last modified"]
-    projects: [],
-    visibleProjects: []
+    display: windowWidth <= breakpoints.xs ? "list" : "grid", // grid or list
+    sort: "createdAt" // ["createdAt", "updatedAt"]
   });
-
   const history = useHistory();
   const location = useLocation();
-  // const updateQueryParam = obj => {
-  //   history.push({
-  //     search: `?${qs.stringify({
-  //       ...qs.parse(location.search.replace("?", "")),
-  //       ...obj
-  //     })}`
-  //   });
-  // };
-  // const navigate = projectTitle => {
-  //   history.push({
-  //     pathname: `/${projectTitle.replace(/\s/g, "-")}`,
-  //     search: location.search
-  //   });
-  // };
+  const _getProjectsByUser = useAction(getProjectsByUser);
+  const { user, token } = useSelector(getCurrentUserAndToken);
+  const { pending, error } = useSelector(getProjectsPendingAndError);
+  const projects = useSelector(getProjects);
+  const debouncedSearchTerm = useDebounce(state.filter, 200);
 
-  // // Get projects by user
-  // const _getProjectsByUser = useAction(getProjectsByUser);
-  // const { user } = useSelector(getCurrentUserAndToken);
-  // const projects = useSelector(getProjects);
-  // const { pending, error } = useSelector(getProjectsPendingAndError);
+  // Lifecycle methods
+  const handleChange = e => {
+    const { name, value } = e.target;
+    setState(prevState => ({ ...prevState, [name]: value }));
+  };
 
-  // useEffect(() => {
-  //   if (!user) {
-  //     history.push({ pathname: `/auth` });
-  //     return;
-  //   }
-  //   const getProjectsAsync = async () => {
-  //     await _getProjectsByUser(user._id);
-  //     setState(prevState => ({ ...prevState, projects }));
-  //   };
-  //   getProjectsAsync();
-  // }, []);
+  const updateQueryParam = obj => {
+    history.push({
+      search: `?${qs.stringify({
+        ...qs.parse(location.search.replace("?", "")),
+        ...obj
+      })}`
+    });
+  };
+
+  const handleSmallWindow = () => {
+    if (windowWidth <= breakpoints.xs) {
+      if (state.display !== "list") {
+        updateQueryParam({ display: "list" });
+      }
+    }
+  };
+
+  // Fetch projects at start and set display if window is small
+  useEffect(() => {
+    // console.log("Project Page", user, token, projects, pending, error);
+    if (_.isEmpty(user) || _.isEmpty(token)) {
+      history.push({ pathname: `/auth` });
+      return;
+    }
+    try {
+      _getProjectsByUser(user._id);
+    } catch (e) {
+      // console.log(e);
+    }
+  }, []);
+
+  // If window size gets below xs, change query parameter 'display' to list
+  useEffect(() => {
+    handleSmallWindow();
+  }, [windowWidth]);
+
+  // Update query parameters when debounced search term is changed
+  useEffect(() => {
+    updateQueryParam(state);
+  }, [debouncedSearchTerm]);
 
   // Update visible projects when projects or query params change
   useEffect(() => {
-    const sortParam = state.sort === "created" ? "createdAt" : "updatedAt";
     setState(prevState => ({
-      ...state,
-      visibleProjects: _(prevState.visibleProjects)
-        .sortBy(project => new Date(project[sortParam]))
-        .filter(project =>
-          new RegExp(`^${prevState.filter}`).test(project.name)
-        )
-        .value()
+      ...prevState,
+      ...qs.parse(location.search.replace("?", ""))
     }));
-  }, [state.projects, location.search]);
+  }, [projects, location.search]);
+
+  // Render methods
+  const renderProjects = () => {
+    // console.log("VISIBLE", pending, error);
+    if (pending) {
+      return `Pending projects!`;
+    }
+    if (error) {
+      return error.message;
+    }
+    if (_.isEmpty(projects)) {
+      return `No projects found`;
+    }
+
+    const {
+      filter: searchParam,
+      display: displayParam,
+      sort: sortParam
+    } = qs.parse(location.search.replace("?", ""));
+    let visibleProjects = _(projects)
+      .sortBy(project => new Date(project[sortParam]))
+      .value();
+    if (!_.isEmpty(searchParam)) {
+      visibleProjects = new Fuse(projects, fuseOptions).search(searchParam);
+    }
+    if (_.isEmpty(visibleProjects)) {
+      return `No projects with those criteria.`;
+    }
+    return (
+      <Fragment>
+        {visibleProjects.map(project => (
+          <ProjectCard
+            project={project}
+            key={project._id}
+            setKey={project._id}
+            display={displayParam}
+          />
+        ))}
+      </Fragment>
+    );
+  };
+
+  const renderControls = () => {
+    const { display: displayParam, sort: sortParam } = qs.parse(
+      location.search.replace("?", "")
+    );
+    return (
+      <Fragment>
+        <div>
+          <ToggleSwitch.Icon
+            active={sortParam === "createdAt"}
+            onClick={() => updateQueryParam({ sort: "createdAt" })}
+          >
+            <IoMdCalendar />
+            <IoIosArrowRoundUp />
+          </ToggleSwitch.Icon>
+          <ToggleSwitch.Icon
+            active={sortParam === "updatedAt"}
+            onClick={() => updateQueryParam({ sort: "updatedAt" })}
+          >
+            <IoMdCalendar />
+            <IoIosArrowRoundDown />
+          </ToggleSwitch.Icon>
+        </div>
+        <div>
+          <ToggleSwitch.Icon
+            active={displayParam === "list"}
+            onClick={() => updateQueryParam({ display: "list" })}
+          >
+            <IoMdList />
+          </ToggleSwitch.Icon>
+          <ToggleSwitch.Icon
+            active={displayParam === "grid"}
+            onClick={() => updateQueryParam({ display: "grid" })}
+          >
+            <IoMdGrid />
+          </ToggleSwitch.Icon>
+        </div>
+      </Fragment>
+    );
+  };
 
   return (
-    <Fragment>
-      {state.visibleProjects.length === 0 ? (
-        <Container>
-          <Flipped inverseFlipId="page">
-            <div>
-              <h1>No Results Found</h1>
-              <button
-                onClick={() => {
-                  history.push({ pathname: `/auth` });
-                }}
-              >
-                go back
-              </button>
+    <Flipped inverseFlipId="page">
+      <Fragment>
+        <div className="header">
+          <div>Logo</div>
+          <div style={{ flex: 1 }}>Flex</div>
+          <LinkButton onClick={() => history.push({ pathname: `/auth` })}>
+            Logout
+          </LinkButton>
+        </div>
+        <div className="spacer"></div>
+        <div className="body">
+          <div className="box">
+            {/* {windowWidth} */}
+            <div className="toggles">{renderControls()}</div>
+            <div className="search">
+              <Input.Text
+                type="text"
+                name="filter"
+                placeholder={"Search here for a project..."}
+                value={state.filter}
+                onChange={handleChange}
+              />
             </div>
-          </Flipped>
-        </Container>
-      ) : (
-        <Container>
-          <h1>Projects</h1>
-          <CardGrid display={state.display}>
-            {state.visibleProjects.map((project, i) => (
-              <div key={i}>
-                <h3>{project.title}</h3>
-              </div>
-            ))}
-          </CardGrid>
-        </Container>
-      )}
-    </Fragment>
+            <StyledProjects>{renderProjects()}</StyledProjects>
+          </div>
+        </div>
+      </Fragment>
+    </Flipped>
   );
 };
+
+const Projects = () => (
+  <Background>
+    <ProjectsBox />
+  </Background>
+);
 
 export default Projects;

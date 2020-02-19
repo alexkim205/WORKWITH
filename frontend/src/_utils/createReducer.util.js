@@ -33,22 +33,32 @@ const createReducer = (initialState, actions, mode = "setState") => {
        errorConstant: ({action}) => ({pending: false, error: action.error})
      }
  */
-const createReducerPart = (constants, constantPrefix, payloadProp = null) => ({
-  [constants[`${constantPrefix}_PENDING`]]: () => ({
-    pending: true,
-    error: null
-  }),
-  ...(payloadProp && {
-    [constants[`${constantPrefix}_SUCCESS`]]: ({ action }) => ({
-      pending: false,
-      [payloadProp]: action.payload,
+const createReducerPart = (constants, constantPrefix, payloadProp = null) => {
+  const payloadPropArray =
+    payloadProp?.constructor === Array ? payloadProp : [payloadProp];
+  return {
+    [constants[`${constantPrefix}_PENDING`]]: () => ({
+      pending: true,
       error: null
+    }),
+    ...(payloadProp && {
+      [constants[`${constantPrefix}_SUCCESS`]]: ({ action }) => ({
+        pending: false,
+        error: null,
+        ...payloadPropArray.reduce((res, prop) => {
+          res[prop] =
+            payloadProp?.constructor === Array
+              ? action.payload[prop]
+              : action.payload;
+          return res;
+        }, {})
+      })
+    }),
+    [constants[`${constantPrefix}_ERROR`]]: ({ action }) => ({
+      pending: false,
+      error: action.error
     })
-  }),
-  [constants[`${constantPrefix}_ERROR`]]: ({ action }) => ({
-    pending: false,
-    error: action.error
-  })
-});
+  };
+};
 
 export { createReducer, createReducerPart };

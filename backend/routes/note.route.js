@@ -186,6 +186,16 @@ const createNote = async (req, res) => {
     return res.status(HttpStatus.UNPROCESSABLE_ENTITY).send(err1);
   }
 
+  // Add requesting user to authors and taggedUsers arrays
+  req.body.authors = req.body.authors || [];
+  req.body.taggedUsers = req.body.taggedUsers || [];
+  if (!_.includes(req.body.authors, req.user._id)) {
+    req.body.authors = [...req.body.authors, req.user._id];
+  }
+  if (!_.includes(req.body.taggedUsers, req.user._id)) {
+    req.body.taggedUsers = [...req.body.taggedUsers, req.user._id];
+  }
+
   // Check if all authors exist
   const checkAuthorPromises = req.body.authors.map(async authorId => {
     const [errAuthor, user] = await to(User.findById(authorId));
@@ -206,9 +216,6 @@ const createNote = async (req, res) => {
   }
 
   // Check if all tagged users exist
-  req.body.taggedUsers = _.isEmpty(req.body.taggedUsers)
-    ? []
-    : req.body.taggedUsers;
   const checkTaggedUserPromises = req.body.taggedUsers.map(
     async taggedUserId => {
       const [errTaggedUser, user] = await to(User.findById(taggedUserId));

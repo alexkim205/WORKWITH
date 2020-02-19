@@ -8,22 +8,20 @@ Array [
   Object {
     "error": null,
     "payload": Object {
-      "project": Object {
-        "__v": 0,
-        "_id": "5e02efdd94748b21482e6010",
-        "authors": Array [
-          "5df9778c0f65fddc651e6167",
-        ],
-        "createdAt": "2019-12-25T05:13:01.264Z",
-        "deleted": false,
-        "private": true,
-        "title": "My Project",
-        "updatedAt": "2019-12-25T05:31:27.794Z",
-        "users": Array [
-          "5df9778c0f65fddc651e6167",
-          "5df97791556bc5bc928b32fb",
-        ],
-      },
+      "__v": 0,
+      "_id": "5e02efdd94748b21482e6010",
+      "authors": Array [
+        "5df9778c0f65fddc651e6167",
+      ],
+      "createdAt": "2019-12-25T05:13:01.264Z",
+      "deleted": false,
+      "private": true,
+      "title": "My Project",
+      "updatedAt": "2019-12-25T05:31:27.794Z",
+      "users": Array [
+        "5df9778c0f65fddc651e6167",
+        "5df97791556bc5bc928b32fb",
+      ],
     },
     "type": "projects/create-project-success",
   },
@@ -51,22 +49,20 @@ Array [
   Object {
     "error": null,
     "payload": Object {
-      "project": Object {
-        "__v": 0,
-        "_id": "5e02efdd94748b21482e6010",
-        "authors": Array [
-          "5df9778c0f65fddc651e6167",
-        ],
-        "createdAt": "2019-12-25T05:13:01.264Z",
-        "deleted": false,
-        "private": true,
-        "title": "My Project",
-        "updatedAt": "2019-12-25T05:31:27.794Z",
-        "users": Array [
-          "5df9778c0f65fddc651e6167",
-          "5df97791556bc5bc928b32fb",
-        ],
-      },
+      "__v": 0,
+      "_id": "5e02efdd94748b21482e6010",
+      "authors": Array [
+        "5df9778c0f65fddc651e6167",
+      ],
+      "createdAt": "2019-12-25T05:13:01.264Z",
+      "deleted": false,
+      "private": true,
+      "title": "My Project",
+      "updatedAt": "2019-12-25T05:31:27.794Z",
+      "users": Array [
+        "5df9778c0f65fddc651e6167",
+        "5df97791556bc5bc928b32fb",
+      ],
     },
     "type": "projects/get-project-success",
   },
@@ -80,24 +76,76 @@ Array [
   },
   Object {
     "error": null,
-    "payload": Object {
-      "projects": Array [
-        Object {
-          "__v": 0,
-          "_id": "5e02efdd94748b21482e6010",
-          "authors": Array [],
-          "createdAt": "2019-12-25T05:13:01.264Z",
-          "deleted": false,
-          "private": true,
-          "title": "My Project",
-          "updatedAt": "2019-12-25T05:31:27.794Z",
-          "users": Array [
-            "5df9778c0f65fddc651e6167",
-            "5df97791556bc5bc928b32fb",
-          ],
-        },
-      ],
-    },
+    "payload": Array [
+      Object {
+        "__v": 0,
+        "_id": "5e02efdd94748b21482e6010",
+        "authors": Array [
+          "5e0bb5c61c90231c34596f83",
+        ],
+        "createdAt": "2019-12-25T05:13:01.264Z",
+        "deleted": false,
+        "private": true,
+        "title": "Hera",
+        "updatedAt": "2019-12-25T05:31:27.794Z",
+        "users": Array [
+          "5e0bb5c61c90231c34596f83",
+          "5df9778c0f65fddc651e6167",
+          "5df97791556bc5bc928b32fb",
+        ],
+      },
+      Object {
+        "__v": 0,
+        "_id": "5e4c34e5890521be2c2de2fe",
+        "authors": Array [
+          "5e0bb5c61c90231c34596f83",
+        ],
+        "createdAt": "2019-12-25T05:13:01.264Z",
+        "deleted": false,
+        "private": true,
+        "title": "Poseidon",
+        "updatedAt": "2019-12-25T05:31:27.794Z",
+        "users": Array [
+          "5e0bb5c61c90231c34596f83",
+          "5df9778c0f65fddc651e6167",
+          "5df97791556bc5bc928b32fb",
+        ],
+      },
+      Object {
+        "__v": 0,
+        "_id": "5e4c34e91ff8893429ff8ce6",
+        "authors": Array [
+          "5e0bb5c61c90231c34596f83",
+        ],
+        "createdAt": "2019-12-25T05:13:01.264Z",
+        "deleted": false,
+        "private": true,
+        "title": "Hades",
+        "updatedAt": "2019-12-25T05:31:27.794Z",
+        "users": Array [
+          "5e0bb5c61c90231c34596f83",
+          "5df9778c0f65fddc651e6167",
+          "5df97791556bc5bc928b32fb",
+        ],
+      },
+      Object {
+        "__v": 0,
+        "_id": "5e4c34f192e646c363c3a803",
+        "authors": Array [
+          "5e0bb5c61c90231c34596f83",
+        ],
+        "createdAt": "2019-12-25T05:13:01.264Z",
+        "deleted": false,
+        "private": true,
+        "title": "Dionysus",
+        "updatedAt": "2019-12-25T05:31:27.794Z",
+        "users": Array [
+          "5e0bb5c61c90231c34596f83",
+          "5df9778c0f65fddc651e6167",
+          "5df97791556bc5bc928b32fb",
+        ],
+      },
+    ],
     "type": "projects/get-projects-success",
   },
 ]
@@ -110,24 +158,76 @@ Array [
   },
   Object {
     "error": null,
-    "payload": Object {
-      "projects": Array [
-        Object {
-          "__v": 0,
-          "_id": "5e02efdd94748b21482e6010",
-          "authors": Array [],
-          "createdAt": "2019-12-25T05:13:01.264Z",
-          "deleted": false,
-          "private": true,
-          "title": "My Project",
-          "updatedAt": "2019-12-25T05:31:27.794Z",
-          "users": Array [
-            "5df9778c0f65fddc651e6167",
-            "5df97791556bc5bc928b32fb",
-          ],
-        },
-      ],
-    },
+    "payload": Array [
+      Object {
+        "__v": 0,
+        "_id": "5e02efdd94748b21482e6010",
+        "authors": Array [
+          "5e0bb5c61c90231c34596f83",
+        ],
+        "createdAt": "2019-12-25T05:13:01.264Z",
+        "deleted": false,
+        "private": true,
+        "title": "Hera",
+        "updatedAt": "2019-12-25T05:31:27.794Z",
+        "users": Array [
+          "5e0bb5c61c90231c34596f83",
+          "5df9778c0f65fddc651e6167",
+          "5df97791556bc5bc928b32fb",
+        ],
+      },
+      Object {
+        "__v": 0,
+        "_id": "5e4c34e5890521be2c2de2fe",
+        "authors": Array [
+          "5e0bb5c61c90231c34596f83",
+        ],
+        "createdAt": "2019-12-25T05:13:01.264Z",
+        "deleted": false,
+        "private": true,
+        "title": "Poseidon",
+        "updatedAt": "2019-12-25T05:31:27.794Z",
+        "users": Array [
+          "5e0bb5c61c90231c34596f83",
+          "5df9778c0f65fddc651e6167",
+          "5df97791556bc5bc928b32fb",
+        ],
+      },
+      Object {
+        "__v": 0,
+        "_id": "5e4c34e91ff8893429ff8ce6",
+        "authors": Array [
+          "5e0bb5c61c90231c34596f83",
+        ],
+        "createdAt": "2019-12-25T05:13:01.264Z",
+        "deleted": false,
+        "private": true,
+        "title": "Hades",
+        "updatedAt": "2019-12-25T05:31:27.794Z",
+        "users": Array [
+          "5e0bb5c61c90231c34596f83",
+          "5df9778c0f65fddc651e6167",
+          "5df97791556bc5bc928b32fb",
+        ],
+      },
+      Object {
+        "__v": 0,
+        "_id": "5e4c34f192e646c363c3a803",
+        "authors": Array [
+          "5e0bb5c61c90231c34596f83",
+        ],
+        "createdAt": "2019-12-25T05:13:01.264Z",
+        "deleted": false,
+        "private": true,
+        "title": "Dionysus",
+        "updatedAt": "2019-12-25T05:31:27.794Z",
+        "users": Array [
+          "5e0bb5c61c90231c34596f83",
+          "5df9778c0f65fddc651e6167",
+          "5df97791556bc5bc928b32fb",
+        ],
+      },
+    ],
     "type": "projects/get-user-projects-success",
   },
 ]
@@ -141,22 +241,20 @@ Array [
   Object {
     "error": null,
     "payload": Object {
-      "project": Object {
-        "__v": 0,
-        "_id": "5e02efdd94748b21482e6010",
-        "authors": Array [
-          "5df9778c0f65fddc651e6167",
-        ],
-        "createdAt": "2019-12-25T05:13:01.264Z",
-        "deleted": false,
-        "private": true,
-        "title": "My Project",
-        "updatedAt": "2019-12-25T05:31:27.794Z",
-        "users": Array [
-          "5df9778c0f65fddc651e6167",
-          "5df97791556bc5bc928b32fb",
-        ],
-      },
+      "__v": 0,
+      "_id": "5e02efdd94748b21482e6010",
+      "authors": Array [
+        "5df9778c0f65fddc651e6167",
+      ],
+      "createdAt": "2019-12-25T05:13:01.264Z",
+      "deleted": false,
+      "private": true,
+      "title": "My Project",
+      "updatedAt": "2019-12-25T05:31:27.794Z",
+      "users": Array [
+        "5df9778c0f65fddc651e6167",
+        "5df97791556bc5bc928b32fb",
+      ],
     },
     "type": "projects/update-project-success",
   },
