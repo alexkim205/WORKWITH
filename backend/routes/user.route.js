@@ -9,6 +9,8 @@ const to = require("await-to-js").default;
 const router = require("express").Router();
 const passport = require("passport");
 const _ = require("lodash");
+const jwt = require("jsonwebtoken");
+const { switchEnvs } = require("../_config/getEnv.config");
 const { HttpStatus } = require("../_constants/error.constants");
 const User = require("../models/user.model");
 const Role = require("../_utils/roles.util");
@@ -16,6 +18,7 @@ const authorize = require("../_utils/authorize.util");
 const validateRegisterInput = require("../validators/register.validator");
 const validateLoginInput = require("../validators/login.validator");
 const validateUpdateUserInput = require("../validators/update.user.validator");
+const validateRefreshTokenInput = require("../validators/refresh.token.user.validator");
 
 /**
  * @swagger
@@ -42,7 +45,7 @@ const validateUpdateUserInput = require("../validators/update.user.validator");
  *              schema:
  *                type: array
  *                items:
- *                  $ref: '#/components/schemas/User'
+ *                  $ref: '#/components/schemas/UserSafe'
  *        "401":
  *          $ref: '#/components/responses/UnauthorizedError'
  */
@@ -82,7 +85,7 @@ router.route("/").get(authorize(Role.ADMIN), getUsers);
  *          content:
  *            application/json:
  *              schema:
- *                $ref: '#/components/schemas/User'
+ *                $ref: '#/components/schemas/UserSafe'
  *        "404":
  *          description: NOT_FOUND. User not found
  *        "401":
@@ -125,7 +128,14 @@ router.route("/:id").get(authorize([Role.ADMIN, Role.USER]), getUser);
  *          content:
  *            application/json:
  *              schema:
- *                $ref: '#/components/schemas/User'
+ *                allOf:
+ *                  - $ref: '#/components/schemas/UserSafe'
+ *                  - type: object
+ *                    properties:
+ *                      token:
+ *                        type: string
+ *                      refreshToken:
+ *                        type: string
  *        "401":
  *          $ref: '#/components/responses/UnauthorizedError'
  */
@@ -153,7 +163,7 @@ const register = async (req, res) => {
 
   return res
     .status(HttpStatus.CREATED)
-    .send({ user: user.getSafeUser(), token: user.generateJwt() });
+    .send({ user: user.getSafeUser(), ...user.generateJwt() });
 };
 router.route("/add").post(register);
 
@@ -177,10 +187,12 @@ router.route("/add").post(register);
  *            application/json:
  *              schema:
  *                allOf:
- *                  - $ref: '#/components/schemas/User'
+ *                  - $ref: '#/components/schemas/UserSafe'
  *                  - type: object
  *                    properties:
  *                      token:
+ *                        type: string
+ *                      refreshToken:
  *                        type: string
  *        "404":
  *          description: NOT_FOUND. User not found
@@ -203,13 +215,97 @@ const login = async (req, res) => {
     if (user) {
       return res
         .status(HttpStatus.OK)
-        .send({ user: user.getSafeUser(), token: user.generateJwt() });
+        .send({ user: user.getSafeUser(), ...user.generateJwt() });
     }
 
     return res.status(HttpStatus.NOT_FOUND).send(JSON.stringify(info));
   })(req, res);
 };
 router.route("/login").post(login);
+
+/**
+ * @swagger
+ * path:
+ *  /users/token:
+ *    post:
+ *      summary: Refresh user token
+ *      tags: [Users]
+ *      requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              allOf:
+ *                - $ref: '#/components/schemas/User'
+ *                - type: object
+ *                  properties:
+ *                    token:
+ *                      type: string
+ *                    refreshToken:
+ *                      type: string
+ *      responses:
+ *        "200":
+ *          description: OK. Returns a token
+ *          content:
+ *            application/json:
+ *              schema:
+ *                allOf:
+ *                  - $ref: '#/components/schemas/UserSafe'
+ *                  - type: object
+ *                    properties:
+ *                      token:
+ *                        type: string
+ *                      refreshToken:
+ *                        type: string
+ *        "401":
+ *          description: UNAUTHORIZED. Refresh token is invalid or has expired.
+ */
+const refreshToken = async (req, res) => {
+  // Validate form data
+  const err1 = validateRefreshTokenInput(req.body);
+  if (!_.isEmpty(err1)) {
+    return res.status(HttpStatus.UNPROCESSABLE_ENTITY).send(err1);
+  }
+
+  const refreshSecret = switchEnvs({
+    generic: process.env.PRODUCTION_REFRESH_JWT_SECRET,
+    dev: process.env.DEVELOPMENT_REFRESH_JWT_SECRET,
+    test: process.env.TESTING_REFRESH_JWT_SECRET,
+    testConnection: process.env.TESTING_REFRESH_JWT_SECRET
+  });
+
+  // jwt functions aren't promisifed yet
+  return jwt.verify(req.body.refreshToken, refreshSecret, (err2, user) => {
+    if (!_.isEmpty(err2) || _.isEmpty(user)) {
+      return res
+        .status(HttpStatus.UNAUTHORIZED)
+        .send("Refresh token is invalid");
+    }
+    return User.findById(user._id)
+      .then(dbUser => {
+        if (
+          _.isEmpty(dbUser) ||
+          // check if request body and db user matches
+          !_.isEqual(req.body.user, {
+            ...dbUser.getSafeUser(),
+            _id: dbUser._id.toString()
+          })
+        ) {
+          return res
+            .status(HttpStatus.UNAUTHORIZED)
+            .send("Refresh token is invalid");
+        }
+        // Sign new JWT token
+        return res
+          .status(HttpStatus.OK)
+          .send({ user: dbUser.getSafeUser(), ...dbUser.generateJwt() });
+      })
+      .catch(err3 => {
+        return res.status(HttpStatus.BAD_REQUEST).send(err3);
+      });
+  });
+};
+router.route("/token").post(refreshToken);
 
 /**
  * @swagger
@@ -239,7 +335,7 @@ router.route("/login").post(login);
  *          content:
  *            application/json:
  *              schema:
- *                $ref: '#/components/schemas/User'
+ *                $ref: '#/components/schemas/UserSafe'
  *        "401":
  *          $ref: '#/components/responses/UnauthorizedError'
  */

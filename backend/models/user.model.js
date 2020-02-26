@@ -108,6 +108,32 @@ const { Schema } = mongoose;
  *        example:
  *          email: alexkim@dev.com
  *          password: Iamapassword01234!
+ *      UserSafe:
+ *        type: object
+ *        required:
+ *          - _id
+ *          - name
+ *          - email
+ *          - role
+ *        properties:
+ *          _id:
+ *            type: string
+ *            description: The unique identifier.
+ *          name:
+ *            type: string
+ *            name: The user's name.
+ *          email:
+ *            type: string
+ *            format: email
+ *            description: The user's email address. It must be unique.
+ *          role:
+ *            type: string
+ *            description: The user's role. Admin, User, or Guest.
+ *        example:
+ *          _id: 5dfb32da9856601e60ea80a4
+ *          name: Alex Kim
+ *          email: alexkim@dev.com
+ *          role: User
  */
 const userSchema = new Schema(
   {
@@ -162,18 +188,32 @@ userSchema.methods.getSafeUser = function() {
 };
 
 userSchema.methods.generateJwt = function() {
-  return jwt.sign(
-    this.getSafeUser(),
-    switchEnvs({
-      generic: process.env.PRODUCTION_JWT_SECRET,
-      dev: process.env.DEVELOPMENT_JWT_SECRET,
-      test: process.env.TESTING_JWT_SECRET,
-      testConnection: process.env.TESTING_JWT_SECRET
-    }),
-    {
-      expiresIn: 60 * 60 * 24 // expires in 24 hours
-    }
-  );
+  return {
+    token: jwt.sign(
+      this.getSafeUser(),
+      switchEnvs({
+        generic: process.env.PRODUCTION_JWT_SECRET,
+        dev: process.env.DEVELOPMENT_JWT_SECRET,
+        test: process.env.TESTING_JWT_SECRET,
+        testConnection: process.env.TESTING_JWT_SECRET
+      }),
+      {
+        expiresIn: 60 * 60 * 24 // expires in 24 hours
+      }
+    ),
+    refreshToken: jwt.sign(
+      this.getSafeUser(),
+      switchEnvs({
+        generic: process.env.PRODUCTION_REFRESH_JWT_SECRET,
+        dev: process.env.DEVELOPMENT_REFRESH_JWT_SECRET,
+        test: process.env.TESTING_REFRESH_JWT_SECRET,
+        testConnection: process.env.TESTING_REFRESH_JWT_SECRET
+      }),
+      {
+        expiresIn: 60 * 60 * 24 * 96 // expires in 96 days
+      }
+    )
+  };
 };
 
 const User = mongoose.model("User", userSchema);

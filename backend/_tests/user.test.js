@@ -25,6 +25,7 @@ describe("User", () => {
 
   let userId;
   let userToken;
+  let userRefreshToken;
 
   describe("GET /users", () => {
     before(async () => User.deleteMany({}));
@@ -195,6 +196,7 @@ describe("User", () => {
       testUserResponse(res, user, true);
       userId = res.body.user._id.toString();
       userToken = res.body.token;
+      userRefreshToken = res.body.refreshToken;
     });
   });
 
@@ -225,6 +227,182 @@ describe("User", () => {
       expect(res.statusCode).to.equal(HttpStatus.OK);
       testUserResponse(res, user);
       expect(res.body.user._id).to.equal(userId);
+    });
+  });
+
+  describe("POST /users/token", () => {
+    const apiBase = `${getApiBase()}/users/token`;
+    const createUserWithTokens = (
+      id,
+      token,
+      refreshToken,
+      testCustomUsers = {}
+    ) => ({
+      user: _.assign(
+        { _id: id },
+        _.pick(user, ["name", "email", "role"]),
+        testCustomUsers
+      ),
+      token,
+      refreshToken
+    });
+    it("it should not POST refresh token without user object", async () => {
+      const userWithTokens = _.omit(
+        createUserWithTokens(userId, userToken, userRefreshToken),
+        ["user"]
+      );
+      const res = await chai
+        .request(app)
+        .post(apiBase)
+        .send(userWithTokens);
+      expect(res.statusCode).to.equal(HttpStatus.UNPROCESSABLE_ENTITY);
+      expect(res).to.not.have.nested.property("body[0]");
+    });
+    it("it should not POST refresh token without id", async () => {
+      const userWithTokens = createUserWithTokens(
+        userId,
+        userToken,
+        userRefreshToken,
+        { _id: null }
+      );
+      const res = await chai
+        .request(app)
+        .post(apiBase)
+        .send(userWithTokens);
+      expect(res.statusCode).to.equal(HttpStatus.UNPROCESSABLE_ENTITY);
+      expect(res).to.not.have.nested.property("body[0]");
+    });
+    it("it should not POST refresh token with non ObjectId", async () => {
+      const userWithTokens = createUserWithTokens(
+        "idthereforeiamnot",
+        userToken,
+        userRefreshToken
+      );
+      const res = await chai
+        .request(app)
+        .post(apiBase)
+        .send(userWithTokens);
+      expect(res.statusCode).to.equal(HttpStatus.UNPROCESSABLE_ENTITY);
+      expect(res).to.not.have.nested.property("body[0]");
+    });
+    it("it should not POST refresh token without name", async () => {
+      const userWithTokens = createUserWithTokens(
+        userId,
+        userToken,
+        userRefreshToken,
+        { name: null }
+      );
+      const res = await chai
+        .request(app)
+        .post(apiBase)
+        .send(userWithTokens);
+      expect(res.statusCode).to.equal(HttpStatus.UNPROCESSABLE_ENTITY);
+      expect(res).to.not.have.nested.property("body[0]");
+    });
+    it("it should not POST refresh token without email", async () => {
+      const userWithTokens = createUserWithTokens(
+        userId,
+        userToken,
+        userRefreshToken,
+        { email: null }
+      );
+      const res = await chai
+        .request(app)
+        .post(apiBase)
+        .send(userWithTokens);
+      expect(res.statusCode).to.equal(HttpStatus.UNPROCESSABLE_ENTITY);
+      expect(res).to.not.have.nested.property("body[0]");
+    });
+    it("it should not POST refresh token without role", async () => {
+      const userWithTokens = createUserWithTokens(
+        userId,
+        userToken,
+        userRefreshToken,
+        { role: null }
+      );
+      const res = await chai
+        .request(app)
+        .post(apiBase)
+        .send(userWithTokens);
+      expect(res.statusCode).to.equal(HttpStatus.UNPROCESSABLE_ENTITY);
+      expect(res).to.not.have.nested.property("body[0]");
+    });
+    it("it should not POST refresh token without refresh token", async () => {
+      const userWithTokens = _.omit(
+        createUserWithTokens(userId, userToken, userRefreshToken),
+        ["refreshToken"]
+      );
+      const res = await chai
+        .request(app)
+        .post(apiBase)
+        .send(userWithTokens);
+      expect(res.statusCode).to.equal(HttpStatus.UNPROCESSABLE_ENTITY);
+      expect(res).to.not.have.nested.property("body[0]");
+    });
+    it("it should not POST refresh token without valid refresh token", async () => {
+      const userWithTokens = createUserWithTokens(
+        userId,
+        userToken,
+        "imnotavalidrefreshtoken"
+      );
+      const res = await chai
+        .request(app)
+        .post(apiBase)
+        .send(userWithTokens);
+      expect(res.statusCode).to.equal(HttpStatus.UNAUTHORIZED);
+      expect(res).to.not.have.nested.property("body[0]");
+    });
+    it("it should not POST refresh token for user that doesn't exist", async () => {
+      const userWithTokens = createUserWithTokens(
+        "5e0441c26044dfb8d86d8cc0",
+        userToken,
+        userRefreshToken
+      );
+      const res = await chai
+        .request(app)
+        .post(apiBase)
+        .send(userWithTokens);
+      expect(res.statusCode).to.equal(HttpStatus.UNAUTHORIZED);
+      expect(res).to.not.have.nested.property("body[0]");
+    });
+    it("it should not POST refresh token for non matching users", async () => {
+      const userWithTokens = createUserWithTokens(
+        userId,
+        userToken,
+        userRefreshToken,
+        {
+          name: "Bob Kim",
+          role: "USER",
+          email: "bobby@dev.com"
+        }
+      );
+      const res = await chai
+        .request(app)
+        .post(apiBase)
+        .send(userWithTokens);
+      expect(res.statusCode).to.equal(HttpStatus.UNAUTHORIZED);
+      expect(res).to.not.have.nested.property("body[0]");
+    });
+    it("it should not POST refresh token with empty body", async () => {
+      const res = await chai
+        .request(app)
+        .post(apiBase)
+        .send({});
+      expect(res.statusCode).to.equal(HttpStatus.UNPROCESSABLE_ENTITY);
+      expect(res).to.not.have.nested.property("body[0]");
+    });
+    it("it should POST refresh token with correct fields", async () => {
+      const userWithTokens = createUserWithTokens(
+        userId,
+        userToken,
+        userRefreshToken
+      );
+      const res = await chai
+        .request(app)
+        .post(apiBase)
+        .send(userWithTokens);
+      expect(res.statusCode).to.equal(HttpStatus.OK);
+      testUserResponse(res, user, true);
     });
   });
 

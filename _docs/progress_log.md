@@ -10,7 +10,9 @@
 
 - Animate caret in dropdown
 - Backend
-  - Add refresh token to payload and refresh token route
+  - Add refresh token to payload and refresh `/token` route
+  - Update swagger documentation
+  - Add token route tests
 
 ## 2/25/2020
 
