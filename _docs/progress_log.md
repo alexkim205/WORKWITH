@@ -6,6 +6,29 @@
 - Refactor out all errors into reusable error types
 - Add authorization tests
 
+## 2/26/2020
+
+- Animate caret in dropdown
+- Backend
+  - Add refresh token to payload and refresh token route
+
+## 2/25/2020
+
+- Add profile dropdown and style navbar
+- Make card clickable
+- Add card routes
+- Add animation to single project page
+
+## 2/24/2020
+
+- Finalize styling and animation of dropdown filter
+- Added outside click hook
+- Add sort alphabetically filter
+
+## 2/22/2020
+
+- Added ToggleSwitch and Dropdown filter components
+
 ## 2/18/2020
 
 - Add testing-offline start script to serve mock data when I'm on a train and can't connect to online Mongod.

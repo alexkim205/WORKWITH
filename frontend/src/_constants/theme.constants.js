@@ -1,10 +1,12 @@
 import theme from "styled-theming";
 import { darken, lighten } from "polished";
 
-const GREEN = "#1affc4";
-const BLACK = "#111";
-const PURPLE = "#4922D8";
-const WHITE = "#fff";
+export const GREEN = "#1affc4";
+export const BLACK = "#111";
+export const PURPLE = "#4922D8";
+export const WHITE = "#fff";
+export const ORANGE = "#F87060";
+export const LIGHT_GRAY = "#ededed";
 
 export const mainColor = theme("mode", {
   light: GREEN,
@@ -16,14 +18,24 @@ export const secondaryColor = theme("mode", {
   dark: PURPLE
 });
 
+export const tertiaryColor = theme("mode", {
+  light: ORANGE,
+  dark: ORANGE
+});
+
 export const textColor = theme("mode", {
   light: BLACK,
   dark: WHITE
 });
 
+export const textOnDarkColor = theme("mode", {
+  light: WHITE,
+  dark: BLACK
+});
+
 export const backgroundColor = theme("mode", {
-  light: `linear-gradient(45deg, #dbfff6, #ceceff)`,
-  dark: `linear-gradient(45deg, #003f2e, #00007e)`
+  light: WHITE,
+  dark: BLACK
 });
 
 export const buttonColor = theme("mode", {
@@ -39,6 +51,16 @@ export const buttonTextColor = theme("mode", {
 export const linkButtonTextColor = theme("mode", {
   light: darken(0.3, GREEN),
   dark: GREEN
+});
+
+export const highlightLightBackgroundColor = theme("mode", {
+  light: LIGHT_GRAY,
+  dark: LIGHT_GRAY
+});
+
+export const inputBackgroundColor = theme("mode", {
+  light: LIGHT_GRAY,
+  dark: LIGHT_GRAY
 });
 
 export const loaderBackgroundColor = theme("mode", {
@@ -63,7 +85,7 @@ export const pendingColor = theme("mode", {
 });
 
 export const borderColor = theme("mode", {
-  light: "#C4C4C4",
+  light: "#F5F5F5",
   dark: lighten(0.5, BLACK)
 });
 
@@ -74,4 +96,8 @@ export const breakpoints = {
   m: 700,
   l: 992,
   xl: 1200
+};
+
+export const springConfig = {
+  noWobble: "spring(1, 170, 26, 0)"
 };

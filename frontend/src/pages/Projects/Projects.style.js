@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { borderColor, secondaryColor } from "../../_constants/theme.constants";
+import { secondaryColor } from "../../_constants/theme.constants";
 import { breakpoint } from "../../_constants/theme.mixins.constants";
 
 export const Background = styled.div`
@@ -7,19 +7,9 @@ export const Background = styled.div`
   flex-direction: column;
   height: 100vh;
 
-  .header {
-    display: flex;
-    flex-direction: row;
-    // width: 100%;
-    height: 50px;
-    padding: 1em;
-    border-bottom: 2px solid ${borderColor};
-
-    background-color: pink;
-  }
   .spacer {
     transition: 0.2s height;
-    height: calc(25%);
+    height: calc(20%);
     ${breakpoint.down("m")`
       height: 0;
     `}
@@ -43,7 +33,14 @@ export const Background = styled.div`
       `}
 
       .toggles {
-        background-color: lightblue;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        margin-bottom: 1.5em;
+
+        ${breakpoint.down("m")`
+          margin-bottom: 1em;
+        `}
       }
 
       .search {
@@ -51,9 +48,7 @@ export const Background = styled.div`
         width: 100%;
         input {
           width: inherit;
-          box-sizing: border-box;
           font-size: 1.2em;
-          transition: 0.2s font-size;
 
           ${breakpoint.down("m")`
             font-size: 1.1em;
@@ -63,7 +58,7 @@ export const Background = styled.div`
           `}
         }
         &:focus {
-          border: 1px solid ${secondaryColor};
+          border: 1px solid ${secondaryColor} !important;
         }
       }
     }

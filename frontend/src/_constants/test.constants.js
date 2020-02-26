@@ -87,7 +87,7 @@ const projects = {
       _id: "5e4c34e5890521be2c2de2fe",
       title: "Poseidon",
       createdAt: "2019-12-25T05:13:01.264Z",
-      updatedAt: "2019-12-25T05:31:27.794Z",
+      updatedAt: "2019-12-26T05:31:27.794Z",
       __v: 0
     },
     {
@@ -102,7 +102,7 @@ const projects = {
       _id: "5e4c34e91ff8893429ff8ce6",
       title: "Hades",
       createdAt: "2019-12-25T05:13:01.264Z",
-      updatedAt: "2019-12-25T05:31:27.794Z",
+      updatedAt: "2019-12-27T05:31:27.794Z",
       __v: 0
     },
     {
@@ -117,7 +117,7 @@ const projects = {
       _id: "5e4c34f192e646c363c3a803",
       title: "Dionysus",
       createdAt: "2019-12-25T05:13:01.264Z",
-      updatedAt: "2019-12-25T05:31:27.794Z",
+      updatedAt: "2019-12-28T05:31:27.794Z",
       __v: 0
     }
   ]

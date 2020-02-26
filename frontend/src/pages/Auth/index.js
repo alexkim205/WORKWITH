@@ -14,7 +14,8 @@ import {
   buttonColor
 } from "../../_constants/theme.constants";
 
-import { FlippedButton, LinkButton } from "../../components/Button";
+import FlippedButton from "../../components/Button/FlippedButton";
+import LinkButton from "../../components/Button/LinkButton";
 import { Input } from "../../components/Form";
 import { Background, _onFieldExit, _onFieldAppear } from "./Auth.style";
 
@@ -129,7 +130,6 @@ const AuthBox = () => {
           errors[name] = getValidationString[name](fieldState[name]);
         }
       });
-    // errors.server = errors.server;
     setState(prevState => ({
       ...prevState,
       formErrors: errors

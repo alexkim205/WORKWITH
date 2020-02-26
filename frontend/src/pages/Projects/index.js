@@ -5,13 +5,7 @@ import _ from "lodash";
 import qs from "qs";
 import { Flipped } from "react-flip-toolkit";
 import Fuse from "fuse.js";
-import {
-  IoMdGrid,
-  IoMdList,
-  IoMdCalendar,
-  IoIosArrowRoundDown,
-  IoIosArrowRoundUp
-} from "react-icons/io";
+import { IoMdGrid, IoMdList } from "react-icons/io";
 
 import fuseOptions from "../../_config/fuse.config";
 import useAction from "../../_utils/useAction.util";
@@ -24,18 +18,21 @@ import {
   getProjects,
   getProjectsPendingAndError
 } from "../../_selectors/projects.selectors";
+import { sortOptions, displayOptions } from "./Projects.options";
 import { Background, StyledProjects } from "./Projects.style";
-import { LinkButton } from "../../components/Button";
+import Navbar from "../../components/Navbar";
 import { Input } from "../../components/Form";
-import ToggleSwitch from "../../components/ToggleSwitch";
+import ToggleSwitch from "../../components/Filters/ToggleSwitch";
+import Dropdown from "../../components/Filters/Dropdown";
 import ProjectCard from "./ProjectCard";
 
 const ProjectsBox = () => {
   const windowWidth = useWindowWidth();
   const [state, setState] = useState({
     filter: "",
-    display: windowWidth <= breakpoints.xs ? "list" : "grid", // grid or list
-    sort: "createdAt" // ["createdAt", "updatedAt"]
+    display:
+      windowWidth <= breakpoints.xs ? displayOptions.list : displayOptions.grid,
+    sort: sortOptions[0].name
   });
   const history = useHistory();
   const location = useLocation();
@@ -60,17 +57,23 @@ const ProjectsBox = () => {
     });
   };
 
+  const navigate = project => {
+    history.push({
+      pathname: `/project/${project._id}`
+      // search: location.search
+    });
+  };
+
   const handleSmallWindow = () => {
     if (windowWidth <= breakpoints.xs) {
-      if (state.display !== "list") {
-        updateQueryParam({ display: "list" });
+      if (state.display !== displayOptions.list) {
+        updateQueryParam({ display: displayOptions.list });
       }
     }
   };
 
   // Fetch projects at start and set display if window is small
   useEffect(() => {
-    // console.log("Project Page", user, token, projects, pending, error);
     if (_.isEmpty(user) || _.isEmpty(token)) {
       history.push({ pathname: `/auth` });
       return;
@@ -102,7 +105,6 @@ const ProjectsBox = () => {
 
   // Render methods
   const renderProjects = () => {
-    // console.log("VISIBLE", pending, error);
     if (pending) {
       return `Pending projects!`;
     }
@@ -114,12 +116,13 @@ const ProjectsBox = () => {
     }
 
     const {
-      filter: searchParam,
-      display: displayParam,
-      sort: sortParam
+      filter: searchParam = state.filter,
+      display: displayParam = state.display,
+      sort: sortParam = state.sort
     } = qs.parse(location.search.replace("?", ""));
+    const sortOption = _.find(sortOptions, ["name", sortParam]);
     let visibleProjects = _(projects)
-      .sortBy(project => new Date(project[sortParam]))
+      .orderBy([sortOption.by], [sortOption.order])
       .value();
     if (!_.isEmpty(searchParam)) {
       visibleProjects = new Fuse(projects, fuseOptions).search(searchParam);
@@ -135,6 +138,7 @@ const ProjectsBox = () => {
             key={project._id}
             setKey={project._id}
             display={displayParam}
+            navigate={navigate}
           />
         ))}
       </Fragment>
@@ -142,41 +146,29 @@ const ProjectsBox = () => {
   };
 
   const renderControls = () => {
-    const { display: displayParam, sort: sortParam } = qs.parse(
-      location.search.replace("?", "")
-    );
+    const {
+      display: displayParam = state.display,
+      sort: sortParam = state.sort
+    } = qs.parse(location.search.replace("?", ""));
     return (
       <Fragment>
-        <div>
-          <ToggleSwitch.Icon
-            active={sortParam === "createdAt"}
-            onClick={() => updateQueryParam({ sort: "createdAt" })}
-          >
-            <IoMdCalendar />
-            <IoIosArrowRoundUp />
-          </ToggleSwitch.Icon>
-          <ToggleSwitch.Icon
-            active={sortParam === "updatedAt"}
-            onClick={() => updateQueryParam({ sort: "updatedAt" })}
-          >
-            <IoMdCalendar />
-            <IoIosArrowRoundDown />
-          </ToggleSwitch.Icon>
-        </div>
-        <div>
-          <ToggleSwitch.Icon
-            active={displayParam === "list"}
-            onClick={() => updateQueryParam({ display: "list" })}
-          >
-            <IoMdList />
-          </ToggleSwitch.Icon>
-          <ToggleSwitch.Icon
-            active={displayParam === "grid"}
-            onClick={() => updateQueryParam({ display: "grid" })}
-          >
-            <IoMdGrid />
-          </ToggleSwitch.Icon>
-        </div>
+        <Dropdown
+          name={"sort"}
+          active={sortParam}
+          options={sortOptions}
+          selectCallback={updateQueryParam}
+        />
+        {windowWidth > breakpoints.xs && (
+          <ToggleSwitch
+            name={"display"}
+            icons={{
+              left: { name: displayOptions.grid, icon: <IoMdGrid /> },
+              right: { name: displayOptions.list, icon: <IoMdList /> }
+            }}
+            active={displayParam}
+            toggleCallback={updateQueryParam}
+          />
+        )}
       </Fragment>
     );
   };
@@ -184,17 +176,10 @@ const ProjectsBox = () => {
   return (
     <Flipped inverseFlipId="page">
       <Fragment>
-        <div className="header">
-          <div>Logo</div>
-          <div style={{ flex: 1 }}>Flex</div>
-          <LinkButton onClick={() => history.push({ pathname: `/auth` })}>
-            Logout
-          </LinkButton>
-        </div>
+        <Navbar />
         <div className="spacer"></div>
         <div className="body">
           <div className="box">
-            {/* {windowWidth} */}
             <div className="toggles">{renderControls()}</div>
             <div className="search">
               <Input.Text
