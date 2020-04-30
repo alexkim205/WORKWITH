@@ -2,6 +2,10 @@
 
 ## Backlog Todo
 
+## 4/30/2020
+
+- Fixed annoying eslint + prettier + vscode + airbnb + lint-staged + husky bug
+
 ## 4/29/2020
 
 - Figured out why project page to projects page transition wasn't working. If fetch was pending, cached projects wouldn't render, which would interrupt the animation.
