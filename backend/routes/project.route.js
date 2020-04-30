@@ -95,12 +95,10 @@ const getProject = async (req, res) => {
       .status(HttpStatus.NOT_FOUND)
       .send(`Project with id ${req.params.id} NOT_FOUND`);
   }
-  const requestUserId = parseInt(req.user._id, 10);
+  const requestUserId = String(req.user._id);
+
   // Only admins can access other user projects
-  if (
-    !_.includes(project.users, requestUserId) &&
-    req.user.role !== Role.ADMIN
-  ) {
+  if (!project.users.includes(requestUserId) && req.user.role !== Role.ADMIN) {
     return res.status(HttpStatus.UNAUTHORIZED).send("Request is UNAUTHORIZED");
   }
   return res.status(HttpStatus.OK).send({ project });
@@ -200,10 +198,10 @@ const createProject = async (req, res) => {
   // Add requesting user to authors and users arrays
   req.body.authors = req.body.authors || [];
   req.body.users = req.body.users || [];
-  if (!_.includes(req.body.authors, req.user._id)) {
+  if (!req.body.authors.includes(req.user._id)) {
     req.body.authors = [...req.body.authors, req.user._id];
   }
-  if (!_.includes(req.body.users, req.user._id)) {
+  if (!req.body.users.includes(req.user._id)) {
     req.body.users = [...req.body.users, req.user._id];
   }
 
@@ -315,10 +313,7 @@ const updateProject = async (req, res) => {
 
   const requestUserId = req.user._id;
   // Only admins can access other user projects
-  if (
-    !_.includes(project.users, requestUserId) &&
-    req.user.role !== Role.ADMIN
-  ) {
+  if (!project.users.includes(requestUserId) && req.user.role !== Role.ADMIN) {
     return res.status(HttpStatus.UNAUTHORIZED).send("Request is UNAUTHORIZED");
   }
 
@@ -420,12 +415,9 @@ const deleteProject = async (req, res) => {
       .send(`Project with id ${req.params.id} NOT_FOUND`);
   }
 
-  const requestUserId = parseInt(req.user._id, 10);
+  const requestUserId = String(req.user._id);
   // Only admins can access other user projects
-  if (
-    !_.includes(project.users, requestUserId) &&
-    req.user.role !== Role.ADMIN
-  ) {
+  if (!project.users.includes(requestUserId) && req.user.role !== Role.ADMIN) {
     return res.status(HttpStatus.UNAUTHORIZED).send("Request is UNAUTHORIZED");
   }
 

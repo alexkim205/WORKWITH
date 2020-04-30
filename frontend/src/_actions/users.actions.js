@@ -1,14 +1,14 @@
-import to from "await-to-js";
-import usersConstants from "../_constants/users.constants";
-import services from "../_services";
-import createActionCreator from "../_utils/createActionCreator.util";
+import to from 'await-to-js';
+import usersConstants from '../_constants/users.constants';
+import services from '../_services';
+import createActionCreator from '../_utils/createActionCreator.util';
 
 const { usersServices } = services;
 
 export const getUsers = () => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     usersConstants,
-    "GET_USERS"
+    'GET_USERS'
   );
 
   dispatch(actionPending());
@@ -23,7 +23,7 @@ export const getUsers = () => async dispatch => {
 export const getUser = userId => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     usersConstants,
-    "GET_USER"
+    'GET_USER'
   );
 
   dispatch(actionPending());
@@ -38,7 +38,7 @@ export const getUser = userId => async dispatch => {
 export const login = (email, password) => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     usersConstants,
-    "LOGIN"
+    'LOGIN'
   );
 
   dispatch(actionPending());
@@ -57,7 +57,7 @@ export const logout = () => async dispatch => {
 export const register = newUser => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     usersConstants,
-    "REGISTER"
+    'REGISTER'
   );
 
   dispatch(actionPending());
@@ -69,10 +69,25 @@ export const register = newUser => async dispatch => {
   dispatch(actionSuccess(user));
 };
 
+export const refreshToken = userWithToken => async dispatch => {
+  const { actionPending, actionSuccess, actionError } = createActionCreator(
+    usersConstants,
+    'REFRESH_TOKEN'
+  );
+
+  dispatch(actionPending());
+  const [err, user] = await to(usersServices.refreshToken(userWithToken));
+  if (err) {
+    dispatch(actionError(err));
+    throw err;
+  }
+  dispatch(actionSuccess(user));
+};
+
 export const updateUser = (userId, newUser) => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     usersConstants,
-    "UPDATE_USER"
+    'UPDATE_USER'
   );
 
   dispatch(actionPending());
@@ -87,7 +102,7 @@ export const updateUser = (userId, newUser) => async dispatch => {
 export const deleteUser = userId => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     usersConstants,
-    "DELETE_USER"
+    'DELETE_USER'
   );
 
   dispatch(actionPending());

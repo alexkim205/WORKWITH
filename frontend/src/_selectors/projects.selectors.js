@@ -1,4 +1,4 @@
-import { createSelector } from "reselect";
+import { createSelector } from 'reselect';
 
 export const getProjectsPendingAndError = createSelector(
   state => state.projects.pending,

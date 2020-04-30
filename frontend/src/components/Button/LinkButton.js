@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { linkButtonTextColor } from "../../_constants/theme.constants";
+import styled from 'styled-components';
+import { linkButtonTextColor } from '../../_constants/theme.constants';
 
 const LinkButton = styled.button`
   background-color: transparent;
@@ -10,7 +10,7 @@ const LinkButton = styled.button`
   cursor: pointer;
 
   letter-spacing: 1px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   color: ${linkButtonTextColor};
   text-decoration: underline;
 `;

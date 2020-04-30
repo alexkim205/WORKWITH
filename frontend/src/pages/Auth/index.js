@@ -1,39 +1,39 @@
-import React, { Fragment, useState, useRef, useEffect } from "react";
-import { useHistory } from "react-router-dom";
-import { Flipper, Flipped } from "react-flip-toolkit";
-import _ from "lodash";
+import React, { Fragment, useState, useRef, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
+import { Flipper, Flipped } from 'react-flip-toolkit';
+import _ from 'lodash';
 
-import useAction from "../../_utils/useAction.util";
-import { useFlip } from "../../_utils/FlipProvider.util";
-import { validEmailRegex } from "../../_utils/formCheckRegexes.util";
-import { FormError } from "../../_config/errors";
-import { login, register, logout } from "../../_actions/users.actions";
-import FullScreenLoader from "../../components/FullScreenLoader";
+import useAction from '../../_utils/useAction.util';
+import { useFlip } from '../../_utils/FlipProvider.util';
+import { validEmailRegex } from '../../_utils/formCheckRegexes.util';
+import { FormError } from '../../_config/errors';
+import { login, register, logout } from '../../_actions/users.actions';
+import FullScreenLoader from '../../components/FullScreenLoader';
 import {
   loaderBackgroundColor,
   buttonColor
-} from "../../_constants/theme.constants";
+} from '../../_constants/theme.constants';
 
-import FlippedButton from "../../components/Button/FlippedButton";
-import LinkButton from "../../components/Button/LinkButton";
-import { Input } from "../../components/Form";
-import { Background, _onFieldExit, _onFieldAppear } from "./Auth.style";
+import FlippedButton from '../../components/Button/FlippedButton';
+import LinkButton from '../../components/Button/LinkButton';
+import { Input } from '../../components/Form';
+import { Background, _onFieldExit, _onFieldAppear } from './Auth.style';
 
 const AuthBox = () => {
   /* Component Setup */
   const history = useHistory();
   const [fieldState, setFieldState] = useState({
-    name: "",
-    email: "",
-    password: "",
-    password2: ""
+    name: '',
+    email: '',
+    password: '',
+    password2: ''
   });
   const [state, setState] = useState({
     formErrors: {
-      ..._.mapValues(fieldState, ""),
-      server: ""
+      ..._.mapValues(fieldState, ''),
+      server: ''
     },
-    authState: "LOGIN"
+    authState: 'LOGIN'
   });
   const _login = useAction(login);
   const _register = useAction(register);
@@ -41,24 +41,24 @@ const AuthBox = () => {
   const backgroundRefs = _.mapValues(fieldState, useRef);
   const AUTH_STATE = {
     LOGIN: {
-      key: "LOGIN",
-      fields: ["email", "password"],
+      key: 'LOGIN',
+      fields: ['email', 'password'],
       callback: () => _login(fieldState.email, fieldState.password),
       switch: () =>
         setState({
-          authState: "REGISTER",
-          formErrors: _.mapValues(fieldState, "")
+          authState: 'REGISTER',
+          formErrors: _.mapValues(fieldState, '')
         }),
-      switchText: "I am new here."
+      switchText: 'I am new here.'
     },
     REGISTER: {
-      key: "REGISTER",
-      fields: ["name", "email", "password", "password2"],
+      key: 'REGISTER',
+      fields: ['name', 'email', 'password', 'password2'],
       callback: () => _register(fieldState),
       switch: () =>
         setState({
-          authState: "LOGIN",
-          formErrors: _.mapValues(fieldState, "")
+          authState: 'LOGIN',
+          formErrors: _.mapValues(fieldState, '')
         }),
       switchText: "I've been here before."
     }
@@ -66,39 +66,39 @@ const AuthBox = () => {
   const FIELDS = {
     name: {
       scope: [AUTH_STATE.REGISTER.key],
-      key: "name",
-      placeholder: "Name",
-      type: "name",
+      key: 'name',
+      placeholder: 'Name',
+      type: 'name',
       backgroundRef: backgroundRefs.name,
       onExitEls: [],
       onAppearEls: _(backgroundRefs)
-        .pick(["name", "password2"])
+        .pick(['name', 'password2'])
         .values()
         .map(ref => ref.current)
         .value()
     },
     email: {
       scope: [AUTH_STATE.LOGIN.key, AUTH_STATE.REGISTER.key],
-      key: "email",
-      placeholder: "Email",
-      type: "email",
+      key: 'email',
+      placeholder: 'Email',
+      type: 'email',
       backgroundRef: backgroundRefs.email
     },
     password: {
       scope: [AUTH_STATE.LOGIN.key, AUTH_STATE.REGISTER.key],
-      key: "password",
-      placeholder: "Password",
-      type: "password",
+      key: 'password',
+      placeholder: 'Password',
+      type: 'password',
       backgroundRef: backgroundRefs.password
     },
     password2: {
       scope: [AUTH_STATE.REGISTER.key],
-      key: "password2",
-      placeholder: "Confirm password",
-      type: "password",
+      key: 'password2',
+      placeholder: 'Confirm password',
+      type: 'password',
       backgroundRef: backgroundRefs.password2,
       onExitEls: _(backgroundRefs)
-        .pick(["name", "password2"])
+        .pick(['name', 'password2'])
         .values()
         .map(ref => ref.current)
         .value(),
@@ -107,10 +107,10 @@ const AuthBox = () => {
   };
   const getAuthState = () => AUTH_STATE[state.authState];
   const getValidationString = {
-    name: () => "",
-    email: v => (!validEmailRegex.test(v) ? "Email is not valid." : ""),
-    password: v => (v.length < 6 ? "Password must be 6 characters long." : ""),
-    password2: v => (v !== fieldState.password ? "Passwords must match." : "")
+    name: () => '',
+    email: v => (!validEmailRegex.test(v) ? 'Email is not valid.' : ''),
+    password: v => (v.length < 6 ? 'Password must be 6 characters long.' : ''),
+    password2: v => (v !== fieldState.password ? 'Passwords must match.' : '')
   };
   const { setPending, isPending } = useFlip();
   /* Component Setup End */
@@ -121,11 +121,11 @@ const AuthBox = () => {
     const errors = state.formErrors;
     _(state.formErrors)
       .keys()
-      .filter(v => _.includes(getAuthState().fields, v))
+      .filter(v => getAuthState().fields.includes(v))
       .value()
       .forEach(name => {
         if (_.isEmpty(fieldState[name])) {
-          errors[name] = "Field cannot be empty.";
+          errors[name] = 'Field cannot be empty.';
         } else {
           errors[name] = getValidationString[name](fieldState[name]);
         }
@@ -140,16 +140,16 @@ const AuthBox = () => {
   };
   const _handleLoginOrRegister = async () => {
     if (!_formIsValidOnSubmit()) {
-      throw new FormError("Incorrect form fields.");
+      throw new FormError('Incorrect form fields.');
     }
     await getAuthState().callback();
   };
   const _onSuccess = () => {
-    history.push({ pathname: `/projects` });
+    history.push({ pathname: '/projects' });
   };
   const _onFailure = error => {
     // if failure, display server error
-    if (error.name === "ServerError") {
+    if (error.name === 'ServerError') {
       setState(prevState => ({
         ...prevState,
         formErrors: _.assign({}, prevState.formErrors, {
@@ -172,7 +172,7 @@ const AuthBox = () => {
     <Fragment>
       {_.values(FIELDS).map((field, i) => (
         <Input.Wrapper ref={field.backgroundRef} key={i}>
-          {_.includes(field.scope, state.authState) && (
+          {field.scope.includes(state.authState) && (
             <Flipped
               flipId={`field${i}`}
               stagger="field"
@@ -183,7 +183,7 @@ const AuthBox = () => {
                   key,
                   removeElement,
                   field.onExitEls,
-                  _.includes(field.scope, state.authState)
+                  field.scope.includes(state.authState)
                 )
               }
               onAppear={(el, key) =>
@@ -191,7 +191,7 @@ const AuthBox = () => {
                   el,
                   key,
                   field.onAppearEls,
-                  _.includes(field.scope, state.authState)
+                  field.scope.includes(state.authState)
                 )
               }
             >
@@ -225,7 +225,7 @@ const AuthBox = () => {
           translate
         />
       ) : (
-        <Flipper flipKey={state.authState} spring={"veryGentle"}>
+        <Flipper flipKey={state.authState} spring={'veryGentle'}>
           <div className="form">
             <Input.Error>{state.formErrors.server}</Input.Error>
             <div className="fields-box">{renderFields()}</div>
@@ -253,8 +253,15 @@ const AuthBox = () => {
 };
 
 const Auth = () => (
-  <Background>
-    <AuthBox />
-  </Background>
+  <Flipped
+    flipId="page" // eslint-disable-next-line no-unused-vars
+    shouldFlip={({ location: prevLoc }, { location: currLoc }) =>
+      currLoc === '/auth'
+    }
+  >
+    <Background>
+      <AuthBox />
+    </Background>
+  </Flipped>
 );
 export default Auth;

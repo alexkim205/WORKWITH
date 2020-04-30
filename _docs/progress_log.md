@@ -2,13 +2,36 @@
 
 ## Backlog Todo
 
-- Change error responses to send object with 'message' fields
-- Refactor out all errors into reusable error types
-- Add authorization tests
+## 4/29/2020
+
+- Figured out why project page to projects page transition wasn't working. If fetch was pending, cached projects wouldn't render, which would interrupt the animation.
+- Fixed bug where project cards would animate without transitioning between pages.
+
+## 3/22/2020
+
+- Try to get project --> projects page transition working
+
+## 3/21/2020
+
+- Replace lodash `include` with easier to understand `Array.prototype.includes`.
+- Replace `location.search.replace("?","")` with more sugary `{ ignoreQueryPrefix: true }`
+- Store query params in session storage in projects and project pages
+
+## 3/17/2020
+
+- Fixed refresh tokens. Refreshing on `/projects` with expired token works if refresh token is valid. If it's invalid, then redirect to `/auth`.
+- Preserve query params between project and projects pages
+
+## 3/16/2020
+
+- Refactored global axios instance to baseAxios and authAxios to account for different types of requests
+- Implemented axios middleware to request new token and make request again.
+- Check for user pending and error states in Projects page
 
 ## 2/26/2020
 
-- Animate caret in dropdown
+- Frontend
+  - Animate caret in dropdown
 - Backend
   - Add refresh token to payload and refresh `/token` route
   - Update swagger documentation

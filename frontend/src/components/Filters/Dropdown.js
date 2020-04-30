@@ -1,21 +1,21 @@
-import React, { useState, useRef } from "react";
-import PropTypes from "prop-types";
-import anime from "animejs";
-import _ from "lodash";
-import { IoIosArrowDown } from "react-icons/io";
-import { MdSort } from "react-icons/md";
+import React, { useState, useRef } from 'react';
+import PropTypes from 'prop-types';
+import anime from 'animejs';
+import _ from 'lodash';
+import { IoIosArrowDown } from 'react-icons/io';
+import { MdSort } from 'react-icons/md';
 
-import useOutsideClick from "../../_utils/useOutsideClick.util";
+import useOutsideClick from '../../_utils/useOutsideClick.util';
 import {
   Container,
   Drawer,
   Option,
   OPTION_HEIGHT,
   DD_HEIGHT
-} from "./Dropdown.style";
+} from './Dropdown.style';
 
 const Dropdown = ({ name, active, options, selectCallback }) => {
-  const DRAWER_HEIGHT = options.length * OPTION_HEIGHT + DD_HEIGHT / 2;
+  const DRAWER_HEIGHT = _.size(options) * OPTION_HEIGHT + DD_HEIGHT / 2;
   const fieldRef = useRef(null);
   const styleContainerRef = useRef(null);
   const drawerRef = useRef(null);
@@ -31,19 +31,19 @@ const Dropdown = ({ name, active, options, selectCallback }) => {
       borderBottomLeftRadius: isClosing ? 50 : 0,
       borderBottomRightRadius: isClosing ? 50 : 0,
       duration: 100,
-      easing: isClosing ? "easeInSine" : "easeOutSine"
+      easing: isClosing ? 'easeInSine' : 'easeOutSine'
     }).finished;
     const animDrawer = anime({
       targets: drawerRef.current,
       opacity: isClosing ? [1, 0] : [0, 1],
       height: isClosing ? 0 : DRAWER_HEIGHT,
       duration: 120,
-      easing: "easeInSine"
+      easing: 'easeInSine'
     }).finished;
     const animCaret = anime({
       targets: caretRef.current,
       rotate: isClosing ? [180, 0] : [0, 180],
-      easing: "linear",
+      easing: 'linear',
       duration: 150
     }).finished;
     Promise.all([animField, animDrawer, animCaret]);
@@ -87,14 +87,14 @@ const Dropdown = ({ name, active, options, selectCallback }) => {
         <div className="icon filter">
           <MdSort />
         </div>
-        <div className="value">{_.find(options, { name: active }).value}</div>
+        <div className="value">{options[active].value}</div>
         <div className="icon caret" ref={caretRef}>
           <IoIosArrowDown />
         </div>
       </div>
       <Drawer ref={drawerRef}>
         {options &&
-          options.map((option, i) => (
+          _.values(options).map((option, i) => (
             <Option
               key={i}
               isActive={option.name === active}
@@ -112,7 +112,7 @@ const Dropdown = ({ name, active, options, selectCallback }) => {
 Dropdown.propTypes = {
   name: PropTypes.string, // key of query parameter to change on toggle
   active: PropTypes.string,
-  options: PropTypes.arrayOf(
+  options: PropTypes.objectOf(
     PropTypes.shape({ name: PropTypes.string, value: PropTypes.string })
   ),
   selectCallback: PropTypes.func

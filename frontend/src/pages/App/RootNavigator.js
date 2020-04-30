@@ -1,13 +1,13 @@
-import React, { useMemo } from "react";
-import PropTypes from "prop-types";
-import { Switch, Route } from "react-router-dom";
-import { Flipper, Flipped } from "react-flip-toolkit";
-import _ from "lodash";
+import React, { useMemo } from 'react';
+import PropTypes from 'prop-types';
+import { Switch, Route } from 'react-router-dom';
+import { Flipper } from 'react-flip-toolkit';
+import _ from 'lodash';
 
-import { useFlip } from "../../_utils/FlipProvider.util";
-import Projects from "../Projects";
-import Auth from "../Auth";
-import ProjectPage from "../Project";
+import { useFlip } from '../../_utils/FlipProvider.util';
+import ProjectsPage from '../Projects';
+import AuthPage from '../Auth';
+import ProjectPage from '../Project';
 
 const RootNavigator = ({ location }) => {
   const { flipState, isPending } = useFlip();
@@ -15,7 +15,7 @@ const RootNavigator = ({ location }) => {
     () =>
       _.compact([
         location.pathname,
-        location.search.replace("?", ""),
+        location.search,
         flipState.toString(),
         isPending.toString()
       ]),
@@ -24,7 +24,7 @@ const RootNavigator = ({ location }) => {
   // console.log(flipKeyParams.join("-"));
   return (
     <Flipper
-      flipKey={flipKeyParams.join("-")}
+      flipKey={flipKeyParams.join('-')}
       decisionData={{ location, flipState, isPending }}
       // spring={{
       //   stiffness: 10,
@@ -53,34 +53,8 @@ const RootNavigator = ({ location }) => {
       // debug
     >
       <Switch>
-        <Route
-          exact
-          path={"/auth"}
-          render={() => (
-            <Flipped
-              flipId="page"
-              // eslint-disable-next-line no-unused-vars
-              shouldFlip={({ location: prevLoc }, { location: currLoc }) =>
-                currLoc === "/auth"
-              }
-            >
-              <div>
-                <Auth />
-              </div>
-            </Flipped>
-          )}
-        />
-        <Route
-          exact
-          path={"/projects"}
-          render={() => (
-            <Flipped flipId="page">
-              <div>
-                <Projects />
-              </div>
-            </Flipped>
-          )}
-        />
+        <Route exact path={'/auth'} render={AuthPage} />
+        <Route exact path={'/projects'} render={ProjectsPage} />
         <Route path="/project/:id" component={ProjectPage} />
       </Switch>
     </Flipper>

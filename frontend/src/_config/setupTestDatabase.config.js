@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const setup = async () => {
   try {
@@ -10,7 +10,7 @@ const setup = async () => {
       useCreateIndex: true
     });
     console.log(
-      "Online test MongoDB database connection established successfully"
+      'Online test MongoDB database connection established successfully'
     );
   } catch (err) {
     console.log(`Error: ${err}`);
@@ -20,7 +20,7 @@ const setup = async () => {
 const disconnect = async () => {
   try {
     await mongoose.connection.close();
-    console.log("Online test MongoDB database disconnected");
+    console.log('Online test MongoDB database disconnected');
   } catch (err) {
     console.log(`Error: ${err}`);
   }

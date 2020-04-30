@@ -1,14 +1,14 @@
-import React, { Fragment, useState } from "react";
-import PropTypes from "prop-types";
-import { Flipper, Flipped } from "react-flip-toolkit";
+import React, { Fragment, useState } from 'react';
+import PropTypes from 'prop-types';
+import { Flipper, Flipped } from 'react-flip-toolkit';
 
 import {
   InverseContainer,
   Container,
   Content,
   Blob
-} from "./FullScreenLoader.style";
-import wait from "../../_utils/wait.util";
+} from './FullScreenLoader.style';
+import wait from '../../_utils/wait.util';
 
 const FullScreenLoader = ({
   flipId,
@@ -19,19 +19,19 @@ const FullScreenLoader = ({
   onFailure,
   ...flipProps
 }) => {
-  const [pendingStatus, setPendingStatus] = useState("pending");
+  const [pendingStatus, setPendingStatus] = useState('pending');
   const _onComplete = async () => {
     try {
       await wait(800);
       await onComplete();
       // Animate success loading page
-      setPendingStatus("success");
+      setPendingStatus('success');
       // Animate away from loading page
       await wait(800);
       setPending(false);
       onSuccess();
     } catch (error) {
-      setPendingStatus("failure");
+      setPendingStatus('failure');
       onFailure(error);
       await wait(800);
       setPending(false);
@@ -39,7 +39,7 @@ const FullScreenLoader = ({
   };
 
   const _renderStatus = () => {
-    if (pendingStatus === "failure") {
+    if (pendingStatus === 'failure') {
       return (
         <Fragment>
           <Content>
@@ -51,7 +51,7 @@ const FullScreenLoader = ({
         </Fragment>
       );
     }
-    if (pendingStatus === "success") {
+    if (pendingStatus === 'success') {
       return (
         <Fragment>
           <Content>

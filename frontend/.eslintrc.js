@@ -5,30 +5,29 @@ module.exports = {
     mocha: true,
     jest: true
   },
-  parser: "babel-eslint",
-  extends: ["plugin:react/recommended", "airbnb-base", "prettier"],
+  parser: 'babel-eslint',
   globals: {
-    Atomics: "readonly",
-    SharedArrayBuffer: "readonly"
+    Atomics: 'readonly',
+    SharedArrayBuffer: 'readonly'
   },
   parserOptions: {
     ecmaFeatures: {
       jsx: true
     },
-    ecmaVersion: 2018,
-    sourceType: "module"
+    sourceType: 'module'
   },
-  plugins: ["react", "prettier"],
+  extends: ['airbnb-base', 'prettier', 'plugin:react/recommended'],
+  plugins: ['prettier'],
   rules: {
-    // "linebreak-style": ["error", "windows"],
-    "no-underscore-dangle": [0],
-    "react/jsx-filename-extension": [1, { extensions: [".js", ".jsx"] }],
-    "import/no-extraneous-dependencies": ["error", { devDependencies: true }],
-    "prettier/prettier": ["error"]
+    'prettier/prettier': ['error'],
+    'linebreak-style': ['error', 'windows'],
+    'no-underscore-dangle': [0],
+    'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
+    'import/no-extraneous-dependencies': ['error', { devDependencies: true }]
   },
   settings: {
     react: {
-      version: "detect"
+      version: 'latest'
     }
   }
 };

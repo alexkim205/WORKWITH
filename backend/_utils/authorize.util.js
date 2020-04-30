@@ -36,7 +36,7 @@ const authorize = (roles = []) => {
       });
     },
     (req, res, next) => {
-      if (!_.isEmpty(rolesArray) && !_.includes(rolesArray, req.user.role)) {
+      if (!_.isEmpty(rolesArray) && !rolesArray.includes(req.user.role)) {
         // user's role is not authorized
         return res
           .status(HttpStatus.UNAUTHORIZED)

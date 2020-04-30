@@ -5,7 +5,7 @@ const fuseOptions = {
   distance: 100,
   maxPatternLength: 32,
   minMatchCharLength: 1,
-  keys: ["title"]
+  keys: ['title']
 };
 
 export default fuseOptions;

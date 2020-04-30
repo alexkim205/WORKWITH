@@ -1,31 +1,23 @@
-import axios from "axios";
-import { getServerUrl } from "../_config/getEnv.config";
-
-const serverUrl = getServerUrl();
+import { authAxios } from '../_config/axiosInstances.config';
 
 const getProjectsByUser = userId =>
-  axios
-    .get(`${serverUrl}/projects/user/${userId}`)
-    .then(res => res.data.projects);
+  authAxios.get(`/projects/user/${userId}`).then(res => res.data.projects);
 
 const getProjects = () =>
-  axios.get(`${serverUrl}/projects`).then(res => res.data.projects);
+  authAxios.get('/projects').then(res => res.data.projects);
 
 const getProject = projectId =>
-  axios.get(`${serverUrl}/projects/${projectId}`).then(res => res.data.project);
+  authAxios.get(`/projects/${projectId}`).then(res => res.data.project);
 
 const createProject = newProject =>
-  axios
-    .post(`${serverUrl}/projects/add`, newProject)
-    .then(res => res.data.project);
+  authAxios.post('/projects/add', newProject).then(res => res.data.project);
 
 const updateProject = (projectId, newProject) =>
-  axios
-    .put(`${serverUrl}/projects/update/${projectId}`, newProject)
+  authAxios
+    .put(`/projects/update/${projectId}`, newProject)
     .then(res => res.data.project);
 
-const deleteProject = projectId =>
-  axios.delete(`${serverUrl}/projects/${projectId}`);
+const deleteProject = projectId => authAxios.delete(`/projects/${projectId}`);
 
 export default {
   getProjectsByUser,

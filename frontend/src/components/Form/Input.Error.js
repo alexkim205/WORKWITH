@@ -1,7 +1,7 @@
-import React from "react";
-import styled from "styled-components";
-import PropTypes from "prop-types";
-import { failureColor } from "../../_constants/theme.constants";
+import React from 'react';
+import styled from 'styled-components';
+import PropTypes from 'prop-types';
+import { failureColor } from '../../_constants/theme.constants';
 
 const Container = styled.div`
   font-size: 0.75em;

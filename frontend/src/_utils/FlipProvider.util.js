@@ -1,8 +1,8 @@
-import React, { useState, useContext, createContext } from "react";
+import React, { useState, useContext, createContext } from 'react';
 // import { shallowEqual, useSelector } from "react-redux";
 // import { createSelector } from "reselect";
 // import _ from "lodash";
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 
 const FlipContext = createContext({
   flip: () => {}

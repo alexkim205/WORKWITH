@@ -42,7 +42,7 @@ const validateRefreshTokenInput = data => {
   // Role checks
   if (Validator.isEmpty(formattedData.role)) {
     errors.role = "Role field is required";
-  } else if (!_.includes(_.values(Role), formattedData.role)) {
+  } else if (!_.values(Role).includes(formattedData.role)) {
     errors.role = "Role is invalid";
   }
 

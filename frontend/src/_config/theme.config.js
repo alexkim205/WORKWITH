@@ -1,6 +1,6 @@
-import React, { useState, useContext, createContext } from "react";
-import PropTypes from "prop-types";
-import { ThemeProvider } from "styled-components";
+import React, { useState, useContext, createContext } from 'react';
+import PropTypes from 'prop-types';
+import { ThemeProvider } from 'styled-components';
 
 const ThemeToggleContext = createContext({
   toggle: () => {}
@@ -9,9 +9,9 @@ const ThemeToggleContext = createContext({
 export const useTheme = () => useContext(ThemeToggleContext);
 
 export const MyThemeProvider = ({ children }) => {
-  const [themeState, setThemeState] = useState({ mode: "light" });
+  const [themeState, setThemeState] = useState({ mode: 'light' });
   const toggle = () => {
-    const mode = themeState.mode === "light" ? "dark" : "light";
+    const mode = themeState.mode === 'light' ? 'dark' : 'light';
     setThemeState({ mode });
   };
   return (

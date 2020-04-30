@@ -1,14 +1,14 @@
-import to from "await-to-js";
-import projectsConstants from "../_constants/projects.constants";
-import services from "../_services";
-import createActionCreator from "../_utils/createActionCreator.util";
+import to from 'await-to-js';
+import projectsConstants from '../_constants/projects.constants';
+import services from '../_services';
+import createActionCreator from '../_utils/createActionCreator.util';
 
 const { projectsServices } = services;
 
 export const getProjectsByUser = userId => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     projectsConstants,
-    "GET_USER_PROJECTS"
+    'GET_USER_PROJECTS'
   );
 
   dispatch(actionPending());
@@ -23,7 +23,7 @@ export const getProjectsByUser = userId => async dispatch => {
 export const getProjects = () => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     projectsConstants,
-    "GET_PROJECTS"
+    'GET_PROJECTS'
   );
 
   dispatch(actionPending());
@@ -38,7 +38,7 @@ export const getProjects = () => async dispatch => {
 export const getProject = projectId => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     projectsConstants,
-    "GET_PROJECT"
+    'GET_PROJECT'
   );
 
   dispatch(actionPending());
@@ -53,7 +53,7 @@ export const getProject = projectId => async dispatch => {
 export const createProject = newProject => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     projectsConstants,
-    "CREATE_PROJECT"
+    'CREATE_PROJECT'
   );
 
   dispatch(actionPending());
@@ -68,7 +68,7 @@ export const createProject = newProject => async dispatch => {
 export const updateProject = (projectId, newProject) => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     projectsConstants,
-    "UPDATE_PROJECT"
+    'UPDATE_PROJECT'
   );
 
   dispatch(actionPending());
@@ -85,7 +85,7 @@ export const updateProject = (projectId, newProject) => async dispatch => {
 export const deleteProject = projectId => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     projectsConstants,
-    "DELETE_PROJECT"
+    'DELETE_PROJECT'
   );
 
   dispatch(actionPending());

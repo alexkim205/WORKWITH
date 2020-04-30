@@ -1,9 +1,9 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 import {
   tertiaryColor,
   backgroundColor
-} from "../../_constants/theme.constants";
-import { BaseContainer, FILTER_HEIGHT } from "./Base.style";
+} from '../../_constants/theme.constants';
+import { BaseContainer, FILTER_HEIGHT } from './Base.style';
 
 export const SWITCH_HEIGHT = FILTER_HEIGHT;
 export const SWITCH_WIDTH = 2 * SWITCH_HEIGHT;

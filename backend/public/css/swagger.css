@@ -1,7 +1,7 @@
 .swagger-ui .topbar {
   display: none;
 }
-
+/* 
 html,
 body,
 div {
@@ -18,4 +18,4 @@ select {
 
 thead {
   border-bottom: 2px solid gray;
-}
+} */

@@ -1,5 +1,5 @@
-import Server from "./Server.error";
-import Form from "./Form.error";
+import Server from './Server.error';
+import Form from './Form.error';
 
 export const ServerError = Server;
 export const FormError = Form;

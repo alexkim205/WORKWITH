@@ -1,11 +1,11 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 import {
   textColor,
   backgroundColor,
   borderColor,
   highlightLightBackgroundColor
-} from "../../_constants/theme.constants";
-import { breakpoint } from "../../_constants/theme.mixins.constants";
+} from '../../_constants/theme.constants';
+import { breakpoint } from '../../_constants/theme.mixins.constants';
 
 export const FIELD_HEIGHT = 60;
 export const OPTION_HEIGHT = 60;
@@ -17,7 +17,7 @@ export const Container = styled.div`
   height: 2em;
   padding: 1.5em;
 
-  ${breakpoint.down("m")`
+  ${breakpoint.down('m')`
     padding: 1.5em 1em;
   `}
 
@@ -39,7 +39,7 @@ export const Container = styled.div`
     z-index: 2;
     cursor: pointer;
 
-    ${breakpoint.down("m")`
+    ${breakpoint.down('m')`
       
     `}
 
@@ -55,7 +55,7 @@ export const Container = styled.div`
       font-weight: 1em;
       color: ${textColor};
 
-      ${breakpoint.down("m")`
+      ${breakpoint.down('m')`
         font-size: 1.0em;
       `}
     }
@@ -101,7 +101,7 @@ export const Option = styled.div`
   font-size: 1em;
   background-color: ${({ isActive, ...props }) =>
     isActive ? highlightLightBackgroundColor(props) : backgroundColor(props)};
-  // cursor: ${({ isActive }) => (isActive ? "normal" : "pointer")};
+  // cursor: ${({ isActive }) => (isActive ? 'normal' : 'pointer')};
   justify-content: flex-start;
   align-items: center;
   height: ${OPTION_HEIGHT}px;

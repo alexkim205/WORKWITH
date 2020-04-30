@@ -1,10 +1,10 @@
-import styled from "styled-components";
-import { lighten } from "polished";
+import styled from 'styled-components';
+import { lighten } from 'polished';
 import {
   tertiaryColor,
   textOnDarkColor
-} from "../../_constants/theme.constants";
-import { BaseContainer, FILTER_HEIGHT } from "./Base.style";
+} from '../../_constants/theme.constants';
+import { BaseContainer, FILTER_HEIGHT } from './Base.style';
 
 export const DD_HEIGHT = FILTER_HEIGHT;
 export const OPTION_HEIGHT = FILTER_HEIGHT;
@@ -96,7 +96,7 @@ export const Option = styled.div`
   color: ${textOnDarkColor};
   font-size: 1em;
   background-color: ${({ isActive }) =>
-    isActive ? "rgba(0, 0, 0, 0.1)" : "auto"};
+    isActive ? 'rgba(0, 0, 0, 0.1)' : 'auto'};
   justify-content: center;
   align-items: center;
   height: ${OPTION_HEIGHT}px;

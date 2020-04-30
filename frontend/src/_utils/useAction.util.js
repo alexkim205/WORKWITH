@@ -1,5 +1,5 @@
-import { useCallback } from "react";
-import { useDispatch } from "react-redux";
+import { useCallback } from 'react';
+import { useDispatch } from 'react-redux';
 
 // https://blog.usejournal.com/new-react-redux-coding-style-with-hooks-without-selectors-5055d59ab753
 const useAction = actionCreator => {

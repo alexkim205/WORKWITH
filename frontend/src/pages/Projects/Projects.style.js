@@ -1,6 +1,6 @@
-import styled from "styled-components";
-import { secondaryColor } from "../../_constants/theme.constants";
-import { breakpoint } from "../../_constants/theme.mixins.constants";
+import styled from 'styled-components';
+import { secondaryColor } from '../../_constants/theme.constants';
+import { breakpoint } from '../../_constants/theme.mixins.constants';
 
 export const Background = styled.div`
   display: flex;
@@ -9,10 +9,10 @@ export const Background = styled.div`
 
   .spacer {
     transition: 0.2s height;
-    height: calc(20%);
-    ${breakpoint.down("m")`
+    height: calc(5%);
+    /* ${breakpoint.down('m')`
       height: 0;
-    `}
+    `} */
   }
   .body {
     display: flex;
@@ -28,7 +28,7 @@ export const Background = styled.div`
       width: 600px;
       height: 100%;
 
-      ${breakpoint.down("m")`
+      ${breakpoint.down('m')`
       width: 100%;
       `}
 
@@ -38,7 +38,7 @@ export const Background = styled.div`
         justify-content: flex-end;
         margin-bottom: 1.5em;
 
-        ${breakpoint.down("m")`
+        ${breakpoint.down('m')`
           margin-bottom: 1em;
         `}
       }
@@ -50,10 +50,10 @@ export const Background = styled.div`
           width: inherit;
           font-size: 1.2em;
 
-          ${breakpoint.down("m")`
+          ${breakpoint.down('m')`
             font-size: 1.1em;
           `}
-          ${breakpoint.down("s")`
+          ${breakpoint.down('s')`
             font-size: 1em;
           `}
         }

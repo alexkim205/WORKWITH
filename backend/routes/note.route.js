@@ -189,10 +189,10 @@ const createNote = async (req, res) => {
   // Add requesting user to authors and taggedUsers arrays
   req.body.authors = req.body.authors || [];
   req.body.taggedUsers = req.body.taggedUsers || [];
-  if (!_.includes(req.body.authors, req.user._id)) {
+  if (!req.body.authors.includes(req.user._id)) {
     req.body.authors = [...req.body.authors, req.user._id];
   }
-  if (!_.includes(req.body.taggedUsers, req.user._id)) {
+  if (!req.body.taggedUsers.includes(req.user._id)) {
     req.body.taggedUsers = [...req.body.taggedUsers, req.user._id];
   }
 

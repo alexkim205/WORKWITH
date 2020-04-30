@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import _ from "lodash";
+import { useEffect } from 'react';
+import _ from 'lodash';
 
 export default function useOutsideClick(refs, callback) {
   const refArray = _.isArray(refs) ? refs : [refs];
@@ -11,10 +11,10 @@ export default function useOutsideClick(refs, callback) {
   };
 
   useEffect(() => {
-    document.addEventListener("click", handleClick);
+    document.addEventListener('click', handleClick);
 
     return () => {
-      document.removeEventListener("click", handleClick);
+      document.removeEventListener('click', handleClick);
     };
   });
 }

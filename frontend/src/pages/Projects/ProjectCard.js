@@ -1,19 +1,15 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { Flipped } from "react-flip-toolkit";
-import _ from "lodash";
-import { displayOptions } from "./Projects.options";
-import { Card, _onAppear, _onExit } from "./ProjectCard.style";
-
-const shouldFlip = (prev, current) => {
-  const sort1 =
-    current.location.search.match(/sort=([^&]+)/) &&
-    current.location.search.match(/sort=([^&]+)/)[1];
-  const sort2 =
-    prev.location.search.match(/sort=([^&]+)/) &&
-    prev.location.search.match(/sort=([^&]+)/)[1];
-  return sort1 === sort2;
-};
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Flipped } from 'react-flip-toolkit';
+import _ from 'lodash';
+import { displayOptions } from './Projects.options';
+import {
+  Card,
+  _onAppear,
+  _onExit,
+  _onStart,
+  _onComplete
+} from './ProjectCard.style';
 
 const ProjectCard = ({ project, setKey, display, navigate }) => {
   const onClick = () => {
@@ -26,12 +22,19 @@ const ProjectCard = ({ project, setKey, display, navigate }) => {
       stagger
       onAppear={_onAppear}
       onExit={_onExit}
-      shouldInvert={shouldFlip}
+      onStart={_onStart}
+      onComplete={_onComplete}
+      // shouldInvert={_shouldFlip}
     >
       <Card display={display} onClick={onClick}>
         <Flipped inverseFlipId={setKey} opacity scale>
           <div className="card-content">
-            <div className="card-title">{project.title}</div>
+            <div className="card-title" data-fade-in>
+              {project.title}
+            </div>
+            <div className="card-subtitle" data-fade-in>
+              Filler subtitle
+            </div>
           </div>
         </Flipped>
       </Card>

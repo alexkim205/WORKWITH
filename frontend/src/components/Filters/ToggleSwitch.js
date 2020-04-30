@@ -1,12 +1,12 @@
-import React, { useState, useRef } from "react";
-import PropTypes from "prop-types";
-import anime from "animejs";
+import React, { useState, useRef } from 'react';
+import PropTypes from 'prop-types';
+import anime from 'animejs';
 import {
   Container,
   SelectorCircle,
   LEFT_LEFT_OFFSET,
   RIGHT_LEFT_OFFSET
-} from "./ToggleSwitch.style";
+} from './ToggleSwitch.style';
 
 const ToggleSwitch = ({ name, icons, active, toggleCallback }) => {
   const selectorCircleRef = useRef(null);
@@ -22,7 +22,7 @@ const ToggleSwitch = ({ name, icons, active, toggleCallback }) => {
       targets: selectorCircleRef.current,
       left: leftFromToOffset,
       duration: 200,
-      easing: "easeInOutSine"
+      easing: 'easeInOutSine'
     }).finished;
     setDisabled(false);
   };

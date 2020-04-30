@@ -1,5 +1,5 @@
-import ServerError from "./Server.error";
-import HttpStatus from "../../_constants/httpErrors.constants";
+import ServerError from './Server.error';
+import HttpStatus from '../../_constants/httpErrors.constants';
 
 const handleError = error => {
   // https://github.com/axios/axios/issues/383

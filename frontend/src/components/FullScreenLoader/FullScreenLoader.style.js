@@ -1,12 +1,12 @@
-import React from "react";
-import styled, { keyframes } from "styled-components";
+import React from 'react';
+import styled, { keyframes } from 'styled-components';
 
 import {
   loaderBackgroundColor,
   failureColor,
   successColor,
   pendingColor
-} from "../../_constants/theme.constants";
+} from '../../_constants/theme.constants';
 
 export const InverseContainer = styled.div`
   width: 100vw;
@@ -62,7 +62,7 @@ export const Content = styled.div`
     color: white;
     letter-spacing: 2px;
     font-weight: 700;
-    font-family: "Poppins", sans-serif;
+    font-family: 'Poppins', sans-serif;
     text-transform: uppercase;
   }
 `;
@@ -93,7 +93,7 @@ const StyledBlob = styled.div`
 38%, 40%  { transform: scale(0.8, 1) translate(90vw, 50vh) rotate(180deg); }
 78%, 80%  { transform: scale(1.3) translate(0vw, 60vh) rotate(-40deg); }
 `} 10s ease-in-out infinite;
-  width: ${({ large }) => (large ? "150vmax" : "50vmax")};
+  width: ${({ large }) => (large ? '150vmax' : '50vmax')};
   transform-origin: 50% 50%;
 `;
 

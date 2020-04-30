@@ -1,8 +1,8 @@
-import React, { Fragment, useEffect, useRef, useState } from "react";
-import styled, { keyframes } from "styled-components";
-import PropTypes from "prop-types";
-import { Flipped } from "react-flip-toolkit";
-import { buttonColor, buttonTextColor } from "../../_constants/theme.constants";
+import React, { Fragment, useEffect, useRef, useState } from 'react';
+import styled, { keyframes } from 'styled-components';
+import PropTypes from 'prop-types';
+import { Flipped } from 'react-flip-toolkit';
+import { buttonColor, buttonTextColor } from '../../_constants/theme.constants';
 
 export const Button = styled.button`
   background-color: transparent;
@@ -12,10 +12,10 @@ export const Button = styled.button`
   padding: 0.75em 1.25em;
   border: none;
   margin: auto;
-  cursor: ${({ disabled }) => (disabled ? "auto" : "pointer")};
+  cursor: ${({ disabled }) => (disabled ? 'auto' : 'pointer')};
 
   letter-spacing: 1px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   text-transform: uppercase;
   font-size: 1em;
   font-weight: 600;
@@ -67,9 +67,9 @@ const FlippedButton = ({
 
   useEffect(() => {
     const element = buttonContainerRef.current;
-    element.addEventListener("animationend", enableClickability);
+    element.addEventListener('animationend', enableClickability);
     return () => {
-      element.removeEventListener("animationend", enableClickability);
+      element.removeEventListener('animationend', enableClickability);
     };
   }, []);
 

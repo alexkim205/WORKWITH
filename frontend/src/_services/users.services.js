@@ -1,35 +1,31 @@
-import axios from "axios";
-import { getServerUrl } from "../_config/getEnv.config";
+import { baseAxios, authAxios } from '../_config/axiosInstances.config';
 
-const serverUrl = getServerUrl();
-
-const getUsers = () =>
-  axios.get(`${serverUrl}/users`).then(res => res.data.users);
+const getUsers = () => authAxios.get('/users').then(res => res.data.users);
 
 const getUser = userId =>
-  axios.get(`${serverUrl}/users/${userId}`).then(res => res.data.user);
+  authAxios.get(`/users/${userId}`).then(res => res.data.user);
 
 const login = (email, password) =>
-  axios
-    .post(`${serverUrl}/users/login`, { email, password })
-    .then(res => res.data);
+  baseAxios.post('/users/login', { email, password }).then(res => res.data);
 
 const register = newUser =>
-  axios.post(`${serverUrl}/users/add`, newUser).then(res => res.data.user);
+  baseAxios.post('/users/add', newUser).then(res => res.data.user);
+
+const refreshToken = userWithToken =>
+  baseAxios.post('/users/token', userWithToken).then(res => res.data);
 
 const updateUser = (userId, newUser) =>
-  axios
-    .put(`${serverUrl}/users/update/${userId}`, newUser)
-    .then(res => res.data.user);
+  authAxios.put(`/users/update/${userId}`, newUser).then(res => res.data.user);
 
 const deleteUser = userId =>
-  axios.delete(`${serverUrl}/users/${userId}`).then(res => res.data);
+  authAxios.delete(`/users/${userId}`).then(res => res.data);
 
 export default {
   getUsers,
   getUser,
   login,
   register,
+  refreshToken,
   updateUser,
   deleteUser
 };

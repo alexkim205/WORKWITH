@@ -1,4 +1,4 @@
-import testConstants from "../_constants/test.constants";
+import testConstants from '../_constants/test.constants';
 
 const constants = testConstants.projects;
 

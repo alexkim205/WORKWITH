@@ -1,7 +1,7 @@
 class FormError extends Error {
   constructor(message) {
     super(message);
-    this.name = "FormError";
+    this.name = 'FormError';
   }
 
   toJSON() {

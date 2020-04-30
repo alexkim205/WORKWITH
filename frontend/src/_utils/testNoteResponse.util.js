@@ -1,4 +1,4 @@
-import testUserResponse from "./testUserResponse.util";
+import testUserResponse from './testUserResponse.util';
 
 const testNoteResponse = note => {
   expect(note).toMatchSnapshot({

@@ -41,7 +41,7 @@ const validateRegisterInput = data => {
   // Role checks
   if (
     !Validator.isEmpty(formattedData.role) &&
-    !_.includes(_.values(Role), formattedData.role)
+    !_.values(Role).includes(formattedData.role)
   ) {
     errors.role = "Role is invalid";
   }

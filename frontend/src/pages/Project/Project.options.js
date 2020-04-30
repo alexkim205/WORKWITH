@@ -19,7 +19,12 @@ export const sortOptions = {
   }
 };
 
-export const displayOptions = {
-  list: 'list',
-  grid: 'grid'
+export const noteTypeOptions = {
+  text: 'text',
+  image: 'image'
+};
+
+export const privacyOptions = {
+  private: 'private',
+  public: 'public'
 };

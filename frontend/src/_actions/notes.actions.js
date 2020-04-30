@@ -1,14 +1,14 @@
-import to from "await-to-js";
-import notesConstants from "../_constants/notes.constants";
-import services from "../_services";
-import createActionCreator from "../_utils/createActionCreator.util";
+import to from 'await-to-js';
+import notesConstants from '../_constants/notes.constants';
+import services from '../_services';
+import createActionCreator from '../_utils/createActionCreator.util';
 
 const { notesServices } = services;
 
 export const getNotesByProject = projectId => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     notesConstants,
-    "GET_PROJECT_NOTES"
+    'GET_PROJECT_NOTES'
   );
 
   dispatch(actionPending());
@@ -23,7 +23,7 @@ export const getNotesByProject = projectId => async dispatch => {
 export const getNotes = () => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     notesConstants,
-    "GET_NOTES"
+    'GET_NOTES'
   );
 
   dispatch(actionPending());
@@ -38,7 +38,7 @@ export const getNotes = () => async dispatch => {
 export const getNote = noteId => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     notesConstants,
-    "GET_NOTE"
+    'GET_NOTE'
   );
 
   dispatch(actionPending());
@@ -53,7 +53,7 @@ export const getNote = noteId => async dispatch => {
 export const createNote = newNote => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     notesConstants,
-    "CREATE_NOTE"
+    'CREATE_NOTE'
   );
 
   dispatch(actionPending());
@@ -68,7 +68,7 @@ export const createNote = newNote => async dispatch => {
 export const updateNote = (noteId, newNote) => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     notesConstants,
-    "UPDATE_NOTE"
+    'UPDATE_NOTE'
   );
 
   dispatch(actionPending());
@@ -83,7 +83,7 @@ export const updateNote = (noteId, newNote) => async dispatch => {
 export const deleteNote = noteId => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     notesConstants,
-    "DELETE_NOTE"
+    'DELETE_NOTE'
   );
 
   dispatch(actionPending());

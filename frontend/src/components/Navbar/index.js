@@ -1,16 +1,16 @@
-import React, { useState, useRef } from "react";
-import anime from "animejs";
-import { useLocation, useHistory } from "react-router-dom";
-import { IoIosArrowDown } from "react-icons/io";
-import navbarOptions from "./Navbar.options";
-import useOutsideClick from "../../_utils/useOutsideClick.util";
+import React, { useState, useRef } from 'react';
+import anime from 'animejs';
+import { useLocation, useHistory } from 'react-router-dom';
+import { IoIosArrowDown } from 'react-icons/io';
+import navbarOptions from './Navbar.options';
+import useOutsideClick from '../../_utils/useOutsideClick.util';
 import {
   Container,
   Drawer,
   Option,
   FIELD_HEIGHT,
   OPTION_HEIGHT
-} from "./Navbar.style";
+} from './Navbar.style';
 
 const Navbar = () => {
   const DRAWER_HEIGHT = navbarOptions.length * OPTION_HEIGHT + FIELD_HEIGHT / 2;
@@ -31,13 +31,13 @@ const Navbar = () => {
       opacity: isClosing ? [1, 0] : [0, 1],
       height: isClosing ? 0 : DRAWER_HEIGHT,
       duration: 120,
-      easing: "easeInSine"
+      easing: 'easeInSine'
     }).finished;
     const animCaret = anime({
       targets: caretRef.current,
       rotate: isClosing ? [180, 0] : [0, 180],
       duration: 150,
-      easing: "linear"
+      easing: 'linear'
     }).finished;
     Promise.all([animDrawer, animCaret]);
     setDisabled(false);

@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 
-import styled from "styled-components";
-import anime from "animejs";
+import styled from 'styled-components';
+import anime from 'animejs';
 
 export const Background = styled.div`
   display: flex;
@@ -54,7 +54,7 @@ export const _onFieldExit = async (
     translateX: [0, 250],
     opacity: [1, 0],
     duration: 200,
-    easing: "easeOutSine"
+    easing: 'easeOutSine'
   }).finished;
   await removeElement();
   await anime({
@@ -62,7 +62,7 @@ export const _onFieldExit = async (
     height: [FIELD_HEIGHT, 0], // don't exit if register state
     delay: 100 * i,
     duration: 200,
-    easing: "easeOutSine"
+    easing: 'easeOutSine'
   }).finished;
 };
 
@@ -78,14 +78,14 @@ export const _onFieldAppear = async (
   }
   // Wrapper should appear
   bgEls.forEach(bgEl => {
-    bgEl.style.height = "0px";
+    bgEl.style.height = '0px';
   });
   await anime({
     targets: bgEls,
     height: [0, FIELD_HEIGHT],
     duration: 200,
     delay: 100 * i,
-    easing: "easeInSine"
+    easing: 'easeInSine'
   }).finished;
   await anime({
     targets: el,
@@ -93,6 +93,6 @@ export const _onFieldAppear = async (
     delay: 100 * i,
     translateX: [250, 0],
     duration: 250,
-    easing: "easeInSine"
+    easing: 'easeInSine'
   }).finished;
 };

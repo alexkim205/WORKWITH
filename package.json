@@ -20,25 +20,19 @@
     "b-watch:test": "cd backend && yarn watch:test",
     "f-build:test": "cd frontend && yarn build:test",
     "f-watch:test": "cd frontend && yarn watch:test",
-    "watch:test-connect": "cd frontend && yarn start:test-connect"
+    "watch:test-connect": "cd frontend && yarn start:test-connect",
+    "test-b-lint": "eslint --fix \"backend/**/*.{js,jsx,ts,tsx}\"",
+    "test-f-lint": "eslint --fix \"frontend/**/*.{js,jsx,ts,tsx}\""
   },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
       "prettier --write",
       "git add"
-    ],
-    "backend/**/*.{js,jsx,ts,tsx}": [
-      "eslint --fix",
-      "git add"
-    ],
-    "frontend/**/*.{js,jsx,ts,tsx}": [
-      "eslint --fix",
-      "git add"
     ]
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "yarn run tidy"
     }
   },
   "devDependencies": {
@@ -46,11 +40,11 @@
     "concurrently": "^5.0.2",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.0.0",
-    "eslint-config-prettier": "^6.7.0",
+    "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-import": "^2.19.1",
     "eslint-plugin-jsx-a11y": "^6.2.3",
-    "eslint-plugin-prettier": "^3.1.2",
-    "eslint-plugin-react": "^7.17.0",
+    "eslint-plugin-prettier": "^3.1.3",
+    "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-react-hooks": "^1.7.0",
     "eslint-watch": "^6.0.1",
     "husky": "^3.1.0",

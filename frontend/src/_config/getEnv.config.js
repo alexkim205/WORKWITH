@@ -1,24 +1,24 @@
 export const switchEnvs = ({ dev, prod, test, testConnection, generic }) => {
   const ternaryUtil = v => {
-    if (typeof v === "undefined") {
-      if (typeof generic === "function") {
+    if (typeof v === 'undefined') {
+      if (typeof generic === 'function') {
         generic();
         return null;
       }
       return generic;
     }
-    if (typeof v === "function") {
+    if (typeof v === 'function') {
       v();
       return null;
     }
     return v;
   };
   switch (process.env.REACT_APP_ENV) {
-    case "production":
+    case 'production':
       return ternaryUtil(prod);
-    case "testing":
+    case 'testing':
       return ternaryUtil(test);
-    case "testing-connection":
+    case 'testing-connection':
       return ternaryUtil(testConnection);
     default:
       // development

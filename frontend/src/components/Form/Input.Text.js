@@ -1,12 +1,12 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 import {
   buttonColor,
   borderColor,
   inputBackgroundColor
-} from "../../_constants/theme.constants";
+} from '../../_constants/theme.constants';
 
 const Text = styled.input`
-  font-family: "Ubuntu", sans-serif;
+  font-family: 'Ubuntu', sans-serif;
   font-weight: 300;
   box-sizing: border-box;
   display: inline-block;
