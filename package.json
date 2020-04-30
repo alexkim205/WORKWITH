@@ -20,9 +20,7 @@
     "b-watch:test": "cd backend && yarn watch:test",
     "f-build:test": "cd frontend && yarn build:test",
     "f-watch:test": "cd frontend && yarn watch:test",
-    "watch:test-connect": "cd frontend && yarn start:test-connect",
-    "test-b-lint": "eslint --fix \"backend/**/*.{js,jsx,ts,tsx}\"",
-    "test-f-lint": "eslint --fix \"frontend/**/*.{js,jsx,ts,tsx}\""
+    "watch:test-connect": "cd frontend && yarn start:test-connect"
   },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
@@ -32,7 +30,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn run tidy"
+      "pre-commit": "lint-staged && yarn run tidy"
     }
   },
   "devDependencies": {
