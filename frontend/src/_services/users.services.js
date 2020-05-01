@@ -9,7 +9,7 @@ const login = (email, password) =>
   baseAxios.post('/users/login', { email, password }).then(res => res.data);
 
 const register = newUser =>
-  baseAxios.post('/users/add', newUser).then(res => res.data.user);
+  baseAxios.post('/users/add', newUser).then(res => res.data);
 
 const refreshToken = userWithToken =>
   baseAxios.post('/users/token', userWithToken).then(res => res.data);

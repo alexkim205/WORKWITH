@@ -2,7 +2,7 @@
 /* eslint-disable no-param-reassign */
 import { createBrowserHistory } from 'history';
 
-export default () => {
+const createHistory = () => {
   const history = createBrowserHistory();
   const cachedPush = history.push;
 
@@ -23,3 +23,5 @@ export default () => {
 
   return history;
 };
+
+export default createHistory();

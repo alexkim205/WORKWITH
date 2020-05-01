@@ -2,6 +2,7 @@ import to from 'await-to-js';
 import usersConstants from '../_constants/users.constants';
 import services from '../_services';
 import createActionCreator from '../_utils/createActionCreator.util';
+import history from '../_config/history.config';
 
 const { usersServices } = services;
 
@@ -48,6 +49,7 @@ export const login = (email, password) => async dispatch => {
     throw err;
   }
   dispatch(actionSuccess(user));
+  history.push('/projects');
 };
 
 export const logout = () => async dispatch => {
@@ -67,6 +69,7 @@ export const register = newUser => async dispatch => {
     throw err;
   }
   dispatch(actionSuccess(user));
+  history.push('/projects');
 };
 
 export const refreshToken = userWithToken => async dispatch => {

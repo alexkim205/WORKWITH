@@ -5,6 +5,11 @@
 ## 4/30/2020
 
 - Fixed annoying eslint + prettier + vscode + airbnb + lint-staged + husky bug
+- Remove full page auth loader because it's buggy and slow.
+- Also removes nested Flipper elements.
+- Fields were NOT registered again when switched between login and register. Fixed.
+- Had trouble pushing history from login/register to projects. Moved history into action creator.
+- Made animations really nice on authentication page. Fixed little registration/login bugs in services.
 
 ## 4/29/2020
 

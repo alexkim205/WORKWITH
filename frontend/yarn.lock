@@ -9200,6 +9200,11 @@ react-flip-toolkit@^7.0.7:
   dependencies:
     rematrix "0.2.2"
 
+react-hook-form@^5.6.0:
+  version "5.6.0"
+  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-5.6.0.tgz#309fbd9780d5d091c6e96796d82d16e0cc5849eb"
+  integrity sha512-/WGDFdrkooe71SKV1IB5bRRWmPHohQW2GfEYivc1mRGEuTIKIzNeAeSLZzTUzAXMVXcoCk2147mb15QwkoyIng==
+
 react-icons@^3.9.0:
   version "3.9.0"
   resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-3.9.0.tgz#89a00f20a0e02e6bfd899977eaf46eb4624239d5"

@@ -18,7 +18,7 @@ export const Background = styled.div`
     width: 300px;
     z-index: 0;
 
-    .form {
+    form {
       .fields-box {
       }
       .button-box {
@@ -33,66 +33,46 @@ export const Background = styled.div`
 
 const FIELD_HEIGHT = 71;
 
-export const _onFieldExit = async (
-  el,
-  i,
-  removeElement,
-  bgEls = [],
-  shouldAnimate = true
-) => {
-  // Wrapper shouldn't exit
-  if (!shouldAnimate) {
-    return;
-  }
-  // Wrapper should exit
-  bgEls.forEach(bgEl => {
-    bgEl.style.height = `${FIELD_HEIGHT}px`;
-  });
+export const _onButtonExit = async formEl => {
   await anime({
-    targets: el,
-    delay: 100 * i,
-    translateX: [0, 250],
+    targets: [...formEl.querySelectorAll('[data-button-fade]')],
+    translateY: [0, -10],
     opacity: [1, 0],
-    duration: 200,
-    easing: 'easeOutSine'
-  }).finished;
-  await removeElement();
-  await anime({
-    targets: bgEls,
-    height: [FIELD_HEIGHT, 0], // don't exit if register state
-    delay: 100 * i,
-    duration: 200,
-    easing: 'easeOutSine'
+    easing: 'easeOutSine',
+    delay: (_fadeEl, i) => i * 180,
+    duration: 150
   }).finished;
 };
 
-export const _onFieldAppear = async (
-  el,
-  i,
-  bgEls = [],
-  shouldAnimate = true
-) => {
-  // Wrapper shouldn't appear
-  if (!shouldAnimate) {
-    return;
-  }
-  // Wrapper should appear
-  bgEls.forEach(bgEl => {
-    bgEl.style.height = '0px';
-  });
+export const _onButtonEnter = async formEl => {
   await anime({
-    targets: bgEls,
-    height: [0, FIELD_HEIGHT],
-    duration: 200,
-    delay: 100 * i,
-    easing: 'easeInSine'
-  }).finished;
-  await anime({
-    targets: el,
+    targets: [...formEl.querySelectorAll('[data-button-fade]')],
+    translateY: [-10, 0],
     opacity: [0, 1],
-    delay: 100 * i,
-    translateX: [250, 0],
-    duration: 250,
-    easing: 'easeInSine'
+    easing: 'easeInSine',
+    delay: (_fadeEl, i) => i * 180,
+    duration: 150
+  }).finished;
+};
+
+export const _onFieldExit = async formEl => {
+  await anime({
+    targets: [...formEl.querySelectorAll('[data-field-fade]')],
+    opacity: [1, 0],
+    height: [FIELD_HEIGHT, 0],
+    easing: 'easeOutSine',
+    delay: (_fadeEl, i) => i * 180,
+    duration: 150
+  }).finished;
+};
+
+export const _onFieldEnter = async formEl => {
+  await anime({
+    targets: [...formEl.querySelectorAll('[data-field-fade]')],
+    opacity: [0, 1],
+    height: [0, FIELD_HEIGHT],
+    easing: 'easeInSine',
+    delay: (_fadeEl, i) => i * 180,
+    duration: 150
   }).finished;
 };

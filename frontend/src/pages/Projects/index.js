@@ -13,6 +13,7 @@ import useDebounce from '../../_utils/useDebounce.util';
 import useWindowWidth from '../../_utils/useWindowWidth.util';
 import { breakpoints } from '../../_constants/theme.constants';
 import { getProjectsByUser } from '../../_actions/projects.actions';
+import { sortOptions, displayOptions } from './Projects.options';
 import {
   getCurrentUserAndToken,
   getUsersPendingAndError
@@ -21,7 +22,7 @@ import {
   getProjects,
   getProjectsPendingAndError
 } from '../../_selectors/projects.selectors';
-import { sortOptions, displayOptions } from './Projects.options';
+
 import { Background, StyledProjects } from './Projects.style';
 import Navbar from '../../components/Navbar';
 import { Input } from '../../components/Form';
@@ -38,10 +39,8 @@ const ProjectsBox = () => {
     { ignoreQueryPrefix: true }
   ); // get saved query params from session storage
   const _getProjectsByUser = useAction(getProjectsByUser);
-  const { user, token } = useSelector(getCurrentUserAndToken);
-  const { pending: userPending, error: userError } = useSelector(
-    getUsersPendingAndError
-  );
+  const { user } = useSelector(getCurrentUserAndToken);
+  const { pending: userPending } = useSelector(getUsersPendingAndError);
   const { pending: projectsPending, error: projectsError } = useSelector(
     getProjectsPendingAndError
   );
@@ -71,10 +70,7 @@ const ProjectsBox = () => {
     // If location.search is already same as new query params (happens
     // in the case of redirects to this page), don't update local storage
     // and don't push history
-    // console.log("ProjectsBox -> location.search", location.search);
-    // console.log("ProjectsBox -> newQueryParams", newQueryParams);
     if (location.search === newQueryParams) {
-      // console.log("Don't update session storage and dont push history.");
       return;
     }
     // Store query params in session storage so that they are saved
@@ -202,10 +198,15 @@ const ProjectsBox = () => {
   };
 
   // if user or token is empty, or user auth error, redirect to auth page
-  if (_.isEmpty(user) || _.isEmpty(token) || userError) {
-    history.push({ pathname: '/auth' });
-    return <Fragment></Fragment>;
-  }
+  // console.log('userPending', userPending, user, token);
+  // if (
+  //   // Wait for user
+  //   !userPending &&
+  //   (_.isEmpty(user) || _.isEmpty(token) || userError)
+  // ) {
+  //   history.push({ pathname: '/auth' });
+  //   return <Fragment>You are not logged in. Redirecting to login...</Fragment>;
+  // }
 
   return (
     <Fragment>

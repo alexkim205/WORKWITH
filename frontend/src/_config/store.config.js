@@ -20,11 +20,9 @@ const composeEnhancers =
     ? composeWithDevTools({ trace: true, traceLimit: 25 })
     : compose;
 
-export default () => {
-  const store = createStore(
-    persistedReducer,
-    composeEnhancers(applyMiddleware(...middlewares))
-  );
-  const persistor = persistStore(store);
-  return { store, persistor };
-};
+export const store = createStore(
+  persistedReducer,
+  composeEnhancers(applyMiddleware(...middlewares))
+);
+
+export const persistor = persistStore(store);
