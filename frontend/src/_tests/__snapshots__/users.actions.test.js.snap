@@ -59,6 +59,7 @@ Array [
   Object {
     "error": null,
     "payload": Object {
+      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTBiYjVjNjFjOTAyMzFjMzQ1OTZmODMiLCJuYW1lIjoiQWxleCB0aGUgQm9vYiIsImVtYWlsIjoiYWxleGtpbUBkZXYuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE1ODMxNzM5MjAsImV4cCI6MTU5MTQ2ODMyMH0.-c2fVoAVWTf-8JrinCIpL7U-jymRWUGW-c3_lIMogx4",
       "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Nzg1NDYxMjUsImlhdCI6MTU3Nzk0MTMyNX0.ksgtQ8uDQ3322tOhQ4jIkzZjH6B0luhLA1NRKGCG00w",
       "user": Object {
         "_id": "5e0bb5c61c90231c34596f83",
@@ -88,6 +89,7 @@ Array [
   Object {
     "error": null,
     "payload": Object {
+      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTBiYjVjNjFjOTAyMzFjMzQ1OTZmODMiLCJuYW1lIjoiQWxleCB0aGUgQm9vYiIsImVtYWlsIjoiYWxleGtpbUBkZXYuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE1ODMxNzM5MjAsImV4cCI6MTU5MTQ2ODMyMH0.-c2fVoAVWTf-8JrinCIpL7U-jymRWUGW-c3_lIMogx4",
       "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Nzg1NDYxMjUsImlhdCI6MTU3Nzk0MTMyNX0.ksgtQ8uDQ3322tOhQ4jIkzZjH6B0luhLA1NRKGCG00w",
       "user": Object {
         "_id": "5e0bb5c61c90231c34596f83",
