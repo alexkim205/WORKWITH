@@ -33,6 +33,7 @@
     "cross-env": "^6.0.3",
     "lodash": "^4.17.15",
     "mocha": "^6.2.2",
-    "mongodb-memory-server": "^6.2.0"
+    "mongodb-memory-server": "^6.2.0",
+    "nodemon": "^2.0.4"
   }
 }
