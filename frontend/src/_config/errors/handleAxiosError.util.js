@@ -3,7 +3,7 @@ import HttpStatus from '../../_constants/httpErrors.constants';
 
 const handleError = error => {
   // https://github.com/axios/axios/issues/383
-  console.log('HANDLING error', error);
+  // console.log('HANDLING error', error);
   if (!error.response) {
     // network error
     throw new ServerError(HttpStatus.NETWORK_CONNECT_TIMEOUT);
