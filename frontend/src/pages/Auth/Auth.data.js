@@ -14,7 +14,8 @@ export const initializeFields = ({ password }) => ({
   [FIELD_KEYS.NAME]: {
     scope: [AUTH_KEYS.REGISTER],
     placeholder: 'Name',
-    type: 'name',
+    type: 'text',
+    name: FIELD_KEYS.NAME.toLowerCase(),
     options: {
       required: 'Name is required.',
       maxLength: { value: 50, message: 'Name is too long.' }
@@ -24,7 +25,8 @@ export const initializeFields = ({ password }) => ({
   [FIELD_KEYS.EMAIL]: {
     scope: [AUTH_KEYS.LOGIN, AUTH_KEYS.REGISTER],
     placeholder: 'Email',
-    type: 'email',
+    type: 'text',
+    name: FIELD_KEYS.EMAIL.toLowerCase(),
     options: {
       required: 'Email is required.',
       pattern: { value: /^\S+@\S+$/i, message: 'Email is not valid.' }
@@ -34,6 +36,7 @@ export const initializeFields = ({ password }) => ({
     scope: [AUTH_KEYS.LOGIN, AUTH_KEYS.REGISTER],
     placeholder: 'Password',
     type: 'password',
+    name: FIELD_KEYS.PASSWORD.toLowerCase(),
     options: {
       required: 'Password is required.',
       minLength: {
@@ -46,6 +49,7 @@ export const initializeFields = ({ password }) => ({
     scope: [AUTH_KEYS.REGISTER],
     placeholder: 'Confirm password',
     type: 'password',
+    name: FIELD_KEYS.PASSWORD2.toLowerCase(),
     options: {
       required: 'Passwords must match.',
       minLength: {

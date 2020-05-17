@@ -198,15 +198,10 @@ const ProjectsBox = () => {
   };
 
   // if user or token is empty, or user auth error, redirect to auth page
-  // console.log('userPending', userPending, user, token);
-  // if (
-  //   // Wait for user
-  //   !userPending &&
-  //   (_.isEmpty(user) || _.isEmpty(token) || userError)
-  // ) {
-  //   history.push({ pathname: '/auth' });
-  //   return <Fragment>You are not logged in. Redirecting to login...</Fragment>;
-  // }
+  if (!userPending && _.isEmpty(user)) {
+    history.push({ pathname: '/auth' });
+    return <Fragment>You are not logged in. Redirecting to login...</Fragment>;
+  }
 
   return (
     <Fragment>

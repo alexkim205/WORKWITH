@@ -17,11 +17,11 @@ import {
   _onFieldExit,
   _onFieldEnter
 } from './Auth.style';
-import { AUTH_KEYS, initializeFields } from './Auth.data';
+import { AUTH_KEYS, FIELD_KEYS, initializeFields } from './Auth.data';
 
 const AuthBox = () => {
   /* Component Setup */
-  const [authState, setAuthState] = useState(AUTH_KEYS.LOGIN);
+  const [authState, setAuthState] = useState(AUTH_KEYS.REGISTER);
   const _login = useAction(login);
   const _register = useAction(register);
   const _logout = useAction(logout);
@@ -36,12 +36,15 @@ const AuthBox = () => {
     clearError,
     watch
   } = useForm();
-  const FIELDS = initializeFields({ password: watch('password') });
+  const FIELDS = initializeFields({
+    password: watch(FIELD_KEYS.PASSWORD.toLowerCase())
+  });
 
   /* Component Setup End */
 
   /* Form functions */
   const _onSubmit = async data => {
+    console.log(data);
     try {
       if (authState === AUTH_KEYS.LOGIN) {
         // If on login form
@@ -64,7 +67,7 @@ const AuthBox = () => {
 
     // Switch auth state, reset form
     clearError();
-    unregisterField(_.keys(FIELDS));
+    unregisterField(_.map(FIELDS, i => i.name));
 
     if (authState === AUTH_KEYS.LOGIN) {
       // Login --> Register
@@ -83,6 +86,7 @@ const AuthBox = () => {
 
   useEffect(() => {
     // Logout if this page is requested
+    console.log('logging out');
     _logout();
   }, []);
 
@@ -91,19 +95,19 @@ const AuthBox = () => {
       <form onSubmit={handleSubmit(_onSubmit)} ref={formRef}>
         <div className="fields-box">
           <Input.Error>{errors?.general?.message}</Input.Error>
-          {_.values(FIELDS).map((field, i) => {
+          {_.map(FIELDS, (field, key) => {
             const shouldFade = _.isEqual(field.scope, _.values(AUTH_KEYS));
             const isHidden = !field.scope.includes(authState);
             return (
               <Input.Wrapper
-                key={i}
+                key={key}
                 data-field-fade={shouldFade ? null : ''}
-                hidden={isHidden}
+                // hidden={isHidden}
               >
                 <Input.Text
                   disabled={isHidden}
                   type={field.type}
-                  name={field.key}
+                  name={field.name}
                   placeholder={field.placeholder}
                   ref={registerField(
                     _.omit(
@@ -112,7 +116,7 @@ const AuthBox = () => {
                     )
                   )}
                 />
-                <Input.Error>{errors?.[field.key]?.message}</Input.Error>
+                <Input.Error>{errors?.[field.name]?.message}</Input.Error>
               </Input.Wrapper>
             );
           })}
