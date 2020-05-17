@@ -10,17 +10,10 @@
     "frontend": "cd frontend && yarn start",
     "backend": "cd backend && yarn start",
     "tidy": "concurrently \"cd backend && yarn clean:js\" \"cd frontend && yarn clean:js\"",
-    "b-build:js": "cd backend && yarn build:js",
-    "b-watch:js": "cd backend && yarn watch:js",
-    "b-clean:js": "cd backend && yarn clean:js",
-    "f-build:js": "cd frontend && yarn build:js",
-    "f-watch:js": "cd frontend && yarn watch:js",
-    "f-clean:js": "cd frontend && yarn clean:js",
-    "b-build:test": "cd backend && yarn build:test",
-    "b-watch:test": "cd backend && yarn watch:test",
-    "f-build:test": "cd frontend && yarn build:test",
-    "f-watch:test": "cd frontend && yarn watch:test",
-    "watch:test-connect": "cd frontend && yarn start:test-connect"
+    "build": "concurrently \"cd backend && yarn build:js\" \"cd frontend && yarn build:js\"",
+    "watch": "concurrently \"cd backend && yarn watch:js\" \"cd frontend && yarn watch:js\"",
+    "test": "concurrently \"cd backend && yarn build:test\" \"cd frontend && yarn build:test\"",
+    "test-connection": "cd frontend && yarn start:test-connect"
   },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
