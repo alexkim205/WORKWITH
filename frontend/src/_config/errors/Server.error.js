@@ -1,7 +1,7 @@
 import HttpStatus from '../../_constants/httpErrors.constants';
 
 class ServerError extends Error {
-  constructor(statusCode, objectName = 'Object') {
+  constructor(statusCode) {
     let message = '';
     switch (statusCode) {
       case HttpStatus.UNAUTHORIZED:
@@ -11,7 +11,7 @@ class ServerError extends Error {
         message = 'That request is forbidden.';
         break;
       case HttpStatus.NOT_FOUND:
-        message = `${objectName} not found.`;
+        message = `Object not found.`;
         break;
       case HttpStatus.CONFLICT:
         message = 'There was a conflict with that request.';
@@ -28,12 +28,14 @@ class ServerError extends Error {
         break;
     }
     super(message);
+    this.code = statusCode;
     this.name = 'ServerError';
     this.message = message;
   }
 
   toJSON() {
     return {
+      code: this.code,
       name: this.name,
       message: this.message,
       stack: this.stack

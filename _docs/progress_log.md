@@ -2,6 +2,11 @@
 
 ## Backlog Todo
 
+## 5/17/3030
+
+- Make general errors on authentication page more human readable.
+- TODO: actually use AuthError.
+
 ## 4/30/2020
 
 - Fixed annoying eslint + prettier + vscode + airbnb + lint-staged + husky bug

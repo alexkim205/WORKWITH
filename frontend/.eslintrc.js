@@ -20,7 +20,7 @@ module.exports = {
   plugins: ['prettier'],
   rules: {
     'prettier/prettier': ['error'],
-    'linebreak-style': ['error', 'windows'],
+    'linebreak-style': ['off'],
     'no-underscore-dangle': [0],
     'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
     'import/no-extraneous-dependencies': ['error', { devDependencies: true }]

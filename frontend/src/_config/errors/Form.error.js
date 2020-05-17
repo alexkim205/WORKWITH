@@ -6,6 +6,7 @@ class FormError extends Error {
 
   toJSON() {
     return {
+      code: this.code,
       name: this.name,
       message: this.message,
       stack: this.stack
