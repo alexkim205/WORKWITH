@@ -17,11 +17,11 @@ import ServerError from './Server.error';
  */
 
 class AuthError extends ServerError {
-  constructor(statusCode) {
-    super(statusCode);
+  // constructor(statusCode) {
+  //   super(statusCode);
 
-    console.log(this);
-  }
+  //   // console.log(this);
+  // }
 
   toJSON() {
     return {
