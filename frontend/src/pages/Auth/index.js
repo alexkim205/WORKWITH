@@ -44,7 +44,6 @@ const AuthBox = () => {
 
   /* Form functions */
   const _onSubmit = async data => {
-    console.log(data);
     try {
       if (authState === AUTH_KEYS.LOGIN) {
         // If on login form
@@ -86,7 +85,6 @@ const AuthBox = () => {
 
   useEffect(() => {
     // Logout if this page is requested
-    console.log('logging out');
     _logout();
   }, []);
 

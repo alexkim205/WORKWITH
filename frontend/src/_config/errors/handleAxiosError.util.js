@@ -7,7 +7,6 @@ const handleError = error => {
     // network error
     throw new ServerError(HttpStatus.NETWORK_CONNECT_TIMEOUT);
   }
-  console.log(error);
   throw new ServerError(error.response.status);
 };
 
