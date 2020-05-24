@@ -2,6 +2,14 @@
 
 ## Backlog Todo
 
+## 5/23/3030
+
+- Finish making register errors human readable. Encapsulate RegisterError and LoginError into ServerError and clean up axios response interceptor handle error.
+
+## 5/17/3030
+
+- Make general errors on authentication page more human readable.
+
 ## 4/30/2020
 
 - Fixed annoying eslint + prettier + vscode + airbnb + lint-staged + husky bug

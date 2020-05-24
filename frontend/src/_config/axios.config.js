@@ -1,17 +1,15 @@
 /* eslint-disable no-param-reassign */
 import jwt from 'jsonwebtoken';
-import ServerError from './errors/Server.error';
-import HttpStatus from '../_constants/httpErrors.constants';
+import Errors from './errors';
 import { refreshToken as refreshTokenAction } from '../_actions/users.actions';
 import { authAxios, baseAxios } from './axiosInstances.config';
 
 const handleError = error => {
-  // https://github.com/axios/axios/issues/383
-  if (!error.response) {
-    // network error
-    throw new ServerError(HttpStatus.NETWORK_CONNECT_TIMEOUT);
+  // If error hasn't been handled yet, cast it as a ServerError.
+  if (error.isAxiosError) {
+    throw new Errors.Server(error);
   }
-  throw new ServerError(error.response.status);
+  throw error;
 };
 
 export default store => {

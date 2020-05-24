@@ -92,7 +92,7 @@ const AuthBox = () => {
     <div className="form-box">
       <form onSubmit={handleSubmit(_onSubmit)} ref={formRef}>
         <div className="fields-box">
-          <Input.Error>{errors?.general?.message}</Input.Error>
+          <Input.Error center>{errors?.general?.message}</Input.Error>
           {_.map(FIELDS, (field, key) => {
             const shouldFade = _.isEqual(field.scope, _.values(AUTH_KEYS));
             const isHidden = !field.scope.includes(authState);

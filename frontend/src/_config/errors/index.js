@@ -1,12 +1,15 @@
 import Server from './Server.error';
 import Form from './Form.error';
-
-export const ServerError = Server;
-export const FormError = Form;
+import Register from './Register.error';
+import Login from './Login.error';
 
 const Errors = {
   Server,
-  Form
+  Form,
+  Auth: {
+    Register,
+    Login
+  }
 };
 
 export default Errors;
