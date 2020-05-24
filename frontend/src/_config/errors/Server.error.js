@@ -1,7 +1,13 @@
 import HttpStatus from '../../_constants/httpErrors.constants';
 
 class ServerError extends Error {
-  constructor(statusCode) {
+  constructor(err) {
+    // If error.response doesn't exist, it's a server can't be reached error.
+    // https://github.com/axios/axios/issues/383
+    const statusCode = err.response
+      ? err.response.status
+      : HttpStatus.NETWORK_CONNECT_TIMEOUT;
+
     let message = '';
     switch (statusCode) {
       case HttpStatus.UNAUTHORIZED:
@@ -30,6 +36,7 @@ class ServerError extends Error {
     super(message);
     this.code = statusCode;
     this.name = 'ServerError';
+    this.response = err.response;
     this.message = message;
   }
 
