@@ -6,6 +6,7 @@ module.exports = {
     mocha: true,
     jest: true
   },
+  parser: "babel-eslint",
   extends: ["airbnb-base", "prettier"],
   globals: {
     Atomics: "readonly",
