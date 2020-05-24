@@ -28,6 +28,7 @@ import Navbar from '../../components/Navbar';
 import { Input } from '../../components/Form';
 import ToggleSwitch from '../../components/Filters/ToggleSwitch';
 import Dropdown from '../../components/Filters/Dropdown';
+import AddProject from '../../components/Modals/AddProject';
 import ProjectCard from './ProjectCard';
 
 const ProjectsBox = () => {
@@ -193,6 +194,7 @@ const ProjectsBox = () => {
             toggleCallback={updateQueryParam}
           />
         )}
+        <AddProject />
       </Fragment>
     );
   };

@@ -5,6 +5,8 @@
 ## 5/23/3030
 
 - Finish making register errors human readable. Encapsulate RegisterError and LoginError into ServerError and clean up axios response interceptor handle error.
+- Start working on adding projects.
+- Add create new project modal. Figure out why error is thrown when I try to open the modal.
 
 ## 5/17/3030
 
