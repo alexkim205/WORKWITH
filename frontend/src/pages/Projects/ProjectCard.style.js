@@ -1,7 +1,10 @@
 import styled from 'styled-components';
 import anime from 'animejs';
 import { displayOptions } from './Projects.options';
-import { secondaryColor } from '../../_constants/theme.constants';
+import {
+  secondaryColor,
+  textOnDarkColor
+} from '../../_constants/theme.constants';
 import { breakpoint } from '../../_constants/theme.mixins.constants';
 
 export const CARD_SPACING = 1.5; // em
@@ -9,7 +12,7 @@ export const CARD_SPACING = 1.5; // em
 export const Card = styled.li`
   box-sizing: border-box;
   position: relative;
-  color: white;
+  color: ${textOnDarkColor};
   border-radius: 5px;
   margin-right: ${CARD_SPACING}em;
   margin-bottom: ${CARD_SPACING}em;
