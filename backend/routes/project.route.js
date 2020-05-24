@@ -103,7 +103,9 @@ const getProject = async (req, res) => {
   }
   return res.status(HttpStatus.OK).send({ project });
 };
-router.route("/:id").get(authorize([Role.ADMIN, Role.USER]), getProject);
+router
+  .route("/:id([0-9a-f]{24})/")
+  .get(authorize([Role.ADMIN, Role.USER]), getProject);
 
 /**
  * @swagger
