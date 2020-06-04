@@ -23,9 +23,9 @@ const StyledButtonBase = styled.button`
 
   letter-spacing: 1px;
   font-family: 'Poppins', sans-serif;
-  font-size: 1em;
+  font-size: 0.9em;
   ${breakpoint.down('m')`
-    font-size: 0.9em;
+    font-size: 0.8em;
   `}
 
   &:focus {
@@ -35,8 +35,6 @@ const StyledButtonBase = styled.button`
 
 export const StyledFormButton = styled(StyledButtonBase)`
   background-color: ${buttonColor};
-  text-transform: uppercase;
-  font-weight: 600;
   color: ${buttonTextColor};
 
   transition: 0.2s all;
@@ -54,11 +52,11 @@ export const StyledModalButton = styled(StyledButtonBase)`
 export const StyledLinkButton = styled(StyledButtonBase)`
   color: ${linkButtonTextColor};
   text-decoration: underline;
-  font-size: 0.9em;
+  font-size: 0.8em;
   padding: 0.2em;
   margin: 0.2em;
   ${breakpoint.down('m')`
-    font-size: 0.85em;
+    font-size: 0.75em;
   `}
 `;
 

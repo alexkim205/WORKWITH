@@ -4,7 +4,9 @@
   "main": "index.js",
   "author": "Alex Gyujin Kim <alexgkim205@gmail.com>",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "babel-eslint": "^10.1.0"
+  },
   "scripts": {
     "start": "concurrently \"yarn frontend\" \"yarn backend\"",
     "frontend": "cd frontend && yarn start",
@@ -27,7 +29,6 @@
     }
   },
   "devDependencies": {
-    "babel-eslint": "^10.0.3",
     "concurrently": "^5.0.2",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.0.0",

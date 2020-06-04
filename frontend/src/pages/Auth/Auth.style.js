@@ -22,7 +22,6 @@ export const Background = styled.div`
       .fields-box {
       }
       .button-box {
-        margin-top: 1em;
         display: flex;
         flex-direction: column;
         align-items: center;

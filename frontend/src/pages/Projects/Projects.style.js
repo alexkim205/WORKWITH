@@ -48,13 +48,13 @@ export const Background = styled.div`
         width: 100%;
         input {
           width: inherit;
-          font-size: 1.2em;
+          font-size: 1.05em;
 
           ${breakpoint.down('m')`
-            font-size: 1.1em;
+            font-size: 1em;
           `}
           ${breakpoint.down('s')`
-            font-size: 1em;
+            font-size: 0.9em;
           `}
         }
         &:focus {

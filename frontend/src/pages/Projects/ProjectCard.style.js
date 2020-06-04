@@ -3,11 +3,13 @@ import anime from 'animejs';
 import { displayOptions } from './Projects.options';
 import {
   secondaryColor,
-  textOnDarkColor
+  textOnDarkColor,
+  backgroundColor,
+  textColor
 } from '../../_constants/theme.constants';
 import { breakpoint } from '../../_constants/theme.mixins.constants';
 
-export const CARD_SPACING = 1.5; // em
+export const CARD_SPACING = 1.2; // em
 
 export const Card = styled.li`
   box-sizing: border-box;
@@ -17,7 +19,10 @@ export const Card = styled.li`
   margin-right: ${CARD_SPACING}em;
   margin-bottom: ${CARD_SPACING}em;
   background-color: ${secondaryColor};
-  box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.25);
+  // background-color: ${backgroundColor};
+  // color: ${textColor};
+  overflow: hidden;
+  // box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.25);
   will-change: transform;
   cursor: pointer;
   // transition: 0.2s margin-bottom;
@@ -25,23 +30,36 @@ export const Card = styled.li`
   ${({ display }) => {
     if (display === displayOptions.grid) {
       return `
-      // 3 columns
-      width: calc((100% / 3) - (${CARD_SPACING * 2}em / 3));
-      padding-bottom: calc((100% / 3) - (${CARD_SPACING * 2}em / 3));
-      &:nth-child(2n) {
+      // 4 columns
+      width: calc((100% / 4) - (${CARD_SPACING * 3}em / 4));
+      padding-bottom: calc((100% / 4) - (${CARD_SPACING * 3}em / 4));
+      &:nth-child(3n) {
         margin-right: ${CARD_SPACING}em;
       }
-      &:nth-child(3n) {
+      &:nth-child(4n) {
         margin-right: 0;
       }
 
-      // 2 columns
+      // 3 columns
       ${breakpoint.down('m')`
-        width: calc((100% / 2) - (${CARD_SPACING}em / 2));
-        padding-bottom: calc((100% / 2) - (${CARD_SPACING}em / 2));
+        width: calc((100% / 3) - (${CARD_SPACING * 2}em / 3));
+        padding-bottom: calc((100% / 3) - (${CARD_SPACING * 2}em / 3));
         margin-right: ${CARD_SPACING}em;
-        &:nth-child(3n) {
+        &:nth-child(2n) {
           margin-right: ${CARD_SPACING}em;       
+        }
+        &:nth-child(3n) {
+          margin-right: 0;
+        }
+      `.join('')}
+
+      // 2 columns
+      ${breakpoint.down('s')`
+        width: calc((100% / 2) - (${CARD_SPACING * 1}em / 2));
+        padding-bottom: calc((100% / 2) - (${CARD_SPACING * 1}em / 2));
+        margin-right: ${CARD_SPACING}em;
+        &:nth-child(4n), &:nth-child(3n) {
+          margin-right: ${CARD_SPACING}em;    
         }
         &:nth-child(2n) {
           margin-right: 0;
@@ -59,7 +77,7 @@ export const Card = styled.li`
     return `
       width: 100%;
       margin-right: 0 !important;
-      margin-bottom: ${CARD_SPACING}em;
+      margin-bottom: ${CARD_SPACING / 2}em;
 
       ${breakpoint.down('s')`
         margin-bottom: ${CARD_SPACING / 2}em;
@@ -81,21 +99,21 @@ export const Card = styled.li`
       if (display === displayOptions.grid) {
         return `
         position: absolute;
-        padding: 1.8em;
+        padding: 1em;
         `;
       }
       return `
         position: relative;
-        padding: 2.1em 1.8em;
+        padding: 1.3em;
 
         ${breakpoint.down('s')`
-          padding: 1.8em 1.5em;
+          padding: 1.3em;
         `.join('')}
       `;
     }}
 
     .card-title {
-      font-size: 1.2em;
+      font-size: 0.9em;
       letter-spacing: 0.04em;
       white-space: nowrap;
       overflow: hidden;
@@ -105,12 +123,12 @@ export const Card = styled.li`
       margin-bottom: 0.3em;
 
       ${breakpoint.down('s')`
-        font-size: 1.1em;
+        font-size: 0.9em;
       `}
     }
 
     .card-subtitle {
-      font-size: 1em;
+      font-size: 0.8em;
       letter-spacing: 0.04em;
       white-space: nowrap;
       overflow: hidden;
@@ -137,8 +155,8 @@ export const _onExit = (el, i, removeElement) => {
     opacity: 0,
     scale: 0.9,
     easing: 'easeOutSine',
-    duration: 400,
-    delay: i * 40,
+    duration: 300,
+    delay: i * 20,
     complete: removeElement
   });
 };
@@ -149,8 +167,8 @@ export const _onAppear = (el, i) => {
     opacity: [0, 1],
     scale: [0.9, 1],
     easing: 'easeInSine',
-    duration: 400,
-    delay: i * 40
+    duration: 300,
+    delay: i * 20
   });
 };
 

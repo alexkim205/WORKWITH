@@ -14,7 +14,7 @@ const Text = styled.input`
   border: 1px solid ${borderColor};
   border-radius: 3px;
   padding: 1em 1.1em;
-  font-size: 1em;
+  font-size: 0.9em;
   color: black;
   transition: all 0.2s ease;
   width: 100%;

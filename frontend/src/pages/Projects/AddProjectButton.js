@@ -18,6 +18,7 @@ import { Input } from '../../components/Form';
 import { ModalButton } from '../../components/Button';
 import AddButton from '../../components/Filters/AddButton';
 import Modal from '../../components/Modals';
+import SquareFlipLoader from '../../components/Loader/SquareFlipLoader';
 
 const AddProjectButton = () => {
   /* Component Setup */
@@ -73,19 +74,23 @@ const AddProjectButton = () => {
                     required: 'Project title is required.'
                   })}
                 />
+                <Input.Error>
+                  {errors?.general?.message || errors?.title?.message}
+                </Input.Error>
               </Input.Wrapper>
             </div>
             <div className="buttons-box">
-              <Input.Error>
-                {errors?.general?.message || errors?.title?.message}
-              </Input.Error>
-              <ModalButton
-                data-button-fade
-                type="submit"
-                disabled={projectPending || projectsPending}
-              >
-                Done
-              </ModalButton>
+              {projectPending || projectsPending ? (
+                <SquareFlipLoader />
+              ) : (
+                <ModalButton
+                  data-button-fade
+                  type="submit"
+                  disabled={projectPending || projectsPending}
+                >
+                  Done
+                </ModalButton>
+              )}
             </div>
           </form>
         </div>
