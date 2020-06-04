@@ -42,7 +42,7 @@ export const Card = styled.li`
       }
 
       // 3 columns
-      ${breakpoint.down('m')`
+      ${breakpoint.down('s')`
         width: calc((100% / 3) - (${CARD_SPACING * 2}em / 3));
         padding-bottom: calc((100% / 3) - (${CARD_SPACING * 2}em / 3));
         margin-right: ${CARD_SPACING}em;
@@ -55,30 +55,30 @@ export const Card = styled.li`
       `.join('')}
 
       // 2 columns
-      ${breakpoint.down('s')`
-        width: calc((100% / 2) - (${CARD_SPACING * 1}em / 2));
-        padding-bottom: calc((100% / 2) - (${CARD_SPACING * 1}em / 2));
-        margin-right: ${CARD_SPACING}em;
-        &:nth-child(4n), &:nth-child(3n) {
-          margin-right: ${CARD_SPACING}em;    
-        }
-        &:nth-child(2n) {
-          margin-right: 0;
-        }
-      `.join('')}
+      // ${breakpoint.down('s')`
+      //   width: calc((100% / 2) - (${CARD_SPACING * 1}em / 2));
+      //   padding-bottom: calc((100% / 2) - (${CARD_SPACING * 1}em / 2));
+      //   margin-right: ${CARD_SPACING}em;
+      //   &:nth-child(4n), &:nth-child(3n) {
+      //     margin-right: ${CARD_SPACING}em;    
+      //   }
+      //   &:nth-child(2n) {
+      //     margin-right: 0;
+      //   }
+      // `.join('')}
 
-      // 1 column and row
-      ${breakpoint.down('xs')`
-        width: 100%;
-        padding-bottom: 0;
-        margin-right: 0 !important;
-      `.join('')}
-      `;
+      // // 1 column and row
+      // ${breakpoint.down('xs')`
+      //   width: 100%;
+      //   padding-bottom: 0;
+      //   margin-right: 0 !important;
+      // `.join('')}
+      // `;
     }
     return `
       width: 100%;
       margin-right: 0 !important;
-      margin-bottom: ${CARD_SPACING / 2}em;
+      margin-bottom: ${CARD_SPACING / 1.5}em;
 
       ${breakpoint.down('s')`
         margin-bottom: ${CARD_SPACING / 2}em;
@@ -105,10 +105,10 @@ export const Card = styled.li`
       }
       return `
         position: relative;
-        padding: 1.3em;
+        padding: 1em;
 
         ${breakpoint.down('s')`
-          padding: 1.3em;
+          padding: 0.9em;
         `.join('')}
       `;
     }}
@@ -124,7 +124,7 @@ export const Card = styled.li`
       margin-bottom: 0.3em;
 
       ${breakpoint.down('s')`
-        font-size: 0.9em;
+        font-size: 0.8em;
       `}
     }
 
@@ -138,7 +138,7 @@ export const Card = styled.li`
       will-change: transform;
 
       ${breakpoint.down('s')`
-        font-size: 0.9em;
+        font-size: 0.7em;
       `}
     }
   }

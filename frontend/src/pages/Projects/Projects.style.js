@@ -44,8 +44,13 @@ export const Background = styled.div`
       }
 
       .search {
-        margin-bottom: 2em;
+        margin-bottom: 1.333em;
         width: 100%;
+
+        ${breakpoint.down('s')`
+          margin-bottom: 1em;
+        `}
+
         input {
           width: inherit;
           font-size: 1.05em;
