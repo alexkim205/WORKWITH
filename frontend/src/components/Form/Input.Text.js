@@ -17,6 +17,7 @@ const Text = styled.input`
   font-size: 1em;
   color: black;
   transition: all 0.2s ease;
+  width: 100%;
 
   &:focus {
     outline: none;

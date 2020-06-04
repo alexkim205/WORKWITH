@@ -1,8 +1,17 @@
 import { createSelector } from 'reselect';
 
 export const getProjectsPendingAndError = createSelector(
-  state => state.projects.pending,
-  state => state.projects.error,
+  state => state.projects.projectsPending,
+  state => state.projects.projectsError,
+  (pending, error) => ({
+    pending,
+    error
+  })
+);
+
+export const getProjectPendingAndError = createSelector(
+  state => state.projects.projectPending,
+  state => state.projects.projectError,
   (pending, error) => ({
     pending,
     error
@@ -15,6 +24,7 @@ export const getProject = state => state.projects.project;
 
 export default {
   getProjectsPendingAndError,
+  getProjectPendingAndError,
   getProjects,
   getProject
 };

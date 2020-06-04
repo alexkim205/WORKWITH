@@ -42,6 +42,15 @@ export const StyledFormButton = styled(StyledButtonBase)`
   transition: 0.2s all;
 `;
 
+export const StyledModalButton = styled(StyledButtonBase)`
+  background-color: ${buttonColor};
+  font-weight: normal;
+  color: ${buttonTextColor};
+  margin: 0;
+
+  transition: 0.2s all;
+`;
+
 export const StyledLinkButton = styled(StyledButtonBase)`
   color: ${linkButtonTextColor};
   text-decoration: underline;

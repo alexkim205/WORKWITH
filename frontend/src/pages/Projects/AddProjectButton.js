@@ -4,8 +4,15 @@ import { useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 
 import useAction from '../../_utils/useAction.util';
-import { createProject } from '../../_actions/projects.actions';
-import { getProjectPendingAndError } from '../../_selectors/projects.selectors';
+import {
+  createProject,
+  getProjectsByUser
+} from '../../_actions/projects.actions';
+import { getCurrentUserAndToken } from '../../_selectors/users.selectors';
+import {
+  getProjectPendingAndError,
+  getProjectsPendingAndError
+} from '../../_selectors/projects.selectors';
 
 import { Input } from '../../components/Form';
 import { ModalButton } from '../../components/Button';
@@ -20,14 +27,27 @@ const AddProjectButton = () => {
   const closeModal = () => setIsModalOpen(false);
 
   const _createProject = useAction(createProject);
-  const { pending } = useSelector(getProjectPendingAndError);
+  const _getProjectsByUser = useAction(getProjectsByUser);
+  const { user } = useSelector(getCurrentUserAndToken);
+  const { pending: projectPending } = useSelector(getProjectPendingAndError);
+  const { pending: projectsPending } = useSelector(getProjectsPendingAndError);
   const { register, handleSubmit, errors, setError } = useForm();
   /* Component Setup End */
 
   /* Form functions */
   const _onSubmit = async data => {
     try {
+      // Try to create project
       await _createProject(data);
+
+      // If a project was created successfully, get refreshed list.
+      // Project will update behind the modal overlay.
+      if (user) {
+        await _getProjectsByUser(user._id);
+      }
+
+      // Close the modal
+      closeModal();
     } catch (error) {
       // If failure, display server error
       if (error.name === 'ServerError') {
@@ -59,7 +79,11 @@ const AddProjectButton = () => {
               <Input.Error>
                 {errors?.general?.message || errors?.title?.message}
               </Input.Error>
-              <ModalButton data-button-fade type="submit" disabled={pending}>
+              <ModalButton
+                data-button-fade
+                type="submit"
+                disabled={projectPending || projectsPending}
+              >
                 Done
               </ModalButton>
             </div>

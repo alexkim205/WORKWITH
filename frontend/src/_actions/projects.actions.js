@@ -2,7 +2,6 @@ import to from 'await-to-js';
 import projectsConstants from '../_constants/projects.constants';
 import services from '../_services';
 import createActionCreator from '../_utils/createActionCreator.util';
-import history from '../_config/history.config';
 
 const { projectsServices } = services;
 
@@ -64,7 +63,6 @@ export const createProject = newProject => async dispatch => {
     throw err;
   }
   dispatch(actionSuccess(project));
-  history.push(`/project/${project._id}`);
 };
 
 export const updateProject = (projectId, newProject) => async dispatch => {

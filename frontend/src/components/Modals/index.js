@@ -48,7 +48,7 @@ const Modal = ({ isOpen: shouldOpen, hide, children }) => {
         aria-modal
         aria-hidden
       >
-        <button onClick={hide}>Close</button>
+        {/* <button onClick={hide}>Close</button> */}
         {children}
       </ModalContainer>
     </ModalOverlay>,

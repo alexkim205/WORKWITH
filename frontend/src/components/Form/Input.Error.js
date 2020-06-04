@@ -14,7 +14,8 @@ const Container = styled.div`
     center
       ? css`
           text-align: center;
-          margin-bottom: 6px;
+          margin-top: 4px;
+          margin-bottom: 4px;
         `
       : css`
           text-align: left;

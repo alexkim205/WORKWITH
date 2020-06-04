@@ -3,7 +3,7 @@ import Text from './Input.Text';
 import Error from './Input.Error';
 
 const Wrapper = styled.div`
-  overflow: hidden;
+  // overflow: hidden;
   will-change: transform;
   ${({ isHidden }) =>
     isHidden

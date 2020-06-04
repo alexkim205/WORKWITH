@@ -17,3 +17,7 @@ The production environment variables are set in AWS using a VSCode extension.
   - ~~On frontend, this env is used to test the service calls to the local server on 8889.~~
   - ~~When both scripts are run concurrently, the connection between frontend and backend are tested.~~
   - Frontend tests just the server connection, and uses mock services otherwise.
+
+### User Account to test on
+
+- a@dev.com; derpderp
