@@ -42,7 +42,8 @@ export const Container = styled(BaseContainer)`
       overflow: hidden;
       text-overflow: ellipsis;
       color: ${textOnDarkColor};
-      font-weight: 600;
+      // font-weight: 600;
+      font-size: 0.9em;
     }
     
     svg {
@@ -103,6 +104,7 @@ export const Option = styled.div`
   width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-size: 0.9em;
 
   &:first-child {
     padding-top: 0.5em;

@@ -28,7 +28,7 @@ export const Container = styled(BaseContainer)`
     svg {
       fill: ${tertiaryColor};
       z-index: 2;
-      transform: scale(1.5);
+      transform: scale(1.2);
     }
   }
 `;

@@ -1,5 +1,6 @@
-import React from 'react';
 import styled, { keyframes } from 'styled-components';
+
+import { secondaryColor } from '../../_constants/theme.constants';
 
 const flip = keyframes`
   0% { -webkit-transform: perspective(120px) }
@@ -7,15 +8,15 @@ const flip = keyframes`
   100% { -webkit-transform: perspective(120px) rotateY(180deg)  rotateX(180deg) }
 `;
 
-const Container = styled.div`
-  width: 40px;
-  height: 40px;
-  background-color: #333;
+const SquareFlipLoader = styled.div`
+  width: 1em;
+  height: 1em;
+  margin: 0.5em;
+  background-color: ${({ backgroundColor }) =>
+    backgroundColor || secondaryColor};
 
   -webkit-animation: ${flip} 1.2s infinite ease-in-out;
   animation: ${flip} 1.2s infinite ease-in-out;
 `;
-
-const SquareFlipLoader = () => <Container></Container>;
 
 export default SquareFlipLoader;

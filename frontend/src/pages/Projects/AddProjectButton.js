@@ -3,6 +3,7 @@ import React, { Fragment, useState, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 
+import { secondaryColor } from '../../_constants/theme.constants';
 import useAction from '../../_utils/useAction.util';
 import {
   createProject,
@@ -80,17 +81,15 @@ const AddProjectButton = () => {
               </Input.Wrapper>
             </div>
             <div className="buttons-box">
-              {projectPending || projectsPending ? (
-                <SquareFlipLoader />
-              ) : (
-                <ModalButton
-                  data-button-fade
-                  type="submit"
-                  disabled={projectPending || projectsPending}
-                >
-                  Done
-                </ModalButton>
-              )}
+              {(projectPending || projectsPending) && <SquareFlipLoader />}
+              <ModalButton
+                data-button-fade
+                type="submit"
+                disabled={projectPending || projectsPending}
+                backgroundColor={secondaryColor}
+              >
+                Done
+              </ModalButton>
             </div>
           </form>
         </div>

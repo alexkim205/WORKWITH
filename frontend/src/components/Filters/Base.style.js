@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { tertiaryColor } from '../../_constants/theme.constants';
 import { breakpoint } from '../../_constants/theme.mixins.constants';
 
-export const FILTER_HEIGHT = 45;
+export const FILTER_HEIGHT = 40;
 
 export const BaseContainer = styled.div`
   position: relative;

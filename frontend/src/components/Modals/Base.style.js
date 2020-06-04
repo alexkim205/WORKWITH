@@ -34,6 +34,7 @@ const ModalContainer = styled.div`
     .buttons-box {
       display: flex;
       justify-content: flex-end;
+      align-items: center;
       // margin-top: 0.75em;
     }
   }
@@ -47,15 +48,15 @@ const _onOpen = async (overlayEl, modalEl) => {
     targets: overlayEl,
     easing: 'linear',
     opacity: [0, 1],
-    duration: 100
+    duration: 50
   }).finished;
   // Then, load modal.
   await anime({
     targets: modalEl,
-    easing: 'easeOutElastic',
+    easing: 'easeInSine',
     opacity: [0, 1],
-    scale: [0, 1],
-    duration: 400
+    scale: [0.8, 1],
+    duration: 150
   }).finished;
 };
 
@@ -72,7 +73,7 @@ const _onClose = async (overlayEl, modalEl) => {
       easing: 'easeOutSine',
       duration: 200,
       opacity: [1, 0],
-      scale: [1, 0]
+      scale: [1, 0.8]
     }).finished
   ]);
 };

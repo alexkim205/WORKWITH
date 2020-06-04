@@ -14,7 +14,7 @@ const StyledButtonBase = styled.button`
   align-items: center;
   will-change: transform;
 
-  background-color: transparent;
+  background-color: ${({ backgroundColor }) => backgroundColor || buttonColor};
   border-radius: 3px;
   border: none;
   padding: 0.75em 1.25em;
@@ -34,14 +34,12 @@ const StyledButtonBase = styled.button`
 `;
 
 export const StyledFormButton = styled(StyledButtonBase)`
-  background-color: ${buttonColor};
   color: ${buttonTextColor};
 
   transition: 0.2s all;
 `;
 
 export const StyledModalButton = styled(StyledButtonBase)`
-  background-color: ${buttonColor};
   font-weight: normal;
   color: ${buttonTextColor};
   margin: 0;
