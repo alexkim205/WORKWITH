@@ -15,6 +15,7 @@ export const Background = styled.div`
     `} */
   }
   .body {
+    padding-top: 6em;
     display: flex;
     flex: 1;
     flex-direction: column;

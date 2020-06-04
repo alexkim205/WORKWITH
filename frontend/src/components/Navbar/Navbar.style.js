@@ -11,11 +11,15 @@ export const FIELD_HEIGHT = 60;
 export const OPTION_HEIGHT = 60;
 
 export const Container = styled.div`
+  position: fixed;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: ${backgroundColor};
   display: flex;
   flex-direction: row;
   align-items: center;
-  height: 2em;
-  padding: 1.5em;
+  z-index: 2;
+  border-bottom: 1px solid ${borderColor};
 
   ${breakpoint.down('m')`
     padding: 1.5em 1em;

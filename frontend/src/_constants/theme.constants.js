@@ -85,7 +85,7 @@ export const pendingColor = theme('mode', {
 });
 
 export const borderColor = theme('mode', {
-  light: '#F5F5F5',
+  light: '#e0e0e0',
   dark: lighten(0.5, BLACK)
 });
 
