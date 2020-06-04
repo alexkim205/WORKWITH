@@ -49,6 +49,7 @@ export const StyledModalButton = styled(StyledButtonBase)`
 
 export const StyledLinkButton = styled(StyledButtonBase)`
   color: ${linkButtonTextColor};
+  background-color: transparent;
   text-decoration: underline;
   font-size: 0.8em;
   padding: 0.2em;

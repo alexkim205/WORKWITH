@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import styled from 'styled-components';
 import anime from 'animejs';
 import { displayOptions } from './Projects.options';
@@ -161,15 +162,16 @@ export const _onExit = (el, i, removeElement) => {
   });
 };
 
-export const _onAppear = (el, i) => {
-  anime({
-    targets: el,
-    opacity: [0, 1],
-    scale: [0.9, 1],
-    easing: 'easeInSine',
-    duration: 300,
-    delay: i * 20
-  });
+export const _onAppear = el => {
+  el.style.opacity = 1;
+  // anime({
+  //   targets: el,
+  //   opacity: [0, 1],
+  //   scale: [0.9, 1],
+  //   easing: 'easeInSine',
+  //   duration: 300,
+  //   delay: i * 20
+  // });
 };
 
 export const _onStart = (el, { previous, current }) => {
