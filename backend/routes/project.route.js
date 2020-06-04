@@ -156,9 +156,7 @@ const getProjectsByUser = async (req, res) => {
   if (_.isEmpty(projects)) {
     return res
       .status(HttpStatus.NO_CONTENT)
-      .send(
-        `User with id ${req.params.id} doesn't have any projects; NOT_FOUND`
-      );
+      .send(`User with id ${req.params.id} doesn't have any projects.`);
   }
   return res.status(HttpStatus.OK).send({ projects });
 };
@@ -208,9 +206,7 @@ const createProject = async (req, res) => {
   if (!_.isEmpty(projectsWithSameTitle)) {
     return res
       .status(HttpStatus.UNPROCESSABLE_ENTITY)
-      .send(
-        `Project with title ${req.body.title} already exists for user with id ${req.user._id}; UNPROCESSABLE_ENTITY`
-      );
+      .send(`Project with title ${req.body.title} already exists.`);
   }
 
   // Add requesting user to authors and users arrays

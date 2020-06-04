@@ -2,13 +2,17 @@
 
 ## Backlog Todo
 
-## 5/23/3030
+## 6/3/2020
+
+- Restrict projects with same name from being made.
+
+## 5/23/2020
 
 - Finish making register errors human readable. Encapsulate RegisterError and LoginError into ServerError and clean up axios response interceptor handle error.
 - Start working on adding projects.
 - Add create new project modal. Figure out why error is thrown when I try to open the modal.
 
-## 5/17/3030
+## 5/17/2020
 
 - Make general errors on authentication page more human readable.
 
