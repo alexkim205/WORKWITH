@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import {
   buttonColor,
   borderColor,
+  backgroundColor,
   inputBackgroundColor
 } from '../../_constants/theme.constants';
 
@@ -19,9 +20,13 @@ const Text = styled.input`
   transition: all 0.2s ease;
   width: 100%;
 
+  &:hover {
+    background-color: ${backgroundColor};
+  }
+
   &:focus {
     outline: none;
-    background-color: #fff;
+    background-color: ${backgroundColor};
     border: 1px solid ${buttonColor};
   }
 `;

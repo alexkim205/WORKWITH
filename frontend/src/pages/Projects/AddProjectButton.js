@@ -2,6 +2,7 @@
 import React, { Fragment, useState, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
+import { RiFileAddLine, RiShareForwardLine } from 'react-icons/ri';
 
 import { secondaryColor } from '../../_constants/theme.constants';
 import useAction from '../../_utils/useAction.util';
@@ -67,10 +68,31 @@ const AddProjectButton = () => {
           <form onSubmit={handleSubmit(_onSubmit)} ref={formRef}>
             <div className="fields-box">
               <Input.Wrapper data-field-fade>
+                <Input.Label>
+                  <RiFileAddLine size={'1.7em'} />
+                  Give your project a descriptive title
+                </Input.Label>
                 <Input.Text
                   type="text"
                   name="title"
-                  placeholder="Give Your Project a Descriptive Title"
+                  placeholder="Name your project"
+                  ref={register({
+                    required: 'Project title is required.'
+                  })}
+                />
+                <Input.Error>
+                  {errors?.general?.message || errors?.title?.message}
+                </Input.Error>
+              </Input.Wrapper>
+              <Input.Wrapper data-field-fade>
+                <Input.Label>
+                  <RiShareForwardLine size={'1.7em'} />
+                  Share your project
+                </Input.Label>
+                <Input.Text
+                  type="text"
+                  name="title"
+                  placeholder="Add people"
                   ref={register({
                     required: 'Project title is required.'
                   })}

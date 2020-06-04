@@ -2,9 +2,16 @@
 
 ## Backlog Todo
 
+## 6/4/2020
+
+- Add sharing input when creating new project in modal.
+- Make project cards layout more responsive.
+- Add ability to share with people.
+
 ## 6/3/2020
 
 - Restrict projects with same name from being made.
+- Fix create new project service, and hook it up to add project button.
 
 ## 5/23/2020
 

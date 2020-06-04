@@ -1,9 +1,7 @@
-import React from 'react';
 import styled, { css } from 'styled-components';
-import PropTypes from 'prop-types';
 import { failureColor } from '../../_constants/theme.constants';
 
-const Container = styled.div`
+const Error = styled.div`
   font-size: 0.75em;
   height: 15px;
   word-wrap: break-word;
@@ -23,13 +21,5 @@ const Container = styled.div`
           margin-bottom: 4px;
         `}
 `;
-
-const Error = ({ children, ...otherProps }) => (
-  <Container {...otherProps}>{children}</Container>
-);
-
-Error.propTypes = {
-  children: PropTypes.node
-};
 
 export default Error;
