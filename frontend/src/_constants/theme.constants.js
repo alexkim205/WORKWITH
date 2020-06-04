@@ -98,6 +98,8 @@ export const breakpoints = {
   xl: 1200
 };
 
+// https://react-spring-visualizer.com/#scale
 export const springConfig = {
-  noWobble: 'spring(1, 170, 26, 0)'
+  noWobble: 'spring(1, 170, 26, 0)',
+  gentleWobble: 'spring(2, 200, 20, 0)'
 };
