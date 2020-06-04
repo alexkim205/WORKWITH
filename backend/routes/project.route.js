@@ -197,6 +197,22 @@ const createProject = async (req, res) => {
   if (!_.isEmpty(err1)) {
     return res.status(HttpStatus.UNPROCESSABLE_ENTITY).send(err1);
   }
+
+  // Check if project with same name already exists in user's projects.
+  const [err2, projectsWithSameTitle] = await to(
+    Project.find({ users: req.user._id, title: req.body.title })
+  );
+  if (!_.isEmpty(err2)) {
+    return res.status(HttpStatus.BAD_REQUEST).send(err2);
+  }
+  if (!_.isEmpty(projectsWithSameTitle)) {
+    return res
+      .status(HttpStatus.UNPROCESSABLE_ENTITY)
+      .send(
+        `Project with title ${req.body.title} already exists for user with id ${req.user._id}; UNPROCESSABLE_ENTITY`
+      );
+  }
+
   // Add requesting user to authors and users arrays
   req.body.authors = req.body.authors || [];
   req.body.users = req.body.users || [];
@@ -218,9 +234,9 @@ const createProject = async (req, res) => {
     }
     return user;
   });
-  const [err2, authors] = await to(Promise.all(checkAuthorPromises));
-  if (!_.isEmpty(err2)) {
-    return res.status(HttpStatus.NOT_FOUND).send(err2);
+  const [err3, authors] = await to(Promise.all(checkAuthorPromises));
+  if (!_.isEmpty(err3)) {
+    return res.status(HttpStatus.NOT_FOUND).send(err3);
   }
   if (_.isEmpty(authors)) {
     return res.status(HttpStatus.NOT_FOUND).send(`Authors were NOT_FOUND`);
@@ -237,9 +253,9 @@ const createProject = async (req, res) => {
     }
     return user;
   });
-  const [err3, users] = await to(Promise.all(checkUsersPromises));
+  const [err4, users] = await to(Promise.all(checkUsersPromises));
   if (!_.isEmpty(err3)) {
-    return res.status(HttpStatus.NOT_FOUND).send(err3);
+    return res.status(HttpStatus.NOT_FOUND).send(err4);
   }
   if (!_.isEmpty(req.body.users) && _.isEmpty(users)) {
     return res.status(HttpStatus.NOT_FOUND).send(`Users were NOT_FOUND`);
@@ -249,9 +265,9 @@ const createProject = async (req, res) => {
     _.pick(req.body, ["title", "authors", "users", "private"])
   );
 
-  const [err4, newProject] = await to(project.save());
+  const [err5, newProject] = await to(project.save());
   if (!_.isEmpty(err4)) {
-    return res.status(HttpStatus.BAD_REQUEST).send(err4);
+    return res.status(HttpStatus.BAD_REQUEST).send(err5);
   }
   if (_.isEmpty(newProject)) {
     return res
