@@ -9,7 +9,7 @@ const validateAddProjectInput = data => {
   formattedData.authors = !_.isEmpty(data.authors) ? data.authors : "";
   formattedData.users = !_.isEmpty(data.users) ? data.users : "";
   formattedData.body = !_.isEmpty(data.body) ? data.body : "";
-  formattedData.private = !_.isEmpty(data.private) ? data.private : "";
+  formattedData.private = !_.isUndefined(data.private) ? data.private : "";
 
   // Title check
   if (_.isEmpty(formattedData.title)) {

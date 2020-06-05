@@ -10,9 +10,8 @@ const validateUpdateProjectInput = data => {
   formattedData.authors = !_.isEmpty(data.authors) ? data.authors : "";
   formattedData.users = !_.isEmpty(data.users) ? data.users : "";
   formattedData.body = !_.isEmpty(data.body) ? data.body : "";
-  formattedData.private =
-    typeof data.private !== "undefined" ? data.private : "";
-  formattedData.deleted = typeof data.deleted !== "undefined" ? "true" : "";
+  formattedData.private = !_.isUndefined(data.private) ? data.private : "";
+  formattedData.deleted = !_.isUndefined(data.deleted) ? "true" : "";
 
   // Delete checks
   if (!_.isEmpty(formattedData.deleted)) {

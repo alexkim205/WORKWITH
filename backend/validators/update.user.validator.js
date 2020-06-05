@@ -8,7 +8,8 @@ const validateUpdateUserInput = data => {
   formattedData._id = !_.isEmpty(data._id) ? data._id : "";
   formattedData.name = !_.isEmpty(data.name) ? data.name : "";
   formattedData.email = !_.isEmpty(data.email) ? data.email : "";
-  formattedData.deleted = typeof data.deleted !== "undefined" ? "true" : "";
+  formattedData.contacts = !_.isEmpty(data.contacts) ? data.contacts : "";
+  formattedData.deleted = !_.isUndefined(data.deleted) ? "true" : "";
 
   // Delete checks
   if (!_.isEmpty(formattedData.deleted)) {
