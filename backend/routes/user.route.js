@@ -12,9 +12,10 @@ const _ = require("lodash");
 const jwt = require("jsonwebtoken");
 const { switchEnvs } = require("../_config/getEnv.config");
 const { HttpStatus } = require("../_constants/error.constants");
-const User = require("../models/user.model");
+const { BaseUser, User, Guest } = require("../models/user.model");
 const Role = require("../_utils/roles.util");
 const authorize = require("../_utils/authorize.util");
+const Validator = require("../_utils/validator.util");
 const validateRegisterInput = require("../validators/register.validator");
 const validateLoginInput = require("../validators/login.validator");
 const validateUpdateUserInput = require("../validators/update.user.validator");
@@ -50,7 +51,7 @@ const validateRefreshTokenInput = require("../validators/refresh.token.user.vali
  *          $ref: '#/components/responses/UnauthorizedError'
  */
 const getUsers = async (req, res) => {
-  const [err, users] = await to(User.find());
+  const [err, users] = await to(BaseUser.find());
   if (!_.isEmpty(err)) {
     return res.status(HttpStatus.BAD_REQUEST).send(err);
   }
@@ -96,7 +97,7 @@ const getUser = async (req, res) => {
   if (req.params.id !== req.user._id && req.user.role !== Role.ADMIN) {
     return res.status(HttpStatus.UNAUTHORIZED).send("Request is UNAUTHORIZED");
   }
-  const [err, user] = await to(User.findById(req.params.id));
+  const [err, user] = await to(BaseUser.findById(req.params.id));
   if (!_.isEmpty(err)) {
     return res.status(HttpStatus.BAD_REQUEST).send(err);
   }
@@ -351,7 +352,7 @@ const updateUser = async (req, res) => {
     return res.status(HttpStatus.UNPROCESSABLE_ENTITY).send(err);
   }
 
-  const [err1, user] = await to(User.findById(req.params.id));
+  const [err1, user] = await to(BaseUser.findById(req.params.id));
   if (!_.isEmpty(err1)) {
     return res.status(HttpStatus.BAD_REQUEST).send(err1);
   }
@@ -361,12 +362,77 @@ const updateUser = async (req, res) => {
       .send(`User with id ${req.params.id} NOT_FOUND`);
   }
 
+  // Check by id or email if each contact exists. If account doesn't exist,
+  // create guest account. Each promise returns an Object Id or throws
+  // an error. Client can pass in either string email addresses or uuids in
+  // req.body.contacts. Backend will format this field into a list of uuids of
+  // existing users/guests or newly created guests.
+  req.body.contacts = req.body.contacts || [];
+  const findOrCreateContactsPromises = req.body.contacts.map(
+    async contactIdOrEmail => {
+      // If Object Id is passed in, the user should exist.
+      if (Validator.isObjectId(contactIdOrEmail)) {
+        const [errContact, contact] = await to(
+          BaseUser.findById(contactIdOrEmail)
+        );
+        if (!_.isEmpty(errContact)) {
+          throw new Error(errContact);
+        }
+        if (_.isEmpty(contact)) {
+          throw new Error(
+            `User contact with id ${contactIdOrEmail} was NOT_FOUND`
+          );
+        }
+        return contact._id;
+      }
+      // Instead, if email is passed in, the guest should be created.
+      if (Validator.isEmail(contactIdOrEmail)) {
+        // Check if user with email is already a user
+        const [errContact, contact] = await to(
+          BaseUser.findOne({ email: contactIdOrEmail })
+        );
+        if (!_.isEmpty(errContact)) {
+          throw new Error(errContact);
+        }
+        // If not already found, create guest.
+        if (_.isEmpty(contact)) {
+          const guest = new Guest({ email: contactIdOrEmail });
+
+          const [errGuest, newGuest] = await to(guest.save());
+
+          if (!_.isEmpty(errGuest)) {
+            throw new Error(errGuest);
+          }
+          if (_.isEmpty(newGuest)) {
+            throw new Error(
+              `Bad request creating new guest with email ${contactIdOrEmail}`
+            );
+          }
+          return newGuest._id;
+        }
+        return contact._id;
+      }
+      // Should already be caught in validator at beginning of function.
+      throw new Error(
+        `User contact ${contactIdOrEmail} is not an Object ID or email.`
+      );
+    }
+  );
+  const [err2, contacts] = await to(Promise.all(findOrCreateContactsPromises));
+  if (!_.isEmpty(err2)) {
+    return res.status(HttpStatus.UNPROCESSABLE_ENTITY).send(err2);
+  }
+
   user.name = req.body.name || user.name;
   user.email = req.body.email || user.email;
+  user.contacts = _(user.contacts)
+    .concat(contacts)
+    .uniqBy(id => id.toString())
+    .value();
 
-  const [err2, newUser] = await to(user.save());
-  if (!_.isEmpty(err2)) {
-    return res.status(HttpStatus.BAD_REQUEST).send(err2);
+  const [err3, newUser] = await to(user.save());
+  if (!_.isEmpty(err3)) {
+    return res.status(HttpStatus.BAD_REQUEST).send(err3);
   }
   if (_.isEmpty(newUser)) {
     return res.status(HttpStatus.BAD_REQUEST).send("Bad request updating user");

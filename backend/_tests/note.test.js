@@ -7,7 +7,7 @@ const _ = require("lodash");
 const to = require("await-to-js").default;
 
 const app = require("../server");
-const User = require("../models/user.model");
+const { User } = require("../models/user.model");
 const Project = require("../models/project.model");
 const Note = require("../models/note.model");
 const { user, project, note } = require("../_constants/test.constants");

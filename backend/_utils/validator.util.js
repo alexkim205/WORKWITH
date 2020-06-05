@@ -1,6 +1,7 @@
 // https://github.com/validatorjs/validator.js/issues/525
 const ValidatorBase = require("validator");
 const mongoose = require("mongoose");
+const _ = require("lodash");
 
 function Validator() {}
 
@@ -19,6 +20,13 @@ Validator.prototype.isObjectId = v => {
 
 Validator.prototype.isRealBoolean = v => {
   return typeof v === "boolean";
+};
+
+Validator.prototype.formatFormData = (value, isBool = false) => {
+  if (isBool) {
+    return !_.isUndefined(value) ? "true" : "";
+  }
+  return !_.isEmpty(value) ? value : "";
 };
 
 const validator = new Validator();

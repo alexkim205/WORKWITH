@@ -1,21 +1,21 @@
 const _ = require("lodash");
 const Validator = require("../_utils/validator.util");
 
+const { formatFormData } = Validator;
+
 const validateUpdateNoteInput = data => {
   const errors = {};
-  const formattedData = {};
-
-  formattedData._id = !_.isEmpty(data._id) ? data._id : "";
-  formattedData.projectId = !_.isEmpty(data.projectId) ? data.projectId : "";
-  formattedData.title = !_.isEmpty(data.title) ? data.title : "";
-  formattedData.authors = !_.isEmpty(data.authors) ? data.authors : "";
-  formattedData.taggedUsers = !_.isEmpty(data.taggedUsers)
-    ? data.taggedUsers
-    : "";
-  formattedData.body = !_.isEmpty(data.body) ? data.body : "";
-  formattedData.minimized = !_.isEmpty(data.minimized) ? data.minimized : "";
-  formattedData.private = !_.isUndefined(data.private) ? data.private : "";
-  formattedData.deleted = !_.isUndefined(data.deleted) ? "true" : "";
+  const formattedData = {
+    _id: formatFormData(data._id),
+    projectId: formatFormData(data.projectId),
+    title: formatFormData(data.title),
+    authors: formatFormData(data.authors),
+    taggedUsers: formatFormData(data.taggedUsers),
+    body: formatFormData(data.body),
+    minimized: formatFormData(data.minimized, true),
+    private: formatFormData(data.private, true),
+    deleted: formatFormData(data.deleted, true)
+  };
 
   // Delete checks
   if (!_.isEmpty(formattedData.deleted)) {

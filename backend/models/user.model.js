@@ -42,7 +42,7 @@ const { ObjectId } = mongoose.Schema.Types;
  *            type: array
  *            items:
  *              type: string
- *            description: The user's contacts.
+ *            description: The user's contacts with an activated account. An array of user UUIDs.
  *          deleted:
  *            type: boolean
  *            default: false
@@ -141,14 +141,8 @@ const { ObjectId } = mongoose.Schema.Types;
  *          email: alexkim@dev.com
  *          role: User
  */
-const userSchema = new Schema(
-  {
-    name: { type: String, required: true, trim: true },
-    screenName: {
-      type: String,
-      trim: true,
-      minlength: 3
-    },
+const schemas = {
+  baseUserSchema: {
     email: {
       type: String,
       validate: {
@@ -161,40 +155,60 @@ const userSchema = new Schema(
       unique: true,
       trim: true
     },
-    role: {
+    deleted: { type: Boolean, default: false }
+  },
+  userSchema: {
+    screenName: {
       type: String,
-      enum: _.values(Role),
-      default: Role.USER
+      trim: true,
+      minlength: 3
+    },
+    name: {
+      type: String,
+      trim: true,
+      required: true
     },
     contacts: [{ type: ObjectId, ref: "User" }],
-    deleted: { type: Boolean, default: false },
     hash: String,
     salt: String
   },
-  {
-    timestamps: true
+  adminSchema: {
+    // entirely extends userSchema
+    screenName: {
+      type: String,
+      trim: true,
+      minlength: 3
+    },
+    name: {
+      type: String,
+      trim: true,
+      required: true
+    },
+    contacts: [{ type: ObjectId, ref: "User" }],
+    hash: String,
+    salt: String
+  },
+  guestSchema: {
+    name: {
+      type: String,
+      trim: true,
+      required: false
+    }
   }
-);
-
-userSchema.methods.setPassword = function(password) {
-  this.salt = crypto.randomBytes(16).toString("hex");
-  this.hash = crypto
-    .pbkdf2Sync(password, this.salt, 1000, 64, "sha512")
-    .toString("hex");
 };
 
-userSchema.methods.validPassword = function(password) {
-  const hash = crypto
-    .pbkdf2Sync(password, this.salt, 1000, 64, "sha512")
-    .toString("hex");
-  return this.hash === hash;
+// Define schema methods
+
+const baseUserSchema = new Schema(schemas.baseUserSchema, {
+  timestamps: true,
+  discriminatorKey: "role"
+});
+
+baseUserSchema.methods.getSafeUser = function() {
+  return _.pick(this, ["_id", "email", "role"]);
 };
 
-userSchema.methods.getSafeUser = function() {
-  return _.pick(this, ["_id", "name", "email", "role", "contacts"]);
-};
-
-userSchema.methods.generateJwt = function() {
+baseUserSchema.methods.generateJwt = function() {
   return {
     token: jwt.sign(
       this.getSafeUser(),
@@ -223,5 +237,42 @@ userSchema.methods.generateJwt = function() {
   };
 };
 
-const User = mongoose.model("User", userSchema);
-module.exports = User;
+baseUserSchema.methods.setPassword = function(password) {
+  this.salt = crypto.randomBytes(16).toString("hex");
+  this.hash = crypto
+    .pbkdf2Sync(password, this.salt, 1000, 64, "sha512")
+    .toString("hex");
+};
+
+baseUserSchema.methods.validPassword = function(password) {
+  const hash = crypto
+    .pbkdf2Sync(password, this.salt, 1000, 64, "sha512")
+    .toString("hex");
+  return this.hash === hash;
+};
+
+const userSchema = new Schema(schemas.userSchema);
+
+userSchema.methods.getSafeUser = function() {
+  return _.pick(this, ["_id", "name", "email", "role", "contacts"]);
+};
+
+const adminSchema = new Schema(schemas.adminSchema);
+
+adminSchema.methods.getSafeUser = function() {
+  return _.pick(this, ["_id", "name", "email", "role"]);
+};
+
+const guestSchema = new Schema(schemas.guestSchema);
+
+// Define models
+
+const BaseUser = mongoose.model("BaseUser", baseUserSchema);
+
+const User = BaseUser.discriminator(Role.USER, userSchema);
+
+const Admin = BaseUser.discriminator(Role.ADMIN, adminSchema);
+
+const Guest = BaseUser.discriminator(Role.GUEST, guestSchema);
+
+module.exports = { BaseUser, User, Admin, Guest };

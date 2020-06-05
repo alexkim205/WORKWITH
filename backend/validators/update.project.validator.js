@@ -1,17 +1,18 @@
 const _ = require("lodash");
 const Validator = require("../_utils/validator.util");
 
+const { formatFormData } = Validator;
+
 const validateUpdateProjectInput = data => {
   const errors = {};
-  const formattedData = {};
-
-  formattedData._id = !_.isEmpty(data._id) ? data._id : "";
-  formattedData.title = !_.isEmpty(data.title) ? data.title : "";
-  formattedData.authors = !_.isEmpty(data.authors) ? data.authors : "";
-  formattedData.users = !_.isEmpty(data.users) ? data.users : "";
-  formattedData.body = !_.isEmpty(data.body) ? data.body : "";
-  formattedData.private = !_.isUndefined(data.private) ? data.private : "";
-  formattedData.deleted = !_.isUndefined(data.deleted) ? "true" : "";
+  const formattedData = {
+    _id: formatFormData(data._id),
+    title: formatFormData(data.title),
+    authors: formatFormData(data.authors),
+    users: formatFormData(data.users),
+    private: formatFormData(data.private, true),
+    deleted: formatFormData(data.deleted, true)
+  };
 
   // Delete checks
   if (!_.isEmpty(formattedData.deleted)) {
@@ -22,9 +23,8 @@ const validateUpdateProjectInput = data => {
   // Number of fields check
   if (
     Validator.isEmpty(formattedData.title) &&
-    Validator.isEmpty(formattedData.authors) &&
-    Validator.isEmpty(formattedData.users) &&
-    Validator.isEmpty(formattedData.body) &&
+    _.isEmpty(formattedData.authors) &&
+    _.isEmpty(formattedData.users) &&
     Validator.isEmpty(formattedData.private)
   ) {
     errors.general = "At least one field must be updated";
@@ -49,15 +49,13 @@ const validateUpdateProjectInput = data => {
     !_.isEmpty(formattedData.authors) &&
     Validator.isArray(formattedData.authors)
   ) {
-    const authorIdErrors = formattedData.authors
-      .map((authorId, i) => {
-        return !Validator.isObjectId(authorId)
-          ? `Id for author ${i} is not an Object ID`
-          : "";
-      })
-      .join();
-    if (!_.isEmpty(authorIdErrors)) {
-      errors.authors = authorIdErrors;
+    const authorIdErrors = formattedData.authors.map((authorId, i) => {
+      return !Validator.isObjectId(authorId)
+        ? `Id for author ${i} is not an Object ID`
+        : null;
+    });
+    if (_.some(authorIdErrors)) {
+      errors.authors = authorIdErrors.join();
     }
   }
 

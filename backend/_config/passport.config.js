@@ -1,7 +1,7 @@
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const to = require("await-to-js").default;
-const User = require("../models/user.model");
+const { BaseUser } = require("../models/user.model");
 
 // https://www.wlaurance.com/2018/09/async-await-passportjs-local-strategy/
 const config = () => {
@@ -12,7 +12,7 @@ const config = () => {
         passwordField: "password"
       },
       async (email, password, done) => {
-        const [err, user] = await to(User.findOne({ email }));
+        const [err, user] = await to(BaseUser.findOne({ email }));
         // Return if server error
         if (err) {
           return done(err);

@@ -6,7 +6,7 @@ const chaiHttp = require("chai-http");
 const _ = require("lodash");
 
 const app = require("../server");
-const User = require("../models/user.model");
+const { User } = require("../models/user.model");
 const { admin: user } = require("../_constants/test.constants");
 const { getApiBase } = require("../_config/getEnv.config");
 const { HttpStatus } = require("../_constants/error.constants");

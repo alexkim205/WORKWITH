@@ -1,15 +1,18 @@
 const _ = require("lodash");
 const Validator = require("../_utils/validator.util");
 
+const { formatFormData } = Validator;
+
 const validateAddProjectInput = data => {
   const errors = {};
-  const formattedData = {};
 
-  formattedData.title = !_.isEmpty(data.title) ? data.title : "";
-  formattedData.authors = !_.isEmpty(data.authors) ? data.authors : "";
-  formattedData.users = !_.isEmpty(data.users) ? data.users : "";
-  formattedData.body = !_.isEmpty(data.body) ? data.body : "";
-  formattedData.private = !_.isUndefined(data.private) ? data.private : "";
+  const formattedData = {
+    title: formatFormData(data.title),
+    authors: formatFormData(data.authors),
+    users: formatFormData(data.users),
+    body: formatFormData(data.body),
+    private: formatFormData(data.private, true)
+  };
 
   // Title check
   if (_.isEmpty(formattedData.title)) {

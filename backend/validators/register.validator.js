@@ -2,15 +2,18 @@ const _ = require("lodash");
 const Validator = require("../_utils/validator.util");
 const Role = require("../_utils/roles.util");
 
+const { formatFormData } = Validator;
+
 const validateRegisterInput = data => {
   const errors = {};
-  const formattedData = {};
 
-  formattedData.name = !_.isEmpty(data.name) ? data.name : "";
-  formattedData.email = !_.isEmpty(data.email) ? data.email : "";
-  formattedData.password = !_.isEmpty(data.password) ? data.password : "";
-  formattedData.password2 = !_.isEmpty(data.password2) ? data.password2 : "";
-  formattedData.role = !_.isEmpty(data.role) ? data.role : "";
+  const formattedData = {
+    name: formatFormData(data.name),
+    email: formatFormData(data.email),
+    password: formatFormData(data.password),
+    password2: formatFormData(data.password2),
+    role: formatFormData(data.role)
+  };
 
   // Name checks
   if (Validator.isEmpty(formattedData.name)) {

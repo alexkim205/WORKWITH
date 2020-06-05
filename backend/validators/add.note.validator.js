@@ -1,20 +1,21 @@
 const _ = require("lodash");
 const Validator = require("../_utils/validator.util");
 
+const { formatFormData } = Validator;
+
 const validateAddNoteInput = data => {
   const errors = {};
-  const formattedData = {};
 
   // Convert empty fields to an empty string so we can use validator functions
-  formattedData.projectId = !_.isEmpty(data.projectId) ? data.projectId : "";
-  formattedData.title = !_.isEmpty(data.title) ? data.title : "";
-  formattedData.authors = !_.isEmpty(data.authors) ? data.authors : "";
-  formattedData.taggedUsers = !_.isEmpty(data.taggedUsers)
-    ? data.taggedUsers
-    : "";
-  formattedData.body = !_.isEmpty(data.body) ? data.body : "";
-  formattedData.minimized = !_.isEmpty(data.minimized) ? data.minimized : "";
-  formattedData.private = !_.isEmpty(data.private) ? data.private : "";
+  const formattedData = {
+    projectId: formatFormData(data.projectId),
+    title: formatFormData(data.title),
+    authors: formatFormData(data.authors),
+    taggedUsers: formatFormData(data.taggedUsers),
+    body: formatFormData(data.body),
+    minimized: formatFormData(data.minimized, true),
+    private: formatFormData(data.private, true)
+  };
 
   // Project ID checks
   if (Validator.isEmpty(formattedData.projectId)) {

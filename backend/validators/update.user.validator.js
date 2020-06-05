@@ -1,16 +1,19 @@
 const _ = require("lodash");
 const Validator = require("../_utils/validator.util");
+const Role = require("../_utils/roles.util");
+
+const { formatFormData } = Validator;
 
 const validateUpdateUserInput = data => {
   const errors = {};
-  const formattedData = {};
-
-  formattedData._id = !_.isEmpty(data._id) ? data._id : "";
-  formattedData.name = !_.isEmpty(data.name) ? data.name : "";
-  formattedData.email = !_.isEmpty(data.email) ? data.email : "";
-  formattedData.contacts = !_.isEmpty(data.contacts) ? data.contacts : "";
-  formattedData.deleted = !_.isUndefined(data.deleted) ? "true" : "";
-
+  const formattedData = {
+    _id: formatFormData(data._id),
+    name: formatFormData(data.name),
+    email: formatFormData(data.email),
+    contacts: formatFormData(data.contacts),
+    role: formatFormData(data.role, true),
+    deleted: formatFormData(data.deleted, true)
+  };
   // Delete checks
   if (!_.isEmpty(formattedData.deleted)) {
     errors.deleted =
@@ -20,7 +23,8 @@ const validateUpdateUserInput = data => {
   // Number of fields check
   if (
     Validator.isEmpty(formattedData.email) &&
-    Validator.isEmpty(formattedData.name)
+    Validator.isEmpty(formattedData.name) &&
+    _.isEmpty(formattedData.contacts)
   ) {
     errors.general = "At least one field must be updated";
   }
@@ -39,6 +43,38 @@ const validateUpdateUserInput = data => {
     !Validator.isEmail(formattedData.email)
   ) {
     errors.email = "Email is invalid";
+  }
+
+  // User contacts check
+  if (
+    !_.isEmpty(formattedData.contacts) &&
+    !Validator.isArray(formattedData.contacts)
+  ) {
+    errors.contacts = "Contacts field is not an array";
+  }
+  if (
+    !_.isEmpty(formattedData.contacts) &&
+    Validator.isArray(formattedData.contacts)
+  ) {
+    const contactIdErrors = formattedData.contacts.map(
+      (contactIdOrEmail, i) => {
+        return Validator.isObjectId(contactIdOrEmail) ||
+          Validator.isEmail(contactIdOrEmail)
+          ? null
+          : `User contact ${i} is not an Object ID or email.`;
+      }
+    );
+    if (_.some(contactIdErrors)) {
+      errors.contacts = contactIdErrors.join();
+    }
+  }
+
+  // Role checks
+  if (
+    !Validator.isEmpty(formattedData.role) &&
+    !_.values(Role).includes(formattedData.role)
+  ) {
+    errors.role = "Role is invalid";
   }
 
   return !_.isEmpty(errors) ? JSON.stringify(errors) : "";

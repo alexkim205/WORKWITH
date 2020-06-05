@@ -1,7 +1,7 @@
 const Role = {
-  ADMIN: "ADMIN",
-  USER: "USER",
-  GUEST: "GUEST"
+  ADMIN: "Admin",
+  USER: "User",
+  GUEST: "Guest"
 };
 
 module.exports = Role;

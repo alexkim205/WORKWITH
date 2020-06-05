@@ -1,13 +1,16 @@
 const _ = require("lodash");
 const Validator = require("../_utils/validator.util");
 
+const { formatFormData } = Validator;
+
 const validateLoginInput = data => {
   const errors = {};
-  const formattedData = {};
 
   // Convert empty fields to an empty string so we can use validator functions
-  formattedData.email = !_.isEmpty(data.email) ? data.email : "";
-  formattedData.password = !_.isEmpty(data.password) ? data.password : "";
+  const formattedData = {
+    email: formatFormData(data.email),
+    password: formatFormData(data.password)
+  };
 
   // Email checks
   if (Validator.isEmpty(formattedData.email)) {

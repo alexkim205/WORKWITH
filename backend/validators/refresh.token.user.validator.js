@@ -2,9 +2,10 @@ const _ = require("lodash");
 const Validator = require("../_utils/validator.util");
 const Role = require("../_utils/roles.util");
 
+const { formatFormData } = Validator;
+
 const validateRefreshTokenInput = data => {
   const errors = {};
-  const formattedData = {};
 
   // User object check
   if (!data.user || _.isEmpty(data.user)) {
@@ -12,13 +13,13 @@ const validateRefreshTokenInput = data => {
     return JSON.stringify(errors);
   }
 
-  formattedData._id = !_.isEmpty(data.user._id) ? data.user._id : "";
-  formattedData.name = !_.isEmpty(data.user.name) ? data.user.name : "";
-  formattedData.email = !_.isEmpty(data.user.email) ? data.user.email : "";
-  formattedData.role = !_.isEmpty(data.user.role) ? data.user.role : "";
-  formattedData.refreshToken = !_.isEmpty(data.refreshToken)
-    ? data.refreshToken
-    : "";
+  const formattedData = {
+    _id: formatFormData(data._id),
+    name: formatFormData(data.name),
+    email: formatFormData(data.email),
+    refreshToken: formatFormData(data.refreshToken),
+    role: formatFormData(data.role)
+  };
 
   // User ID checks
   if (Validator.isEmpty(formattedData._id)) {
