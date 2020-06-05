@@ -7,6 +7,7 @@ const { switchEnvs } = require("../_config/getEnv.config");
 const Role = require("../_utils/roles.util");
 
 const { Schema } = mongoose;
+const { ObjectId } = mongoose.Schema.Types;
 
 /**
  * @swagger
@@ -37,6 +38,11 @@ const { Schema } = mongoose;
  *          role:
  *            type: string
  *            description: The user's role. Admin, User, or Guest.
+ *          contacts:
+ *            type: array
+ *            items:
+ *              type: string
+ *            description: The user's contacts.
  *          deleted:
  *            type: boolean
  *            default: false
@@ -160,6 +166,7 @@ const userSchema = new Schema(
       enum: _.values(Role),
       default: Role.USER
     },
+    contacts: [{ type: ObjectId, ref: "User" }],
     deleted: { type: Boolean, default: false },
     hash: String,
     salt: String
@@ -184,7 +191,7 @@ userSchema.methods.validPassword = function(password) {
 };
 
 userSchema.methods.getSafeUser = function() {
-  return _.pick(this, ["_id", "name", "email", "role"]);
+  return _.pick(this, ["_id", "name", "email", "role", "contacts"]);
 };
 
 userSchema.methods.generateJwt = function() {
