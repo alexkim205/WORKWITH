@@ -21,7 +21,7 @@ class LoginError extends ServerError {
     switch (err.code) {
       case HttpStatus.NOT_FOUND: // Incorrect password.
         if (err.response.data.message.startsWith('User')) {
-          message = "A user with this email doesn't exist.";
+          message = "This user doesn't exist.";
           break;
         } else if (err.response.data.message.startsWith('Password')) {
           message = 'Password is incorrect.';

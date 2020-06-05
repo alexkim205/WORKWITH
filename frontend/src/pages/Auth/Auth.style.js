@@ -15,7 +15,7 @@ export const Background = styled.div`
     justify-content: center;
     align-items: center;
     padding: 1em 2em;
-    max-width: 300px;
+    max-width: 178px;
     z-index: 0;
 
     form {

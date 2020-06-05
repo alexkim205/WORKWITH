@@ -27,7 +27,8 @@ const Navbar = () => {
     setDisabled(true);
     const animDrawer = anime({
       targets: drawerRef.current,
-      paddingTop: FIELD_HEIGHT,
+      marginTop: FIELD_HEIGHT / 3,
+      paddingTop: (FIELD_HEIGHT * 2) / 3,
       opacity: isClosing ? [1, 0] : [0, 1],
       height: isClosing ? 0 : DRAWER_HEIGHT,
       duration: 120,
@@ -79,10 +80,12 @@ const Navbar = () => {
         ref={fieldRef}
         onClick={disabled ? null : onDropdownClick}
       >
-        <div className="avatar"></div>
-        <div className="name">Alex</div>
-        <div className="icon caret" ref={caretRef}>
-          <IoIosArrowDown />
+        <div className="field">
+          <div className="avatar"></div>
+          <div className="name">Alex</div>
+          <div className="icon caret" ref={caretRef}>
+            <IoIosArrowDown />
+          </div>
         </div>
         <Drawer ref={drawerRef}>
           {navbarOptions &&

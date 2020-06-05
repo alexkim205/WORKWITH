@@ -3,7 +3,7 @@ import { failureColor } from '../../_constants/theme.constants';
 
 const Error = styled.div`
   font-size: 0.75em;
-  height: 15px;
+  min-height: 1.2em;
   word-wrap: break-word;
   color: ${failureColor};
   padding-left: 0.2em;
