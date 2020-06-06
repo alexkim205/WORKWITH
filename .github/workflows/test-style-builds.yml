@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  test:
+  frontend:
 
     runs-on: ubuntu-latest
 
@@ -26,14 +26,18 @@ jobs:
     
       - name: Install all Node packages
         run: |
+          cd frontend
           yarn
-          yarn install-all
           
-      - name: Run all API tests on frontend and backend
+      - name: Build tests
         run: |
-          yarn test
+          yarn build:test
 
-  style:
+      - name: Build style checks
+        run: |
+          yarn workflow:build:js
+
+  backend:
 
     runs-on: ubuntu-latest
 
@@ -52,9 +56,13 @@ jobs:
     
       - name: Install all Node packages
         run: |
+          cd backend
           yarn
-          yarn install-all
           
-      - name: Run all API tests on frontend and backend
+      - name: Build tests
         run: |
-          yarn build-style
+          yarn build:test
+
+      - name: Build style checks
+        run: |
+          yarn workflow:build:js

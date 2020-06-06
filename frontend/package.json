@@ -47,6 +47,7 @@
     "build:js": "eslint ./src/ --ext .jsx,.js && prettier './src/**/*.js' --list-different",
     "watch:js": "esw ./src/ --ext .jsx,.js --clear -w --color --format codeframe && onchange './src/**/*.js' -- prettier --write {{changed}}",
     "clean:js": "eslint ./src/ --ext .jsx,.js --fix && prettier './src/**/*.js' --write",
+    "build:js:workflow": "../node_modules/.bin/eslint ./src/ --ext .jsx,.js && ../node_modules/.bin/prettier './src/**/*.js' --list-different",
     "eject": "react-scripts eject"
   },
   "browserslist": {

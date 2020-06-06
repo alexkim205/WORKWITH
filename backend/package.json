@@ -10,7 +10,8 @@
     "watch:test": "nodemon --exec \"mocha ./_tests/*.test.js --timeout 4s --exit -w -R spec\"",
     "build:js": "eslint ./ --ext .jsx,.js && prettier './**/*.js' --list-different",
     "watch:js": "esw ./ --ext .jsx,.js --clear -w --color --format codeframe && onchange './**/*.js' -- prettier --write {{changed}}",
-    "clean:js": "eslint ./ --ext .jsx,.js --fix && prettier './**/*.js' --write"
+    "clean:js": "eslint ./ --ext .jsx,.js --fix && prettier './**/*.js' --write",
+    "workflow:build:js": "../node_modules/.bin/eslint ./ --ext .jsx,.js && ../node_modules/.bin/prettier './**/*.js' --list-different"
   },
   "dependencies": {
     "await-to-js": "^2.1.1",
