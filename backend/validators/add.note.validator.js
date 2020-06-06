@@ -50,7 +50,7 @@ const validateAddNoteInput = data => {
   // Minimized check
   if (
     !_.isEmpty(formattedData.minimized) &&
-    !Validator.isRealBoolean(formattedData.minimized)
+    !Validator.isBoolean(formattedData.minimized)
   ) {
     errors.minimized = "Minimized field must be a boolean";
   }
@@ -58,7 +58,7 @@ const validateAddNoteInput = data => {
   // Private check
   if (
     !_.isEmpty(formattedData.private) &&
-    !Validator.isRealBoolean(formattedData.private)
+    !Validator.isBoolean(formattedData.private)
   ) {
     errors.private = "Private field must be a boolean";
   }

@@ -22,9 +22,10 @@ Validator.prototype.isRealBoolean = v => {
   return typeof v === "boolean";
 };
 
-Validator.prototype.formatFormData = (value, isBool = false) => {
-  if (isBool) {
-    return !_.isUndefined(value) ? "true" : "";
+Validator.prototype.formatFormData = (value, shouldBeBoolean = false) => {
+  if (shouldBeBoolean) {
+    const boolString = typeof value === "boolean" ? value.toString() : value;
+    return !_.isUndefined(value) ? boolString : "";
   }
   return !_.isEmpty(value) ? value : "";
 };

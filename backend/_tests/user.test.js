@@ -6,8 +6,9 @@ const chaiHttp = require("chai-http");
 const _ = require("lodash");
 
 const app = require("../server");
-const { User } = require("../models/user.model");
-const { admin: user } = require("../_constants/test.constants");
+const { BaseUser, User } = require("../models/user.model");
+const { user } = require("../_constants/test.constants");
+const Role = require("../_utils/roles.util");
 const { getApiBase } = require("../_config/getEnv.config");
 const { HttpStatus } = require("../_constants/error.constants");
 const testUserResponse = require("../_utils/testUserResponse.util");
@@ -37,7 +38,16 @@ describe("User", () => {
   });
 
   describe("POST /users/add", () => {
-    before(async () => User.deleteMany({}));
+    before(async () => BaseUser.deleteMany({}));
+    after(async () =>
+      BaseUser.findOneAndUpdate(
+        { email: user.email },
+        {
+          role: Role.ADMIN
+        },
+        { new: true }
+      )
+    );
     const apiBase = `${getApiBase()}/users/add`;
     it("it should not POST a user without name field", async () => {
       const newUser = _.omit(user, ["name"]);
@@ -193,7 +203,7 @@ describe("User", () => {
         .post(apiBase)
         .send(credentials);
       expect(res.statusCode).to.equal(HttpStatus.OK);
-      testUserResponse(res, user, true);
+      testUserResponse(res, user, true, Role.ADMIN);
       userId = res.body.user._id.toString();
       userToken = res.body.token;
       userRefreshToken = res.body.refreshToken;
@@ -225,7 +235,7 @@ describe("User", () => {
         .get(createApiBase(userId))
         .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.OK);
-      testUserResponse(res, user);
+      testUserResponse(res, user, false, Role.ADMIN);
       expect(res.body.user._id).to.equal(userId);
     });
   });
@@ -240,7 +250,8 @@ describe("User", () => {
     ) => ({
       user: _.assign(
         { _id: id },
-        _.pick(user, ["name", "email", "role"]),
+        _.pick(user, ["name", "email"]),
+        { role: Role.ADMIN },
         testCustomUsers
       ),
       token,
@@ -313,20 +324,6 @@ describe("User", () => {
       expect(res.statusCode).to.equal(HttpStatus.UNPROCESSABLE_ENTITY);
       expect(res).to.not.have.nested.property("body[0]");
     });
-    it("it should not POST refresh token without role", async () => {
-      const userWithTokens = createUserWithTokens(
-        userId,
-        userToken,
-        userRefreshToken,
-        { role: null }
-      );
-      const res = await chai
-        .request(app)
-        .post(apiBase)
-        .send(userWithTokens);
-      expect(res.statusCode).to.equal(HttpStatus.UNPROCESSABLE_ENTITY);
-      expect(res).to.not.have.nested.property("body[0]");
-    });
     it("it should not POST refresh token without refresh token", async () => {
       const userWithTokens = _.omit(
         createUserWithTokens(userId, userToken, userRefreshToken),
@@ -372,7 +369,7 @@ describe("User", () => {
         userRefreshToken,
         {
           name: "Bob Kim",
-          role: "USER",
+          role: Role.USER,
           email: "bobby@dev.com"
         }
       );
@@ -402,7 +399,7 @@ describe("User", () => {
         .post(apiBase)
         .send(userWithTokens);
       expect(res.statusCode).to.equal(HttpStatus.OK);
-      testUserResponse(res, user, true);
+      testUserResponse(res, user, true, Role.ADMIN);
     });
   });
 
@@ -467,7 +464,12 @@ describe("User", () => {
         .send(newUserUpdate)
         .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.OK);
-      testUserResponse(res, _.assign({}, user, newUserUpdate));
+      testUserResponse(
+        res,
+        _.assign({}, user, newUserUpdate),
+        false,
+        Role.ADMIN
+      );
     });
     it("it should PUT update with only email field", async () => {
       const newUserUpdate = _.pick(userUpdate, ["email"]);
@@ -477,7 +479,7 @@ describe("User", () => {
         .send(newUserUpdate)
         .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.OK);
-      testUserResponse(res, userUpdate);
+      testUserResponse(res, userUpdate, false, Role.ADMIN);
     });
     it("it should PUT update with both name and email fields", async () => {
       const res = await chai
@@ -486,7 +488,7 @@ describe("User", () => {
         .send(user)
         .set("authorization", `Bearer ${userToken}`);
       expect(res.statusCode).to.equal(HttpStatus.OK);
-      testUserResponse(res, user);
+      testUserResponse(res, user, false, Role.ADMIN);
     });
   });
 

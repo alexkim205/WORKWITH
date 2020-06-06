@@ -59,8 +59,6 @@ const AddProjectButton = () => {
     }
   };
 
-  console.log('contacts', user.contacts);
-
   return (
     <Fragment>
       <AddButton onClick={openModal} />

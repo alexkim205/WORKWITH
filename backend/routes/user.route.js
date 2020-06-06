@@ -282,7 +282,7 @@ const refreshToken = async (req, res) => {
         .status(HttpStatus.UNAUTHORIZED)
         .send("Refresh token is invalid");
     }
-    return User.findById(user._id)
+    return BaseUser.findById(user._id)
       .then(dbUser => {
         if (
           _.isEmpty(dbUser) ||
@@ -472,7 +472,7 @@ const deleteUser = async (req, res) => {
   if (req.params.id !== req.user._id && req.user.role !== Role.ADMIN) {
     return res.status(HttpStatus.UNAUTHORIZED).send("Request is UNAUTHORIZED");
   }
-  const [err1, user] = await to(User.findById(req.params.id));
+  const [err1, user] = await to(BaseUser.findById(req.params.id));
   if (!_.isEmpty(err1)) {
     return res.status(HttpStatus.BAD_REQUEST).send(err1);
   }

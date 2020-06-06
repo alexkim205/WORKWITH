@@ -14,18 +14,18 @@ const validateRefreshTokenInput = data => {
   }
 
   const formattedData = {
-    _id: formatFormData(data._id),
-    name: formatFormData(data.name),
-    email: formatFormData(data.email),
-    refreshToken: formatFormData(data.refreshToken),
-    role: formatFormData(data.role)
+    _id: formatFormData(data.user._id),
+    name: formatFormData(data.user.name),
+    email: formatFormData(data.user.email),
+    role: formatFormData(data.user.role),
+    refreshToken: formatFormData(data.refreshToken)
   };
 
   // User ID checks
   if (Validator.isEmpty(formattedData._id)) {
-    errors.projectId = "User ID field is required";
+    errors._id = "User ID field is required";
   } else if (!Validator.isObjectId(formattedData._id)) {
-    errors.projectId = "User ID field is not an Object ID";
+    errors._id = "User ID field is not an Object ID";
   }
 
   // Name checks

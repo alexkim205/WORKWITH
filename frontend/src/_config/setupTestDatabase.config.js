@@ -7,7 +7,8 @@ const setup = async () => {
     await mongoose.connect(process.env.REACT_APP_TESTING_CONNECTION_ATLAS_URI, {
       useUnifiedTopology: true,
       useNewUrlParser: true,
-      useCreateIndex: true
+      useCreateIndex: true,
+      useFindAndModify: false
     });
     console.log(
       'Online test MongoDB database connection established successfully'

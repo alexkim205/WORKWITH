@@ -10,7 +10,7 @@ const app = require("../server");
 const { User } = require("../models/user.model");
 const Project = require("../models/project.model");
 const Note = require("../models/note.model");
-const { admin: user, project } = require("../_constants/test.constants");
+const { user, project } = require("../_constants/test.constants");
 const { getApiBase } = require("../_config/getEnv.config");
 const { HttpStatus } = require("../_constants/error.constants");
 const testProjectResponse = require("../_utils/testProjectResponse.util");
@@ -29,7 +29,7 @@ describe("Project", () => {
     await app.tListen();
 
     // Create user to associate notes with
-    const newUser = new User(_.pick(user, ["name", "email", "role"]));
+    const newUser = new User(_.pick(user, ["name", "email"]));
     newUser.setPassword(user.password);
     const [userErr] = await to(newUser.save());
     if (!_.isEmpty(userErr)) {
@@ -143,7 +143,7 @@ describe("Project", () => {
         .request(app)
         .get(createApiBase("idthereforeiamnot"))
         .set("authorization", `Bearer ${userToken}`);
-      expect(res.statusCode).to.equal(HttpStatus.BAD_REQUEST);
+      expect(res.statusCode).to.equal(HttpStatus.NOT_FOUND);
       expect(res).to.not.have.nested.property("body[0]");
     });
     it("it should not GET project that doesn't exist", async () => {

@@ -15,7 +15,8 @@ const { connection } = mongoose;
 const mongooseOptions = {
   useUnifiedTopology: true,
   useNewUrlParser: true,
-  useCreateIndex: true
+  useCreateIndex: true,
+  useFindAndModify: false
 };
 
 const setupOnline = async () => {

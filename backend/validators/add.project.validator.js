@@ -38,7 +38,7 @@ const validateAddProjectInput = data => {
   // Private check
   if (
     !_.isEmpty(formattedData.private) &&
-    !Validator.isRealBoolean(formattedData.private)
+    !Validator.isBoolean(formattedData.private)
   ) {
     errors.private = "Private field must be a boolean";
   }
