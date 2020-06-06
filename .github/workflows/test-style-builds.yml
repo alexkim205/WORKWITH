@@ -31,10 +31,12 @@ jobs:
           
       - name: Build tests
         run: |
+          cd frontend
           yarn build:test
 
       - name: Build style checks
         run: |
+          cd frontend
           yarn workflow:build:js
 
   backend:
@@ -61,8 +63,10 @@ jobs:
           
       - name: Build tests
         run: |
+          cd backend
           yarn build:test
 
       - name: Build style checks
         run: |
+          cd backend
           yarn workflow:build:js
