@@ -36,6 +36,7 @@ jobs:
     
       - name: Install all Node packages
         run: |
+          yarn
           cd frontend
           yarn
           
@@ -84,6 +85,7 @@ jobs:
     
       - name: Install all Node packages
         run: |
+          yarn
           cd backend
           yarn
           
