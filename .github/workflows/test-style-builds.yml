@@ -26,6 +26,7 @@ jobs:
     
       - name: Install all Node packages
         run: |
+          yarn
           yarn install-all
           
       - name: Run all API tests on frontend and backend

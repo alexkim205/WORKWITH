@@ -8,7 +8,7 @@
     "babel-eslint": "^10.1.0"
   },
   "scripts": {
-    "install-all": "concurrently \"yarn\" \"cd backend && yarn\" \"cd frontend && yarn\"",
+    "install-all": "concurrently \"cd backend && yarn\" \"cd frontend && yarn\"",
     "start": "concurrently \"yarn frontend\" \"yarn backend\"",
     "frontend": "cd frontend && yarn start",
     "backend": "cd backend && yarn start",
