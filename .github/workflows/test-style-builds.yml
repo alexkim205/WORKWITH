@@ -8,12 +8,22 @@ on:
 
 jobs:
   frontend:
-
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
         node-version: [12.x]
+
+    env:
+      REACT_APP_API_VERSION: ${{ secrets.REACT_APP_API_VERSION }}
+      REACT_APP_DEV_API_BASE_URL: ${{ secrets.REACT_APP_DEV_API_BASE_URL }}
+      REACT_APP_DEV_API_PORT: ${{ secrets.REACT_APP_DEV_API_PORT }}
+      REACT_APP_TEST_API_BASE_URL: ${{ secrets.REACT_APP_TEST_API_BASE_URL }}
+      REACT_APP_TEST_API_PORT: ${{ secrets.REACT_APP_TEST_API_PORT }}
+      REACT_APP_TEST_CONNECT_API_BASE_URL: ${{ secrets.REACT_APP_TEST_CONNECT_API_BASE_URL }}
+      REACT_APP_TEST_CONNECT_API_PORT: ${{ secrets.REACT_APP_TEST_CONNECT_API_PORT }}
+      REACT_APP_TESTING_CONNECTION_ATLAS_URI: ${{ secrets.REACT_APP_TESTING_CONNECTION_ATLAS_URI }}
+      REACT_APP_PROD_API_URL: ${{ secrets.REACT_APP_PROD_API_URL }}
 
     steps:
       - name: Checkout Git repository
@@ -46,6 +56,22 @@ jobs:
     strategy:
       matrix:
         node-version: [12.x]
+
+      env:
+        API_VERSION: ${{ secrets.API_VERSION }}
+        PRODUCTION_ATLAS_URI: ${{ secrets.PRODUCTION_ATLAS_URI }}
+        DEVELOPMENT_ATLAS_URI: ${{ secrets.DEVELOPMENT_ATLAS_URI }}
+        TESTING_CONNECTION_ATLAS_URI: ${{ secrets.TESTING_CONNECTION_ATLAS_URI }}
+        PRODUCTION_API_PORT: ${{ secrets.PRODUCTION_API_PORT }}
+        DEVELOPMENT_API_PORT: ${{ secrets.DEVELOPMENT_API_PORT }}
+        TESTING_API_PORT: ${{ secrets.TESTING_API_PORT }}
+        TESTING_CONNECTION_API_PORT: ${{ secrets.TESTING_CONNECTION_API_PORT }}
+        PRODUCTION_JWT_SECRET: ${{ secrets.PRODUCTION_JWT_SECRET }}
+        DEVELOPMENT_JWT_SECRET: ${{ secrets.DEVELOPMENT_JWT_SECRET }}
+        TESTING_JWT_SECRET: ${{ secrets.TESTING_JWT_SECRET }}
+        PRODUCTION_REFRESH_JWT_SECRET: ${{ secrets.PRODUCTION_REFRESH_JWT_SECRET }}
+        DEVELOPMENT_REFRESH_JWT_SECRET: ${{ secrets.DEVELOPMENT_REFRESH_JWT_SECRET }}
+        TESTING_REFRESH_JWT_SECRET: ${{ secrets.TESTING_REFRESH_JWT_SECRET }}
 
     steps:
       - name: Checkout Git repository
