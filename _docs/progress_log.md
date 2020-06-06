@@ -2,6 +2,11 @@
 
 ## Backlog Todo
 
+## 6/6/2020
+
+- Add multiinput sharing input and dropdown contact search.
+- Backend user contacts field should be list of user objects with {name, email, \_id} or {email, \_id} if guest.
+
 ## 6/4/2020
 
 - Add sharing input when creating new project in modal.

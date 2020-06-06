@@ -59,6 +59,8 @@ const AddProjectButton = () => {
     }
   };
 
+  console.log('contacts', user.contacts);
+
   return (
     <Fragment>
       <AddButton onClick={openModal} />
@@ -89,16 +91,15 @@ const AddProjectButton = () => {
                   <RiShareForwardLine size={'1.7em'} />
                   Share your project
                 </Input.Label>
-                <Input.Text
-                  type="text"
-                  name="title"
+                <Input.Select
+                  multiple
+                  name="contacts"
                   placeholder="Add people"
-                  ref={register({
-                    required: 'Project title is required.'
-                  })}
+                  ref={register()}
+                  options={user.contacts}
                 />
                 <Input.Error>
-                  {errors?.general?.message || errors?.title?.message}
+                  {errors?.general?.message || errors?.contacts?.message}
                 </Input.Error>
               </Input.Wrapper>
             </div>

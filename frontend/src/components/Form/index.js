@@ -2,6 +2,7 @@ import styled, { css } from 'styled-components';
 import Text from './Input.Text';
 import Error from './Input.Error';
 import Label from './Input.Label';
+import Select from './Input.Select';
 
 const Wrapper = styled.div`
   // overflow: hidden;
@@ -17,6 +18,7 @@ const Wrapper = styled.div`
 export const Input = {
   Label,
   Text,
+  Select,
   Error,
   Wrapper
 };
