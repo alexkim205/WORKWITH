@@ -12,9 +12,9 @@
     "start": "concurrently \"yarn frontend\" \"yarn backend\"",
     "frontend": "cd frontend && yarn start",
     "backend": "cd backend && yarn start",
-    "tidy": "concurrently \"cd backend && yarn clean:js\" \"cd frontend && yarn clean:js\"",
-    "build": "concurrently \"cd backend && yarn build:js\" \"cd frontend && yarn build:js\"",
-    "watch": "concurrently \"cd backend && yarn watch:js\" \"cd frontend && yarn watch:js\"",
+    "clean-style": "concurrently \"cd backend && yarn clean:js\" \"cd frontend && yarn clean:js\"",
+    "build-style": "concurrently \"cd backend && yarn build:js\" \"cd frontend && yarn build:js\"",
+    "watch-style": "concurrently \"cd backend && yarn watch:js\" \"cd frontend && yarn watch:js\"",
     "test": "concurrently \"cd backend && yarn build:test\" \"cd frontend && yarn build:test\"",
     "test-connection": "cd frontend && yarn start:test-connect"
   },
@@ -26,7 +26,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged && yarn run tidy"
+      "pre-commit": "lint-staged && yarn run clean-style"
     }
   },
   "devDependencies": {
