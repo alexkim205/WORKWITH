@@ -633,6 +633,57 @@ describe("User", () => {
     });
   });
 
+  describe("GET /users/:id/contacts", () => {
+    const createApiBase = id => `${getApiBase()}/users/${id}/contacts`;
+
+    it("it should not GET contacts for nonexisting user", async () => {
+      const res = await chai
+        .request(app)
+        .get(createApiBase("5e0441c26044dfb8d86d8cc0"))
+        .set("authorization", `Bearer ${adminToken}`);
+      expect(res).to.have.status(HttpStatus.NOT_FOUND);
+      expect(res).to.not.have.nested.property("body[0]");
+    });
+    it("it should not GET contacts without authorization", async () => {
+      const res = await chai
+        .request(app)
+        .get(createApiBase(adminId))
+        .set("authorization", `Bearer ${userToken}`);
+      expect(res).to.have.status(HttpStatus.UNAUTHORIZED);
+      expect(res).to.not.have.nested.property("body[0]");
+    });
+    it("it should GET contacts with admin authorization", async () => {
+      const res = await chai
+        .request(app)
+        .get(createApiBase(userId))
+        .set("authorization", `Bearer ${adminToken}`);
+      expect(res).to.have.status(HttpStatus.OK);
+      expect(res).to.be.an("object");
+      expect(res).to.have.property("body");
+      expect(res.body).to.have.property("contacts");
+      expect(res.body.users).to.have.lengthOf(4);
+    });
+    it("it should GET no content for user without any contacts", async () => {
+      const res = await chai
+        .request(app)
+        .get(createApiBase(adminId))
+        .set("authorization", `Bearer ${adminToken}`);
+      expect(res).to.have.status(HttpStatus.NO_CONTENT);
+      expect(res).to.not.have.nested.property("body[0]");
+    });
+    it("it should GET contacts of user", async () => {
+      const res = await chai
+        .request(app)
+        .get(createApiBase(userId))
+        .set("authorization", `Bearer ${userToken}`);
+      expect(res).to.have.status(HttpStatus.OK);
+      expect(res).to.be.an("object");
+      expect(res).to.have.property("body");
+      expect(res.body).to.have.property("contacts");
+      expect(res.body.users).to.have.lengthOf(4);
+    });
+  });
+
   describe("DELETE /users/:id", () => {
     const createApiBase = id => `${getApiBase()}/users/${id}`;
     it("it should not DELETE user with non ObjectId", async () => {

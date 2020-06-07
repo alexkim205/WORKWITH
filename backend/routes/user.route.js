@@ -138,7 +138,7 @@ const getContactsByUser = async (req, res) => {
 
   return res
     .status(HttpStatus.OK)
-    .json({ user: _.assign({}, user, { contacts }) });
+    .json({ user: _.assign({}, user.getSafeUser(), { contacts }) });
 };
 router
   .route("/:id/contacts")
