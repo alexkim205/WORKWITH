@@ -9,7 +9,7 @@ const to = require("await-to-js").default;
 const router = require("express").Router();
 const _ = require("lodash");
 const { HttpStatus } = require("../_constants/error.constants");
-const { User } = require("../models/user.model");
+const { BaseUser } = require("../models/user.model");
 const Project = require("../models/project.model");
 const Role = require("../_utils/roles.util");
 const authorize = require("../_utils/authorize.util");
@@ -95,7 +95,7 @@ const getProject = async (req, res) => {
       .status(HttpStatus.NOT_FOUND)
       .send(`Project with id ${req.params.id} NOT_FOUND`);
   }
-  const requestUserId = String(req.user._id);
+  const requestUserId = req.user._id.toString();
 
   // Only admins can access other user projects
   if (!project.users.includes(requestUserId) && req.user.role !== Role.ADMIN) {
@@ -221,7 +221,7 @@ const createProject = async (req, res) => {
 
   // Check if all authors exist
   const checkAuthorPromises = req.body.authors.map(async authorId => {
-    const [errAuthor, user] = await to(User.findById(authorId));
+    const [errAuthor, user] = await to(BaseUser.findById(authorId));
     if (!_.isEmpty(errAuthor)) {
       throw new Error(errAuthor);
     }
@@ -240,7 +240,7 @@ const createProject = async (req, res) => {
 
   // Check if all users exist
   const checkUsersPromises = req.body.users.map(async userId => {
-    const [errUser, user] = await to(User.findById(userId));
+    const [errUser, user] = await to(BaseUser.findById(userId));
     if (!_.isEmpty(errUser)) {
       throw new Error(errUser);
     }
@@ -332,16 +332,16 @@ const updateProject = async (req, res) => {
   }
 
   // Check if all authors exist
-  req.body.authors = _.isEmpty(req.body.authors) ? [] : req.body.authors;
+  req.body.authors = req.body.authors || [];
   const checkAuthorPromises = req.body.authors.map(async authorId => {
-    const [errAuthor, user] = await to(User.findById(authorId));
+    const [errAuthor, author] = await to(BaseUser.findById(authorId));
     if (!_.isEmpty(errAuthor)) {
       throw new Error(errAuthor);
     }
-    if (_.isEmpty(user)) {
+    if (_.isEmpty(author)) {
       throw new Error(`Author with id ${authorId} was NOT_FOUND`);
     }
-    return user;
+    return author._id;
   });
   const [err3, authors] = await to(Promise.all(checkAuthorPromises));
   if (!_.isEmpty(err3)) {
@@ -352,16 +352,16 @@ const updateProject = async (req, res) => {
   }
 
   // Check if all users exist
-  req.body.users = _.isEmpty(req.body.users) ? [] : req.body.users;
+  req.body.users = req.body.users || [];
   const checkUsersPromises = req.body.users.map(async userId => {
-    const [errUser, user] = await to(User.findById(userId));
+    const [errUser, user] = await to(BaseUser.findById(userId));
     if (!_.isEmpty(errUser)) {
       throw new Error(errUser);
     }
     if (_.isEmpty(user)) {
       throw new Error(`User with id ${userId} was NOT_FOUND`);
     }
-    return user;
+    return user._id;
   });
   const [err4, users] = await to(Promise.all(checkUsersPromises));
   if (!_.isEmpty(err4)) {
@@ -372,8 +372,15 @@ const updateProject = async (req, res) => {
   }
 
   project.title = req.body.title || project.title;
-  project.authors = req.body.users || project.users;
-  project.private = _.isEmpty(req.body.private)
+  project.authors = _(project.authors)
+    .concat(req.body.authors)
+    .uniqBy(id => id.toString())
+    .value();
+  project.users = _(project.users)
+    .concat(req.body.users)
+    .uniqBy(id => id.toString())
+    .value();
+  project.private = _.isUndefined(req.body.private)
     ? project.private
     : req.body.private;
 

@@ -1,5 +1,4 @@
 const _ = require("lodash");
-const Role = require("../_utils/roles.util");
 
 const user = {
   name: "Alex Kim", // required
@@ -12,13 +11,13 @@ const admin = {
   name: "Admin", // required
   email: "admin@dev.com", // required
   password: "Theworstpassword!12345", // required
-  password2: "Theworstpassword!12345", // required
-  role: Role.ADMIN
+  password2: "Theworstpassword!12345" // required
 };
 
 const project = {
   title: "Hello World", // required
   authors: [], // required
+  users: [],
   private: true
 };
 

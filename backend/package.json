@@ -7,7 +7,7 @@
     "start": "cross-env NODE_ENV=development nodemon server.js",
     "start:test-connection": "cross-env NODE_ENV=testing-connection nodemon server.js",
     "build:test": "nyc mocha ./**/*.test.js --timeout 4s --exit -R min",
-    "watch:test": "nodemon --exec \"mocha ./_tests/*.test.js --timeout 4s --exit -w -R spec\"",
+    "watch:test": "nodemon --exec \"mocha ./**/*.test.js --timeout 4s --exit -w -R spec\"",
     "build:js": "eslint ./ --ext .jsx,.js && prettier './**/*.js' --list-different",
     "watch:js": "esw ./ --ext .jsx,.js --clear -w --color --format codeframe && onchange './**/*.js' -- prettier --write {{changed}}",
     "clean:js": "eslint ./ --ext .jsx,.js --fix && prettier './**/*.js' --write",
