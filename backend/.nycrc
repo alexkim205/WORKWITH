@@ -1,0 +1,11 @@
+{
+  "exclude": [
+    "server.js",
+    "_config/",
+    "**/*.test.js"
+  ],
+  "reporter": [
+    "text",
+    "html"
+  ]
+}

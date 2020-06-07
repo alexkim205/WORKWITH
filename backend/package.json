@@ -5,8 +5,8 @@
   "license": "MIT",
   "scripts": {
     "start": "cross-env NODE_ENV=development nodemon server.js",
-    "start:test": "cross-env NODE_ENV=testing-connection nodemon server.js",
-    "build:test": "mocha ./_tests/*.test.js --timeout 4s --exit -R min",
+    "start:test-connection": "cross-env NODE_ENV=testing-connection nodemon server.js",
+    "build:test": "nyc mocha ./**/*.test.js --timeout 4s --exit -R min",
     "watch:test": "nodemon --exec \"mocha ./_tests/*.test.js --timeout 4s --exit -w -R spec\"",
     "build:js": "eslint ./ --ext .jsx,.js && prettier './**/*.js' --list-different",
     "watch:js": "esw ./ --ext .jsx,.js --clear -w --color --format codeframe && onchange './**/*.js' -- prettier --write {{changed}}",
@@ -35,6 +35,7 @@
     "lodash": "^4.17.15",
     "mocha": "^6.2.2",
     "mongodb-memory-server": "^6.2.0",
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.4",
+    "nyc": "^15.1.0"
   }
 }
