@@ -122,14 +122,19 @@ const getContactsByUser = async (req, res) => {
     if (_.isEmpty(contact)) {
       throw new Error(`Contact with id ${contactId} was not found.`);
     }
-    // console.log(contactId, contact.getContactUser());
     return contact.getContactUser();
   });
-  const [err2, contacts] = await to(Promise.all(findContactPromises));
+  const [err2, contacts] = await to(
+    Promise.allSettled(findContactPromises).then(results =>
+      _(results)
+        .filter(r => r.status === "fulfilled")
+        .map(r => r.value)
+        .value()
+    )
+  );
   if (!_.isEmpty(err2)) {
     return res.status(HttpStatus.BAD_REQUEST).send(err2);
   }
-  // console.log("contacts", err2, contacts);
 
   return res
     .status(HttpStatus.OK)
