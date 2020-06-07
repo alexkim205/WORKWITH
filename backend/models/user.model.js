@@ -208,6 +208,10 @@ baseUserSchema.methods.getSafeUser = function() {
   return _.pick(this, ["_id", "email", "role"]);
 };
 
+baseUserSchema.methods.getContactUser = function() {
+  return _.pick(this, ["_id", "email"]);
+};
+
 baseUserSchema.methods.generateJwt = function() {
   return {
     token: jwt.sign(
@@ -255,6 +259,10 @@ const userSchema = new Schema(schemas.userSchema);
 
 userSchema.methods.getSafeUser = function() {
   return _.pick(this, ["_id", "name", "email", "role", "contacts"]);
+};
+
+userSchema.methods.getContactUser = function() {
+  return _.pick(this, ["_id", "name", "email"]);
 };
 
 const adminSchema = new Schema(schemas.adminSchema);

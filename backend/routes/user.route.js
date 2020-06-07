@@ -38,7 +38,7 @@ const validateRefreshTokenInput = require("../validators/refresh.token.user.vali
  *              schema:
  *                type: array
  *                items:
- *                  $ref: '#/components/schemas/User'
+ *                  $ref: '#/components/schemas/UserSafe'
  *        "204":
  *          description: NO_CONTENT. Returns an empty list
  *          content:
@@ -63,6 +63,81 @@ const getUsers = async (req, res) => {
     .json({ users: _.map(users, user => user.getSafeUser()) });
 };
 router.route("/").get(authorize(Role.ADMIN), getUsers);
+
+/**
+ * @swagger
+ * path:
+ *  /users/{id}/contacts:
+ *    get:
+ *      summary: Get contacts by user ID
+ *      tags: [Users]
+ *      security:
+ *        - bearerAuth: []
+ *      responses:
+ *        "200":
+ *          description: OK. Returns a list of contact user schemas
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: array
+ *                items:
+ *                  $ref: '#/components/schemas/Contact'
+ *        "204":
+ *          description: NO_CONTENT. Returns an empty list
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: array
+ *                items:
+ *                  $ref: '#/components/schemas/UserSafe'
+ *        "401":
+ *          $ref: '#/components/responses/UnauthorizedError'
+ */
+const getContactsByUser = async (req, res) => {
+  // Only admins can access other users' contacts
+  if (req.params.id !== req.user._id && req.user.role !== Role.ADMIN) {
+    return res.status(HttpStatus.UNAUTHORIZED).send("Request is UNAUTHORIZED");
+  }
+  const [err, user] = await to(BaseUser.findById(req.params.id));
+  if (!_.isEmpty(err)) {
+    return res.status(HttpStatus.BAD_REQUEST).send(err);
+  }
+  if (_.isEmpty(user)) {
+    return res
+      .status(HttpStatus.NOT_FOUND)
+      .send(`User with id ${req.params.id} NOT_FOUND`);
+  }
+  if (_.isEmpty(user.contacts)) {
+    return res
+      .status(HttpStatus.NO_CONTENT)
+      .send(`User with id ${req.params.id} has no contacts.`);
+  }
+  // `updateUser` function ensures contact will always exist,
+  // either as a guest or user.
+  const findContactPromises = user.contacts.map(async contactId => {
+    const [errContact, contact] = await to(BaseUser.findById(contactId));
+    if (!_.isEmpty(errContact)) {
+      throw new Error(errContact);
+    }
+    if (_.isEmpty(contact)) {
+      throw new Error(`Contact with id ${contactId} was not found.`);
+    }
+    // console.log(contactId, contact.getContactUser());
+    return contact.getContactUser();
+  });
+  const [err2, contacts] = await to(Promise.all(findContactPromises));
+  if (!_.isEmpty(err2)) {
+    return res.status(HttpStatus.BAD_REQUEST).send(err2);
+  }
+  // console.log("contacts", err2, contacts);
+
+  return res
+    .status(HttpStatus.OK)
+    .json({ user: _.assign({}, user, { contacts }) });
+};
+router
+  .route("/:id/contacts")
+  .get(authorize([Role.ADMIN, Role.USER]), getContactsByUser);
 
 /**
  * @swagger
