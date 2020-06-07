@@ -1,0 +1,63 @@
+name: Style Build
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+      - name: Checkout Git repository
+        uses: actions/checkout@v2
+      
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+    
+      - name: Install all Node packages
+        run: |
+          yarn
+          cd frontend
+          yarn
+
+      - name: Build style checks
+        run: |
+          cd frontend
+          yarn workflow:build:js
+
+  backend:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+      - name: Checkout Git repository
+        uses: actions/checkout@v2
+      
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+    
+      - name: Install all Node packages
+        run: |
+          yarn
+          cd backend
+          yarn
+
+      - name: Build style checks
+        run: |
+          cd backend
+          yarn workflow:build:js
