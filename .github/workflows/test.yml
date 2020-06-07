@@ -1,4 +1,4 @@
-name: Run backend and frontend test and style builds.
+name: Test Build
 
 on:
   push:
@@ -45,10 +45,6 @@ jobs:
           cd frontend
           yarn build:test
 
-      - name: Build style checks
-        run: |
-          cd frontend
-          yarn workflow:build:js
 
   backend:
 
@@ -89,12 +85,12 @@ jobs:
           cd backend
           yarn
           
-      - name: Build tests
+      - name: Build tests and coverages
         run: |
           cd backend
           yarn build:test
 
-      - name: Build style checks
-        run: |
-          cd backend
-          yarn workflow:build:js
+      - name: Push to Coveralls
+        uses: coverallsapp/github-action@v1.1.1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
