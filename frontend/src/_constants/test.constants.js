@@ -155,7 +155,7 @@ const users = {
       _id: '5e0bb5c61c90231c34596f83',
       name: 'Alex Kim',
       email: 'alexkim@dev.com',
-      role: 'ADMIN'
+      role: 'Admin'
     }
   ]
 };
@@ -165,7 +165,24 @@ const user = {
     _id: '5e0bb5c61c90231c34596f83',
     name: 'Alex Kim',
     email: 'alexkim@dev.com',
-    role: 'ADMIN'
+    role: 'User',
+    contacts: ['5e02efdd94748b21482e6010']
+  }
+};
+
+const userWithContacts = {
+  user: {
+    _id: '5e0bb5c61c90231c34596f83',
+    name: 'Alex Kim',
+    email: 'alexkim@dev.com',
+    role: 'User',
+    contacts: [
+      {
+        _id: '5e02efdd94748b21482e6010',
+        name: 'Bobby Kim',
+        email: 'bobbykim@dev.com'
+      }
+    ]
   }
 };
 
@@ -174,7 +191,7 @@ const userWithToken = {
     _id: '5e0bb5c61c90231c34596f83',
     name: 'Alex Kim',
     email: 'alexkim@dev.com',
-    role: 'ADMIN'
+    role: 'User'
   },
   token:
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Nzg1NDYxMjUsImlhdCI6MTU3Nzk0MTMyNX0.ksgtQ8uDQ3322tOhQ4jIkzZjH6B0luhLA1NRKGCG00w',
@@ -192,7 +209,7 @@ const newUser = {
   email: 'alexkim@dev.com',
   password: 'Theworstpassword!12345',
   password2: 'Theworstpassword!12345',
-  role: 'ADMIN'
+  role: 'Admin'
 };
 
 const newUser2 = {
@@ -209,6 +226,7 @@ const newUpdateUser = {
 const usersTestConstants = {
   users,
   user,
+  userWithContacts,
   userWithToken,
   loginCredentials,
   newUser,

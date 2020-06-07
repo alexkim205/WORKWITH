@@ -4,6 +4,9 @@ const GET_USERS_ERROR = 'users/get-users-error';
 const GET_USER_PENDING = 'users/get-user-pending';
 const GET_USER_SUCCESS = 'users/get-user-success';
 const GET_USER_ERROR = 'users/get-user-error';
+const GET_CONTACTS_BY_USER_PENDING = 'users/get-contacts-by-user-pending';
+const GET_CONTACTS_BY_USER_SUCCESS = 'users/get-contacts-by-user-success';
+const GET_CONTACTS_BY_USER_ERROR = 'users/get-contacts-by-user-error';
 const DELETE_USER_PENDING = 'users/delete-user-pending';
 const DELETE_USER_SUCCESS = 'users/delete-user-success';
 const DELETE_USER_ERROR = 'users/delete-user-error';
@@ -35,6 +38,9 @@ export default {
   GET_USER_PENDING,
   GET_USER_SUCCESS,
   GET_USER_ERROR,
+  GET_CONTACTS_BY_USER_PENDING,
+  GET_CONTACTS_BY_USER_SUCCESS,
+  GET_CONTACTS_BY_USER_ERROR,
   DELETE_USER_PENDING,
   DELETE_USER_SUCCESS,
   DELETE_USER_ERROR,

@@ -6,7 +6,7 @@ import {
   createProject,
   updateProject,
   deleteProject
-} from '../_actions/projects.actions';
+} from './projects.actions';
 import testConstants from '../_constants/test.constants';
 
 const {

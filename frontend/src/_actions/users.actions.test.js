@@ -7,7 +7,7 @@ import {
   logout,
   updateUser,
   deleteUser
-} from '../_actions/users.actions';
+} from './users.actions';
 import testConstants from '../_constants/test.constants';
 
 const {

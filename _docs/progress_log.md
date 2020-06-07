@@ -2,6 +2,12 @@
 
 ## Backlog Todo
 
+## 6/7/2020
+
+- Add user contacts action and hook into addprojectbutton modal.
+- Add test coverage and make more comprehensive tests for user and project routes.
+- Update frontend Jest snapshots.
+
 ## 6/6/2020
 
 - Add multiinput sharing input and dropdown contact search.

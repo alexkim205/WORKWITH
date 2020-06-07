@@ -7,6 +7,9 @@ const getUsers = () => authAxios.get('/users').then(res => res.data.users);
 const getUser = userId =>
   authAxios.get(`/users/${userId}`).then(res => res.data.user);
 
+const getContactsByUser = userId =>
+  authAxios.get(`/users/${userId}/contacts`).then(res => res.data.user);
+
 const login = (email, password) =>
   baseAxios
     .post('/users/login', { email, password })
@@ -31,6 +34,7 @@ const deleteUser = userId =>
 export default {
   getUsers,
   getUser,
+  getContactsByUser,
   login,
   register,
   refreshToken,

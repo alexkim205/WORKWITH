@@ -36,6 +36,21 @@ export const getUser = userId => async dispatch => {
   dispatch(actionSuccess(user));
 };
 
+export const getContactsByUser = userId => async dispatch => {
+  const { actionPending, actionSuccess, actionError } = createActionCreator(
+    usersConstants,
+    'GET_CONTACTS_BY_USER'
+  );
+
+  dispatch(actionPending());
+  const [err, user] = await to(usersServices.getContactsByUser(userId));
+  if (err) {
+    dispatch(actionError(err));
+    throw err;
+  }
+  dispatch(actionSuccess(user));
+};
+
 export const login = (email, password) => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     usersConstants,
@@ -120,6 +135,7 @@ export const deleteUser = userId => async dispatch => {
 export default {
   getUsers,
   getUser,
+  getContactsByUser,
   login,
   register,
   logout,

@@ -6,7 +6,7 @@ import {
   createNote,
   updateNote,
   deleteNote
-} from '../_actions/notes.actions';
+} from './notes.actions';
 import testConstants from '../_constants/test.constants';
 
 const {

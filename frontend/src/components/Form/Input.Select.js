@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import {
@@ -38,9 +38,9 @@ const SelectContainer = styled.select`
   }
 `;
 
-const Select = ({ options }) => {
+const Select = forwardRef(({ options }, ref) => {
   return (
-    <SelectContainer>
+    <SelectContainer ref={ref}>
       {options &&
         options.map(({ _id, email, name }, i) => (
           <option key={i} value={_id}>
@@ -49,7 +49,7 @@ const Select = ({ options }) => {
         ))}
     </SelectContainer>
   );
-};
+});
 
 Select.propTypes = {
   options: PropTypes.arrayOf(
@@ -60,5 +60,7 @@ Select.propTypes = {
     })
   )
 };
+
+Select.displayName = 'Input.Select';
 
 export default Select;

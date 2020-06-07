@@ -1,11 +1,13 @@
 // Renders both modal and button
-import React, { Fragment, useState, useRef } from 'react';
+import React, { Fragment, useState, useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import _ from 'lodash';
 import { useForm } from 'react-hook-form';
 import { RiFileAddLine, RiShareForwardLine } from 'react-icons/ri';
 
 import { secondaryColor } from '../../_constants/theme.constants';
 import useAction from '../../_utils/useAction.util';
+import { getContactsByUser, updateUser } from '../../_actions/users.actions';
 import {
   createProject,
   getProjectsByUser
@@ -26,9 +28,12 @@ const AddProjectButton = () => {
   /* Component Setup */
   const formRef = useRef();
   const [isModalOpen, setIsModalOpen] = useState();
+  const [contactOptions, setContactOptions] = useState();
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
+  const _getContactsByUser = useAction(getContactsByUser);
+  // const _updateUser = useAction(updateUser);
   const _createProject = useAction(createProject);
   const _getProjectsByUser = useAction(getProjectsByUser);
   const { user } = useSelector(getCurrentUserAndToken);
@@ -37,11 +42,33 @@ const AddProjectButton = () => {
   const { register, handleSubmit, errors, setError } = useForm();
   /* Component Setup End */
 
+  useEffect(() => {
+    const fetchContacts = async () => {
+      // console.log('getting contacts by user', user);
+      if (user) {
+        await _getContactsByUser(user._id);
+        setContactOptions(contactOptions);
+      }
+    };
+
+    try {
+      fetchContacts();
+    } catch (error) {
+      // If failure, display server error
+      if (error.name === 'ServerError') {
+        setError('general', 'serverError', error.message);
+      }
+    }
+  }, []);
+
   /* Form functions */
   const _onSubmit = async data => {
     try {
+      const newProject = _.pick(data, ['title']);
+      // const newContacts = _.pick(data, ['contacts']);
+
       // Try to create project
-      await _createProject(data);
+      await _createProject(newProject);
 
       // If a project was created successfully, get refreshed list.
       // Project will update behind the modal overlay.
@@ -93,7 +120,7 @@ const AddProjectButton = () => {
                   multiple
                   name="contacts"
                   placeholder="Add people"
-                  ref={register()}
+                  ref={register}
                   options={user.contacts}
                 />
                 <Input.Error>

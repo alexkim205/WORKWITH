@@ -21,10 +21,15 @@ Array [
   Object {
     "error": null,
     "payload": Object {
-      "_id": "5e0bb5c61c90231c34596f83",
-      "email": "alexkim@dev.com",
-      "name": "Alex Kim",
-      "role": "ADMIN",
+      "user": Object {
+        "_id": "5e0bb5c61c90231c34596f83",
+        "contacts": Array [
+          "5e02efdd94748b21482e6010",
+        ],
+        "email": "alexkim@dev.com",
+        "name": "Alex Kim",
+        "role": "User",
+      },
     },
     "type": "users/get-user-success",
   },
@@ -38,14 +43,16 @@ Array [
   },
   Object {
     "error": null,
-    "payload": Array [
-      Object {
-        "_id": "5e0bb5c61c90231c34596f83",
-        "email": "alexkim@dev.com",
-        "name": "Alex Kim",
-        "role": "ADMIN",
-      },
-    ],
+    "payload": Object {
+      "users": Array [
+        Object {
+          "_id": "5e0bb5c61c90231c34596f83",
+          "email": "alexkim@dev.com",
+          "name": "Alex Kim",
+          "role": "Admin",
+        },
+      ],
+    },
     "type": "users/get-users-success",
   },
 ]
@@ -65,7 +72,7 @@ Array [
         "_id": "5e0bb5c61c90231c34596f83",
         "email": "alexkim@dev.com",
         "name": "Alex Kim",
-        "role": "ADMIN",
+        "role": "User",
       },
     },
     "type": "users/login-success",
@@ -95,7 +102,7 @@ Array [
         "_id": "5e0bb5c61c90231c34596f83",
         "email": "alexkim@dev.com",
         "name": "Alex Kim",
-        "role": "ADMIN",
+        "role": "User",
       },
     },
     "type": "users/register-success",
@@ -111,10 +118,15 @@ Array [
   Object {
     "error": null,
     "payload": Object {
-      "_id": "5e0bb5c61c90231c34596f83",
-      "email": "alexkim@dev.com",
-      "name": "Alex Kim",
-      "role": "ADMIN",
+      "user": Object {
+        "_id": "5e0bb5c61c90231c34596f83",
+        "contacts": Array [
+          "5e02efdd94748b21482e6010",
+        ],
+        "email": "alexkim@dev.com",
+        "name": "Alex Kim",
+        "role": "User",
+      },
     },
     "type": "users/update-user-success",
   },
