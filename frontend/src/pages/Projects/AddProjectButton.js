@@ -7,7 +7,7 @@ import { RiFileAddLine, RiShareForwardLine } from 'react-icons/ri';
 
 import { secondaryColor } from '../../_constants/theme.constants';
 import useAction from '../../_utils/useAction.util';
-import { getContactsByUser, updateUser } from '../../_actions/users.actions';
+import { getContactsByUser } from '../../_actions/users.actions';
 import {
   createProject,
   getProjectsByUser
