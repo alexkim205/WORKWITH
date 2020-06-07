@@ -660,8 +660,9 @@ describe("User", () => {
       expect(res).to.have.status(HttpStatus.OK);
       expect(res).to.be.an("object");
       expect(res).to.have.property("body");
-      expect(res.body).to.have.property("contacts");
-      expect(res.body.users).to.have.lengthOf(4);
+      expect(res.body).to.have.property("user");
+      expect(res.body.user).to.have.property("contacts");
+      expect(res.body.user.contacts).to.have.lengthOf(4);
     });
     it("it should GET no content for user without any contacts", async () => {
       const res = await chai
@@ -679,8 +680,9 @@ describe("User", () => {
       expect(res).to.have.status(HttpStatus.OK);
       expect(res).to.be.an("object");
       expect(res).to.have.property("body");
-      expect(res.body).to.have.property("contacts");
-      expect(res.body.users).to.have.lengthOf(4);
+      expect(res.body).to.have.property("user");
+      expect(res.body.user).to.have.property("contacts");
+      expect(res.body.user.contacts).to.have.lengthOf(4);
     });
   });
 

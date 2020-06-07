@@ -57,9 +57,6 @@ describe("Project", () => {
     userId = resUser.body.user._id.toString();
     userToken = resUser.body.token;
 
-    console.log(adminId, adminToken);
-    console.log(userId, userToken);
-
     sendableAdminProject = _.assign({}, project, {
       authors: [adminId],
       users: [adminId]
@@ -148,7 +145,6 @@ describe("Project", () => {
         .post(apiBase)
         .send(sendableAdminProject)
         .set("authorization", `Bearer ${adminToken}`);
-      console.log(res.text);
       expect(res.statusCode).to.equal(HttpStatus.CREATED);
       testProjectResponse(res, sendableAdminProject);
       adminProjectId = res.body.project._id.toString();
@@ -447,7 +443,6 @@ describe("Project", () => {
           users: [adminId]
         }
       );
-      console.log(projectToCheck);
       const res = await chai
         .request(app)
         .put(createApiBase(adminProjectId))
