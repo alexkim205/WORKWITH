@@ -125,19 +125,17 @@ const ProjectsBox = () => {
 
   // Render methods
   const renderProjects = () => {
-    if (
-      // Wait for fetch projects request, use cached projects if pending
-      (projectsPending && _.isEmpty(projects)) ||
-      // Wait for user
-      userPending
-    ) {
-      return 'Pending projects!';
+    if (_.isEmpty(projects)) {
+      if (projectsPending) {
+        // If no projects and still pending
+        return 'Pending projects!';
+      }
+      // If finished pending but still no projects
+      return 'No projects found.';
     }
+
     if (projectsError) {
       return projectsError.message;
-    }
-    if (_.isEmpty(projects)) {
-      return 'No projects found.';
     }
 
     const {

@@ -2,9 +2,13 @@
 
 ## Backlog Todo
 
+## 6/9/2020
+
+- Cache projects, don't update component unless projects are different.
+
 ## 6/7/2020
 
-- Add user contacts action and hook into addprojectbutton modal.
+- Add user contacts action in frontend and hook into addprojectbutton modal.
 - Add test coverage and make more comprehensive tests for user and project routes.
 - Update frontend Jest snapshots.
 
