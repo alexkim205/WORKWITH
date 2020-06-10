@@ -5,6 +5,7 @@ import _ from 'lodash';
 import { useForm } from 'react-hook-form';
 import { RiFileAddLine, RiShareForwardLine } from 'react-icons/ri';
 
+import Role from '../../_constants/role.constants';
 import { secondaryColor } from '../../_constants/theme.constants';
 import useAction from '../../_utils/useAction.util';
 import { getContactsByUser } from '../../_actions/users.actions';
@@ -39,7 +40,7 @@ const AddProjectButton = () => {
   const { user } = useSelector(getCurrentUserAndToken);
   const { pending: projectPending } = useSelector(getProjectPendingAndError);
   const { pending: projectsPending } = useSelector(getProjectsPendingAndError);
-  const { register, handleSubmit, errors, setError } = useForm();
+  const { register, handleSubmit, errors, setError, control } = useForm();
   /* Component Setup End */
 
   useEffect(() => {
@@ -86,6 +87,9 @@ const AddProjectButton = () => {
     }
   };
 
+  // const watchAllFields = watch();
+  // console.log('watched', watchAllFields);
+
   return (
     <Fragment>
       <AddButton onClick={openModal} />
@@ -117,11 +121,16 @@ const AddProjectButton = () => {
                   Share your project
                 </Input.Label>
                 <Input.Select
-                  multiple
                   name="contacts"
                   placeholder="Add people"
-                  ref={register}
+                  control={control}
                   options={user.contacts}
+                  getOptionLabel={option =>
+                    option.role === Role.GUEST
+                      ? option.email
+                      : `${option.name} (${option.email})`
+                  }
+                  getOptionValue={option => option._id}
                 />
                 <Input.Error>
                   {errors?.general?.message || errors?.contacts?.message}

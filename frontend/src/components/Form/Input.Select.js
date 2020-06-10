@@ -1,64 +1,70 @@
-import React, { forwardRef } from 'react';
+import React, { useRef } from 'react';
+import { Controller } from 'react-hook-form';
+import makeAnimated from 'react-select/animated';
+import CreatableSelect from 'react-select/creatable';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import {
-  buttonColor,
-  borderColor,
-  backgroundColor,
-  inputBackgroundColor
-} from '../../_constants/theme.constants';
+// import styled from 'styled-components';
 
-const SelectContainer = styled.select`
-  font-family: 'Ubuntu', sans-serif;
-  font-weight: 300;
-  box-sizing: border-box;
-  display: inline-block;
-  background-color: ${inputBackgroundColor};
-  border: 1px solid ${borderColor};
-  border-radius: 3px;
-  padding: 1em 1.1em;
-  font-size: 0.9em;
-  color: black;
-  transition: all 0.2s ease;
-  width: 100%;
+// import {
+//   buttonColor,
+//   borderColor,
+//   backgroundColor,
+//   inputBackgroundColor
+// } from '../../_constants/theme.constants';
 
-  option {
-    background-color: red;
-    padding: 1em;
-  }
+// const SelectContainer = styled.select`
+//   font-family: 'Ubuntu', sans-serif;
+//   font-weight: 300;
+//   box-sizing: border-box;
+//   display: inline-block;
+//   background-color: ${inputBackgroundColor};
+//   border: 1px solid ${borderColor};
+//   border-radius: 3px;
+//   padding: 1em 1.1em;
+//   font-size: 0.9em;
+//   color: black;
+//   transition: all 0.2s ease;
+//   width: 100%;
 
-  &:hover {
-    background-color: ${backgroundColor};
-  }
+//   // option {
+//   //   background-color: red;
+//   //   padding: 1em;
+//   // }
 
-  &:focus {
-    outline: none;
-    background-color: ${backgroundColor};
-    border: 1px solid ${buttonColor};
-  }
-`;
+//   &:hover {
+//     background-color: ${backgroundColor};
+//   }
 
-const Select = forwardRef(({ options }, ref) => {
+//   &:focus {
+//     outline: none;
+//     background-color: ${backgroundColor};
+//     border: 1px solid ${buttonColor};
+//   }
+// `;
+
+const animatedComponents = makeAnimated();
+
+const Select = ({ name, options, control, ...inputProps }) => {
+  const selectRef = useRef();
   return (
-    <SelectContainer ref={ref}>
-      {options &&
-        options.map(({ _id, email, name }, i) => (
-          <option key={i} value={_id}>
-            {name ? `${name} (${email})` : email}
-          </option>
-        ))}
-    </SelectContainer>
+    <Controller
+      as={<CreatableSelect ref={selectRef} />}
+      name={name}
+      onFocus={() => selectRef.current.focus()}
+      options={options}
+      control={control}
+      components={animatedComponents}
+      closeMenuOnSelect={false}
+      isMulti
+      {...inputProps}
+    />
   );
-});
+};
 
 Select.propTypes = {
-  options: PropTypes.arrayOf(
-    PropTypes.shape({
-      _id: PropTypes.string.isRequired,
-      name: PropTypes.string,
-      email: PropTypes.string.isRequired
-    })
-  )
+  name: PropTypes.string.isRequired,
+  options: PropTypes.arrayOf(PropTypes.object).isRequired,
+  control: PropTypes.func.isRequired
 };
 
 Select.displayName = 'Input.Select';

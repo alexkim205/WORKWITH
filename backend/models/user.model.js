@@ -208,9 +208,7 @@ baseUserSchema.methods.getSafeUser = function() {
   return _.pick(this, ["_id", "email", "role"]);
 };
 
-baseUserSchema.methods.getContactUser = function() {
-  return _.pick(this, ["_id", "email"]);
-};
+baseUserSchema.methods.getContactUser = baseUserSchema.methods.getSafeUser;
 
 baseUserSchema.methods.generateJwt = function() {
   return {
@@ -262,7 +260,7 @@ userSchema.methods.getSafeUser = function() {
 };
 
 userSchema.methods.getContactUser = function() {
-  return _.pick(this, ["_id", "name", "email"]);
+  return _.pick(this, ["_id", "name", "email", "role"]);
 };
 
 const adminSchema = new Schema(schemas.adminSchema);

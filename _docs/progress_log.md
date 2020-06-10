@@ -5,6 +5,8 @@
 ## 6/9/2020
 
 - Cache projects, don't update component unless projects are different.
+- Add multi-select contact options.
+- Multi-select logic working with react-hook-form. TODO standardize styling.
 
 ## 6/7/2020
 
