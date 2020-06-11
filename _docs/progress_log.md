@@ -2,11 +2,19 @@
 
 ## Backlog Todo
 
+## 6/11/2020
+
+- Styled contacts dropdown to match theme. TODO fix dropdown menu overlay on button issue.
+
+## 6/10/2020
+
+- Didn't get much progress done. Worked on fixing option labels in contact dropdown.
+
 ## 6/9/2020
 
 - Cache projects, don't update component unless projects are different.
 - Add multi-select contact options.
-- Multi-select logic working with react-hook-form. TODO standardize styling.
+- Multi-select logic working with react-hook-form.
 
 ## 6/7/2020
 

@@ -18,6 +18,7 @@ import {
   getProjectPendingAndError,
   getProjectsPendingAndError
 } from '../../_selectors/projects.selectors';
+import { isEmail } from '../../_utils/regex.util';
 
 import { Input } from '../../components/Form';
 import { ModalButton } from '../../components/Button';
@@ -96,7 +97,7 @@ const AddProjectButton = () => {
       <Modal isOpen={isModalOpen} hide={closeModal}>
         <div className="header"></div>
         <div className="form-box">
-          <form onSubmit={handleSubmit(_onSubmit)} ref={formRef}>
+          <form ref={formRef} onSubmit={handleSubmit(_onSubmit)}>
             <div className="fields-box">
               <Input.Wrapper data-field-fade>
                 <Input.Label>
@@ -111,9 +112,7 @@ const AddProjectButton = () => {
                     required: 'Project title is required.'
                   })}
                 />
-                <Input.Error>
-                  {errors?.general?.message || errors?.title?.message}
-                </Input.Error>
+                <Input.Error>{errors?.title?.message}</Input.Error>
               </Input.Wrapper>
               <Input.Wrapper data-field-fade>
                 <Input.Label>
@@ -122,20 +121,28 @@ const AddProjectButton = () => {
                 </Input.Label>
                 <Input.Select
                   name="contacts"
-                  placeholder="Add people"
+                  placeholder="Add people by name or email"
                   control={control}
                   options={user.contacts}
-                  getOptionLabel={option =>
-                    option.role === Role.GUEST
+                  getOptionLabel={option => {
+                    return option.role === Role.GUEST
                       ? option.email
-                      : `${option.name} (${option.email})`
-                  }
+                      : `${option.name} (${option.email})`;
+                  }}
                   getOptionValue={option => option._id}
+                  getNewOptionData={email => ({
+                    _id: email,
+                    email,
+                    role: Role.GUEST,
+                    isEmail: isEmail(email),
+                    label: email,
+                    value: email,
+                    __isNew__: true
+                  })}
                 />
-                <Input.Error>
-                  {errors?.general?.message || errors?.contacts?.message}
-                </Input.Error>
+                <Input.Error>{errors?.contacts?.message}</Input.Error>
               </Input.Wrapper>
+              <Input.Error>{errors?.general?.message}</Input.Error>
             </div>
             <div className="buttons-box">
               {(projectPending || projectsPending) && <SquareFlipLoader />}

@@ -38,8 +38,13 @@ export const backgroundColor = theme('mode', {
   dark: BLACK
 });
 
-export const buttonColor = theme('mode', {
+export const buttonHoverColor = theme('mode', {
   light: '#00007e',
+  dark: '#ceceff'
+});
+
+export const buttonColor = theme('mode', {
+  light: PURPLE,
   dark: '#ceceff'
 });
 
@@ -61,12 +66,6 @@ export const highlightLightBackgroundColor = theme('mode', {
 export const inputBackgroundColor = theme('mode', {
   light: LIGHT_GRAY,
   dark: LIGHT_GRAY
-});
-
-export const loaderBackgroundColor = theme('mode', {
-  // light: "#FFB1A4",
-  light: '#00007e',
-  dark: darken(0.6, '#ceceff')
 });
 
 export const failureColor = theme('mode', {
