@@ -68,6 +68,10 @@ export const inputBackgroundColor = theme('mode', {
   dark: LIGHT_GRAY
 });
 
+export const pillBackgroundColor = lighten(0.45, PURPLE);
+
+export const pillFailureBackgroundColor = '#ffcccb';
+
 export const failureColor = theme('mode', {
   light: '#ff3232',
   dark: '#ff3232'

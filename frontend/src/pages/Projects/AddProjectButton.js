@@ -102,12 +102,12 @@ const AddProjectButton = () => {
               <Input.Wrapper data-field-fade>
                 <Input.Label>
                   <RiFileAddLine size={'1.7em'} />
-                  Give your project a descriptive title
+                  Name your project
                 </Input.Label>
                 <Input.Text
                   type="text"
                   name="title"
-                  placeholder="Name your project"
+                  placeholder="Give your project a descriptive title"
                   ref={register({
                     required: 'Project title is required.'
                   })}
@@ -117,7 +117,7 @@ const AddProjectButton = () => {
               <Input.Wrapper data-field-fade>
                 <Input.Label>
                   <RiShareForwardLine size={'1.7em'} />
-                  Share your project
+                  Invite your friends
                 </Input.Label>
                 <Input.Select
                   name="contacts"
@@ -134,13 +134,12 @@ const AddProjectButton = () => {
                     _id: email,
                     email,
                     role: Role.GUEST,
-                    isEmail: isEmail(email),
                     label: email,
                     value: email,
                     __isNew__: true
                   })}
                   menuPortalTarget={document.body}
-                  styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
+                  checkValid={data => isEmail(data.email)}
                 />
                 <Input.Error>{errors?.contacts?.message}</Input.Error>
               </Input.Wrapper>

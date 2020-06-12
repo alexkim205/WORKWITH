@@ -2,6 +2,7 @@
 import styled from 'styled-components';
 import anime from 'animejs';
 
+import { breakpoint } from '../../_constants/theme.mixins.constants';
 import { backgroundColor } from '../../_constants/theme.constants';
 
 const ModalOverlay = styled.div`
@@ -26,10 +27,19 @@ const ModalContainer = styled.div`
   border-radius: 5px;
   will-change: transform;
 
+  width: 500px;
+
+  ${breakpoint.down('m')`
+    width: 100%;
+    margin: 1em;
+  `}
+
   .header {
   }
   .form-box {
-    width: 500px;
+    ${breakpoint.down('m')`
+      width: 100%;
+    `}
 
     .buttons-box {
       display: flex;

@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Controller } from 'react-hook-form';
 import CreatableSelect from 'react-select/creatable';
-import { components } from 'react-select';
+import makeAnimated from 'react-select/animated';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
@@ -10,7 +10,9 @@ import {
   buttonColor,
   borderColor,
   backgroundColor,
-  buttonHoverColor
+  buttonHoverColor,
+  pillBackgroundColor,
+  pillFailureBackgroundColor
 } from '../../_constants/theme.constants';
 
 const SelectContainer = styled(CreatableSelect)`
@@ -47,6 +49,9 @@ const SelectContainer = styled(CreatableSelect)`
         font-size: 0.9em;
         padding-left: 0.8rem;
         margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       .css-b8ldur-Input {
@@ -58,8 +63,9 @@ const SelectContainer = styled(CreatableSelect)`
       }
 
       .react-select__multi-value {
-        padding: 0.6rem 0.4rem 0.6rem 0.8rem;
+        padding: 0.6rem 1.15rem 0.6rem 1.15rem;
         margin: 0.1rem 0.1rem;
+        border-radius: 50px;
         // margin: 0.2rem 0.2rem;
 
         .react-select__multi-value__label {
@@ -84,30 +90,21 @@ const SelectContainer = styled(CreatableSelect)`
       }
     }
   }
-
-  .react-select__menu {
-    font-size: 0.9rem;
-
-    .react-select__menu-list {
-      .react-select__option {
-      }
-    }
-  }
 `;
 
-// const MultiValueStyledContainer = styled(components.MultiValue)`
-//   padding-top: 0.5em;
-//   padding-bottom: 0.5em;
-//   margin-top: 0;
-//   margin-bottom: 0;
-//   background-color: red;
-// `;
+const animatedComponents = makeAnimated();
 
 const MultiValue = props => (
-  <components.MultiValue {...props} cropWithEllipsis={false} />
+  <animatedComponents.MultiValue {...props} cropWithEllipsis={false} />
 );
 
-const Select = ({ name, options, control, ...inputProps }) => {
+const Select = ({
+  name,
+  options,
+  control,
+  checkValid = () => true,
+  ...inputProps
+}) => {
   const [localOptions, setLocalOptions] = useState(options);
 
   const handleChange = ([newValue, actionMeta]) => {
@@ -133,13 +130,23 @@ const Select = ({ name, options, control, ...inputProps }) => {
       control={control}
       className="react-select-container"
       classNamePrefix="react-select"
-      components={{ MultiValue }}
+      components={{ ...animatedComponents, MultiValue }}
       // closeMenuOnSelect={false}
       isMulti
       isClearable
       isCreatable
       onChange={handleChange}
       createOption={handleCreate}
+      styles={{
+        menuPortal: base => ({ ...base, zIndex: 9999 }),
+        multiValue: (base, { data }) => ({
+          ...base,
+          backgroundColor: checkValid(data)
+            ? pillBackgroundColor
+            : pillFailureBackgroundColor
+        }),
+        menu: base => ({ ...base, fontSize: '0.9rem' })
+      }}
       {...inputProps}
     />
   );
@@ -148,7 +155,8 @@ const Select = ({ name, options, control, ...inputProps }) => {
 Select.propTypes = {
   name: PropTypes.string.isRequired,
   options: PropTypes.arrayOf(PropTypes.object).isRequired,
-  control: PropTypes.object.isRequired
+  control: PropTypes.object.isRequired,
+  checkValid: PropTypes.func
 };
 
 Select.displayName = 'Input.Select';
