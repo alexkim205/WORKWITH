@@ -108,7 +108,6 @@ const MultiValue = props => (
 );
 
 const Select = ({ name, options, control, ...inputProps }) => {
-  // const selectRef = useRef();
   const [localOptions, setLocalOptions] = useState(options);
 
   const handleChange = ([newValue, actionMeta]) => {

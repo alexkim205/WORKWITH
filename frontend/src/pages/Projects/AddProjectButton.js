@@ -139,6 +139,8 @@ const AddProjectButton = () => {
                     value: email,
                     __isNew__: true
                   })}
+                  menuPortalTarget={document.body}
+                  styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
                 />
                 <Input.Error>{errors?.contacts?.message}</Input.Error>
               </Input.Wrapper>
