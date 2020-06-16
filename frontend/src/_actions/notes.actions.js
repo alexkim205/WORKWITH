@@ -5,14 +5,19 @@ import createActionCreator from '../_utils/createActionCreator.util';
 
 const { notesServices } = services;
 
-export const getNotesByProject = projectId => async dispatch => {
+export const getNotesByProject = (
+  projectId,
+  axiosOptions
+) => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     notesConstants,
     'GET_PROJECT_NOTES'
   );
 
   dispatch(actionPending());
-  const [err, notes] = await to(notesServices.getNotesByProject(projectId));
+  const [err, notes] = await to(
+    notesServices.getNotesByProject(projectId, axiosOptions)
+  );
   if (err) {
     dispatch(actionError(err));
     throw err;
@@ -20,14 +25,14 @@ export const getNotesByProject = projectId => async dispatch => {
   dispatch(actionSuccess(notes));
 };
 
-export const getNotes = () => async dispatch => {
+export const getNotes = axiosOptions => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     notesConstants,
     'GET_NOTES'
   );
 
   dispatch(actionPending());
-  const [err, notes] = await to(notesServices.getNotes());
+  const [err, notes] = await to(notesServices.getNotes(axiosOptions));
   if (err) {
     dispatch(actionError(err));
     throw err;
@@ -35,14 +40,14 @@ export const getNotes = () => async dispatch => {
   dispatch(actionSuccess(notes));
 };
 
-export const getNote = noteId => async dispatch => {
+export const getNote = (noteId, axiosOptions) => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     notesConstants,
     'GET_NOTE'
   );
 
   dispatch(actionPending());
-  const [err, note] = await to(notesServices.getNote(noteId));
+  const [err, note] = await to(notesServices.getNote(noteId, axiosOptions));
   if (err) {
     dispatch(actionError(err));
     throw err;
@@ -50,14 +55,14 @@ export const getNote = noteId => async dispatch => {
   dispatch(actionSuccess(note));
 };
 
-export const createNote = newNote => async dispatch => {
+export const createNote = (newNote, axiosOptions) => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     notesConstants,
     'CREATE_NOTE'
   );
 
   dispatch(actionPending());
-  const [err, note] = await to(notesServices.createNote(newNote));
+  const [err, note] = await to(notesServices.createNote(newNote, axiosOptions));
   if (err) {
     dispatch(actionError(err));
     throw err;
@@ -65,14 +70,16 @@ export const createNote = newNote => async dispatch => {
   dispatch(actionSuccess(note));
 };
 
-export const updateNote = (noteId, newNote) => async dispatch => {
+export const updateNote = (noteId, newNote, axiosOptions) => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     notesConstants,
     'UPDATE_NOTE'
   );
 
   dispatch(actionPending());
-  const [err, note] = await to(notesServices.updateNote(noteId, newNote));
+  const [err, note] = await to(
+    notesServices.updateNote(noteId, newNote, axiosOptions)
+  );
   if (err) {
     dispatch(actionError(err));
     throw err;
@@ -80,14 +87,14 @@ export const updateNote = (noteId, newNote) => async dispatch => {
   dispatch(actionSuccess(note));
 };
 
-export const deleteNote = noteId => async dispatch => {
+export const deleteNote = (noteId, axiosOptions) => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     notesConstants,
     'DELETE_NOTE'
   );
 
   dispatch(actionPending());
-  const [err] = await to(notesServices.deleteNote(noteId));
+  const [err] = await to(notesServices.deleteNote(noteId, axiosOptions));
   if (err) {
     dispatch(actionError(err));
     throw err;

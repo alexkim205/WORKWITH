@@ -1,4 +1,11 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, {
+  Fragment,
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useRef
+} from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation, useHistory } from 'react-router-dom';
 import _ from 'lodash';
@@ -20,7 +27,8 @@ import {
 } from '../../_selectors/users.selectors';
 import {
   getProjects,
-  getProjectsPendingAndError
+  getProjectsPendingAndError,
+  getCreatedProject
 } from '../../_selectors/projects.selectors';
 
 import { Background, StyledProjects } from './Projects.style';
@@ -32,6 +40,7 @@ import AddProjectButton from './AddProjectButton';
 import ProjectCard from './ProjectCard';
 
 const ProjectsBox = () => {
+  const isFirstRender = useRef(true);
   const windowWidth = useWindowWidth();
   const history = useHistory();
   const location = useLocation();
@@ -39,27 +48,56 @@ const ProjectsBox = () => {
     JSON.parse(sessionStorage.getItem('projectsPage')),
     { ignoreQueryPrefix: true }
   ); // get saved query params from session storage
-  const _getProjectsByUser = useAction(getProjectsByUser);
+  const [_getProjectsByUser, cleanupGetProjectsByUser] = useAction(
+    getProjectsByUser
+  );
   const { user } = useSelector(getCurrentUserAndToken);
   const { pending: userPending } = useSelector(getUsersPendingAndError);
   const { pending: projectsPending, error: projectsError } = useSelector(
     getProjectsPendingAndError
   );
-  const projects = useSelector(getProjects);
-  const [state, setState] = useState({
+  const fetchedProjects = useSelector(getProjects);
+  const [projectsAndPending, setProjectsAndPending] = useState(fetchedProjects);
+  const createdProject = useSelector(getCreatedProject);
+  const [queryParams, setQueryParams] = useState({
     filter: prevQueryParams.filter || '',
     display:
       windowWidth <= breakpoints.xs
         ? displayOptions.list
         : prevQueryParams.display || displayOptions.grid,
-    sort: prevQueryParams.sort || sortOptions.newestFirst.name
+    sort: prevQueryParams.sort || sortOptions.newestFirst.name,
+    sizePerPage: prevQueryParams.sizePerPage || fetchedProjects?.length || 100
   });
-  const debouncedSearchTerm = useDebounce(state.filter, 200);
+  // Memoized visible projects
+  const { visibleProjects, displayParam, sortParam } = useMemo(() => {
+    const {
+      filter: searchParam = queryParams.filter,
+      display: _displayParam = queryParams.display,
+      sort: _sortParam = queryParams.sort
+    } = qs.parse(location.search, { ignoreQueryPrefix: true });
+    const sortOption = sortOptions[_sortParam];
+    let _visibleProjects = _(projectsAndPending)
+      .uniqBy('_id')
+      .orderBy([sortOption.by], [sortOption.order])
+      .value();
+    if (!_.isEmpty(searchParam)) {
+      _visibleProjects = new Fuse(projectsAndPending, fuseOptions).search(
+        searchParam
+      );
+    }
+
+    return {
+      visibleProjects: _visibleProjects,
+      displayParam: _displayParam,
+      sortParam: _sortParam
+    };
+  }, [projectsAndPending, location.search]);
+  const debouncedSearchTerm = useDebounce(queryParams.filter, 200);
 
   // Lifecycle methods
   const handleChange = e => {
     const { name, value } = e.target;
-    setState(prevState => ({ ...prevState, [name]: value }));
+    setQueryParams(prevState => ({ ...prevState, [name]: value }));
   };
 
   const updateQueryParam = obj => {
@@ -82,50 +120,69 @@ const ProjectsBox = () => {
     history.push({ search: newQueryParams });
   };
 
-  const navigate = project => {
+  const navigate = newProject => {
     history.push({
-      pathname: `/project/${project._id}`
+      pathname: `/project/${newProject._id}`
     });
   };
 
-  const handleSmallWindow = () => {
-    if (windowWidth <= breakpoints.xs) {
-      if (state.display !== displayOptions.list) {
-        updateQueryParam({ display: displayOptions.list });
+  // Refresh projects. Use skeleton flipped element to trigger animation.
+  useEffect(() => {
+    const refreshProjects = async () => {
+      if (_.isEmpty(createdProject)) {
+        return;
       }
+
+      // Set pending projects so that a skeleton can be rendered.
+      setProjectsAndPending(prevProjects =>
+        _.concat(
+          [_.assign({}, createdProject, { pending: true })],
+          prevProjects || []
+        )
+      );
+
+      // Update projects redux state by fetching newest.
+      await _getProjectsByUser(user._id);
+    };
+
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
     }
-  };
+    refreshProjects();
+
+    // return cleanupGetProjectsByUser;
+  }, [createdProject?._id]);
+  useEffect(() => {
+    // update projectsAndPending once projects (with created project) are
+    // finally fetched.
+    setProjectsAndPending(fetchedProjects);
+    updateQueryParam({ pending: createdProject?._id });
+  }, [fetchedProjects]);
 
   // Fetch projects at start
   useEffect(() => {
-    try {
-      _getProjectsByUser(user._id);
-    } catch (e) {
-      // console.log("User Projects Fetch Error", user._id, e);
-    }
+    _getProjectsByUser(user._id);
+    return cleanupGetProjectsByUser;
   }, []);
 
   // If window size gets below xs, change query parameter 'display' to list
   useEffect(() => {
-    handleSmallWindow();
+    if (windowWidth <= breakpoints.xs) {
+      if (queryParams.display !== displayOptions.list) {
+        updateQueryParam({ display: displayOptions.list });
+      }
+    }
   }, [windowWidth]);
 
   // Update query parameters when debounced search term is changed
   useEffect(() => {
-    updateQueryParam(state);
+    updateQueryParam(queryParams);
   }, [debouncedSearchTerm]);
 
-  // Update visible projects when projects or query params change
-  useEffect(() => {
-    setState(prevState => ({
-      ...prevState,
-      ...qs.parse(location.search, { ignoreQueryPrefix: true })
-    }));
-  }, [projects, location.search]);
-
   // Render methods
-  const renderProjects = () => {
-    if (_.isEmpty(projects)) {
+  const renderProjects = useCallback(() => {
+    if (_.isEmpty(visibleProjects)) {
       if (projectsPending) {
         // If no projects and still pending
         return 'Pending projects!';
@@ -137,42 +194,26 @@ const ProjectsBox = () => {
     if (projectsError) {
       return projectsError.message;
     }
-
-    const {
-      filter: searchParam = state.filter,
-      display: displayParam = state.display,
-      sort: sortParam = state.sort
-    } = qs.parse(location.search, { ignoreQueryPrefix: true });
-    const sortOption = sortOptions[sortParam];
-    let visibleProjects = _(projects)
-      .orderBy([sortOption.by], [sortOption.order])
-      .value();
-    if (!_.isEmpty(searchParam)) {
-      visibleProjects = new Fuse(projects, fuseOptions).search(searchParam);
-    }
     if (_.isEmpty(visibleProjects)) {
       return 'No projects with those criteria.';
     }
     return (
       <Fragment>
-        {visibleProjects.map(project => (
+        {visibleProjects.map(p => (
           <ProjectCard
-            project={project}
-            key={project._id}
-            setKey={project._id}
+            project={p}
+            key={p._id}
+            setKey={p._id}
             display={displayParam}
             navigate={navigate}
+            pending={p.pending}
           />
         ))}
       </Fragment>
     );
-  };
+  }, [visibleProjects]);
 
-  const renderControls = () => {
-    const {
-      display: displayParam = state.display,
-      sort: sortParam = state.sort
-    } = qs.parse(location.search, { ignoreQueryPrefix: true });
+  const renderControls = useCallback(() => {
     return (
       <Fragment>
         <Dropdown
@@ -195,7 +236,7 @@ const ProjectsBox = () => {
         <AddProjectButton />
       </Fragment>
     );
-  };
+  }, [sortParam, displayParam, windowWidth]);
 
   // if user or token is empty, or user auth error, redirect to auth page
   if (!userPending && _.isEmpty(user)) {
@@ -215,7 +256,7 @@ const ProjectsBox = () => {
               type="text"
               name="filter"
               placeholder={'Search here for a project...'}
-              value={state.filter}
+              value={queryParams.filter}
               onChange={handleChange}
             />
           </div>

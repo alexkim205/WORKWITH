@@ -9,13 +9,10 @@ import Role from '../../_constants/role.constants';
 import { secondaryColor } from '../../_constants/theme.constants';
 import useAction from '../../_utils/useAction.util';
 import { getContactsByUser } from '../../_actions/users.actions';
-import {
-  createProject,
-  getProjectsByUser
-} from '../../_actions/projects.actions';
+import { createProject } from '../../_actions/projects.actions';
 import { getCurrentUserAndToken } from '../../_selectors/users.selectors';
 import {
-  getProjectPendingAndError,
+  getCreatedProjectPendingAndError,
   getProjectsPendingAndError
 } from '../../_selectors/projects.selectors';
 import { isEmail } from '../../_utils/regex.util';
@@ -34,33 +31,37 @@ const AddProjectButton = () => {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  const _getContactsByUser = useAction(getContactsByUser);
+  const [_getContactsByUser, cleanupGetContactsByUser] = useAction(
+    getContactsByUser
+  );
   // const _updateUser = useAction(updateUser);
-  const _createProject = useAction(createProject);
-  const _getProjectsByUser = useAction(getProjectsByUser);
+  const [_createProject] = useAction(createProject);
   const { user } = useSelector(getCurrentUserAndToken);
-  const { pending: projectPending } = useSelector(getProjectPendingAndError);
+  const { pending: createProjectPending } = useSelector(
+    getCreatedProjectPendingAndError
+  );
   const { pending: projectsPending } = useSelector(getProjectsPendingAndError);
   const { register, handleSubmit, errors, setError, control } = useForm();
   /* Component Setup End */
 
   useEffect(() => {
     const fetchContacts = async () => {
-      // console.log('getting contacts by user', user);
-      if (user) {
-        await _getContactsByUser(user._id);
-        setContactOptions(contactOptions);
+      try {
+        if (user) {
+          await _getContactsByUser(user._id);
+          setContactOptions(contactOptions);
+        }
+      } catch (error) {
+        // If failure, display server error
+        if (error.name === 'ServerError') {
+          setError('general', 'serverError', error.message);
+        }
       }
     };
+    fetchContacts();
 
-    try {
-      fetchContacts();
-    } catch (error) {
-      // If failure, display server error
-      if (error.name === 'ServerError') {
-        setError('general', 'serverError', error.message);
-      }
-    }
+    // cleanup get contacts
+    return cleanupGetContactsByUser;
   }, []);
 
   /* Form functions */
@@ -71,12 +72,6 @@ const AddProjectButton = () => {
 
       // Try to create project
       await _createProject(newProject);
-
-      // If a project was created successfully, get refreshed list.
-      // Project will update behind the modal overlay.
-      if (user) {
-        await _getProjectsByUser(user._id);
-      }
 
       // Close the modal
       closeModal();
@@ -89,7 +84,6 @@ const AddProjectButton = () => {
   };
 
   // const watchAllFields = watch();
-  // console.log('watched', watchAllFields);
 
   return (
     <Fragment>
@@ -146,11 +140,13 @@ const AddProjectButton = () => {
               <Input.Error>{errors?.general?.message}</Input.Error>
             </div>
             <div className="buttons-box">
-              {(projectPending || projectsPending) && <SquareFlipLoader />}
+              {(createProjectPending || projectsPending) && (
+                <SquareFlipLoader />
+              )}
               <ModalButton
                 data-button-fade
                 type="submit"
-                disabled={projectPending || projectsPending}
+                disabled={createProjectPending || projectsPending}
                 backgroundColor={secondaryColor}
               >
                 Done

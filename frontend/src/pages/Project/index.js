@@ -32,7 +32,7 @@ const ProjectBox = () => {
     { ignoreQueryPrefix: true }
   ); // get saved query params from session storage
   const { id: projectId } = useParams();
-  const _getProject = useAction(getProject);
+  const [_getProject, cleanupGetProject] = useAction(getProject);
   const { pending: projectPending, error: projectError } = useSelector(
     getProjectsPendingAndError
   );
@@ -47,12 +47,8 @@ const ProjectBox = () => {
   const debouncedSearchTerm = useDebounce(state.filter, 200);
 
   useEffect(() => {
-    try {
-      _getProject(projectId);
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.log('Project Fetch Error', projectId, e);
-    }
+    _getProject(projectId);
+    return cleanupGetProject;
   }, []);
 
   // Lifecycle methods
@@ -123,7 +119,7 @@ ProjectBox.propTypes = {
 
 const Project = () => {
   const { id: projectId } = useParams();
-  const backgroundRef = useRef(null);
+  const backgroundRef = useRef();
 
   return (
     <Flipped flipId={projectId} onComplete={onComplete} onStart={onStart}>

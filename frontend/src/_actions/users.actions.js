@@ -6,14 +6,14 @@ import history from '../_config/history.config';
 
 const { usersServices } = services;
 
-export const getUsers = () => async dispatch => {
+export const getUsers = axiosOptions => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     usersConstants,
     'GET_USERS'
   );
 
   dispatch(actionPending());
-  const [err, users] = await to(usersServices.getUsers());
+  const [err, users] = await to(usersServices.getUsers(axiosOptions));
   if (err) {
     dispatch(actionError(err));
     throw err;
@@ -21,14 +21,14 @@ export const getUsers = () => async dispatch => {
   dispatch(actionSuccess(users));
 };
 
-export const getUser = userId => async dispatch => {
+export const getUser = (userId, axiosOptions) => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     usersConstants,
     'GET_USER'
   );
 
   dispatch(actionPending());
-  const [err, user] = await to(usersServices.getUser(userId));
+  const [err, user] = await to(usersServices.getUser(userId, axiosOptions));
   if (err) {
     dispatch(actionError(err));
     throw err;
@@ -36,14 +36,16 @@ export const getUser = userId => async dispatch => {
   dispatch(actionSuccess(user));
 };
 
-export const getContactsByUser = userId => async dispatch => {
+export const getContactsByUser = (userId, axiosOptions) => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     usersConstants,
     'GET_CONTACTS_BY_USER'
   );
 
   dispatch(actionPending());
-  const [err, user] = await to(usersServices.getContactsByUser(userId));
+  const [err, user] = await to(
+    usersServices.getContactsByUser(userId, axiosOptions)
+  );
   if (err) {
     dispatch(actionError(err));
     throw err;
@@ -51,14 +53,16 @@ export const getContactsByUser = userId => async dispatch => {
   dispatch(actionSuccess(user));
 };
 
-export const login = (email, password) => async dispatch => {
+export const login = (email, password, axiosOptions) => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     usersConstants,
     'LOGIN'
   );
 
   dispatch(actionPending());
-  const [err, user] = await to(usersServices.login(email, password));
+  const [err, user] = await to(
+    usersServices.login(email, password, axiosOptions)
+  );
   if (err) {
     dispatch(actionError(err));
     throw err;
@@ -71,14 +75,14 @@ export const logout = () => async dispatch => {
   dispatch({ type: usersConstants.LOGOUT_SUCCESS });
 };
 
-export const register = newUser => async dispatch => {
+export const register = (newUser, axiosOptions) => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     usersConstants,
     'REGISTER'
   );
 
   dispatch(actionPending());
-  const [err, user] = await to(usersServices.register(newUser));
+  const [err, user] = await to(usersServices.register(newUser, axiosOptions));
   if (err) {
     dispatch(actionError(err));
     throw err;
@@ -87,14 +91,16 @@ export const register = newUser => async dispatch => {
   history.push('/projects');
 };
 
-export const refreshToken = userWithToken => async dispatch => {
+export const refreshToken = (userWithToken, axiosOptions) => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     usersConstants,
     'REFRESH_TOKEN'
   );
 
   dispatch(actionPending());
-  const [err, user] = await to(usersServices.refreshToken(userWithToken));
+  const [err, user] = await to(
+    usersServices.refreshToken(userWithToken, axiosOptions)
+  );
   if (err) {
     dispatch(actionError(err));
     throw err;
@@ -102,14 +108,16 @@ export const refreshToken = userWithToken => async dispatch => {
   dispatch(actionSuccess(user));
 };
 
-export const updateUser = (userId, newUser) => async dispatch => {
+export const updateUser = (userId, newUser, axiosOptions) => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     usersConstants,
     'UPDATE_USER'
   );
 
   dispatch(actionPending());
-  const [err, user] = await to(usersServices.updateUser(userId, newUser));
+  const [err, user] = await to(
+    usersServices.updateUser(userId, newUser, axiosOptions)
+  );
   if (err) {
     dispatch(actionError(err));
     throw err;
@@ -117,14 +125,14 @@ export const updateUser = (userId, newUser) => async dispatch => {
   dispatch(actionSuccess(user));
 };
 
-export const deleteUser = userId => async dispatch => {
+export const deleteUser = (userId, axiosOptions) => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     usersConstants,
     'DELETE_USER'
   );
 
   dispatch(actionPending());
-  const [err] = await to(usersServices.deleteUser(userId));
+  const [err] = await to(usersServices.deleteUser(userId, axiosOptions));
   if (err) {
     dispatch(actionError(err));
     throw err;

@@ -1,16 +1,16 @@
 /* eslint-disable no-param-reassign */
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import anime from 'animejs';
 import { displayOptions } from './Projects.options';
 import {
   secondaryColor,
-  textOnDarkColor,
-  backgroundColor,
-  textColor
+  textOnDarkColor
 } from '../../_constants/theme.constants';
 import { breakpoint } from '../../_constants/theme.mixins.constants';
 
 export const CARD_SPACING = 1.2; // em
+
+const projectPathnameRegex = /^\/project\/[\w\d]+/;
 
 export const Card = styled.li`
   box-sizing: border-box;
@@ -20,17 +20,21 @@ export const Card = styled.li`
   margin-right: ${CARD_SPACING}em;
   margin-bottom: ${CARD_SPACING}em;
   background-color: ${secondaryColor};
-  // background-color: ${backgroundColor};
-  // color: ${textColor};
   overflow: hidden;
-  // box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.25);
   will-change: transform;
   cursor: pointer;
-  // transition: 0.2s margin-bottom;
 
-  ${({ display }) => {
+  ${({ display, pending }) => {
     if (display === displayOptions.grid) {
-      return `
+      if (pending) {
+        return css`
+          width: 0;
+          margin: 0;
+          padding: 0;
+        `;
+      }
+
+      return css`
       // 4 columns
       width: calc((100% / 4) - (${CARD_SPACING * 3}em / 4));
       padding-bottom: calc((100% / 4) - (${CARD_SPACING * 3}em / 4));
@@ -75,14 +79,23 @@ export const Card = styled.li`
       // `.join('')}
       // `;
     }
-    return `
+    // Else display is list
+    if (pending) {
+      return css`
+        height: 0;
+        margin: 0;
+        padding: 0;
+      `;
+    }
+    return css`
       width: 100%;
+      height: ${pending ? 0 : 'auto'};
       margin-right: 0 !important;
       margin-bottom: ${CARD_SPACING / 1.5}em;
 
       ${breakpoint.down('s')`
-        margin-bottom: ${CARD_SPACING / 2}em;
-      `.join('')}
+      margin-bottom: ${CARD_SPACING / 2}em;
+    `.join('')}
     `;
   }}
 
@@ -98,12 +111,12 @@ export const Card = styled.li`
 
     ${({ display }) => {
       if (display === displayOptions.grid) {
-        return `
-        position: absolute;
-        padding: 1em;
+        return css`
+          position: absolute;
+          padding: 1em;
         `;
       }
-      return `
+      return css`
         position: relative;
         padding: 1em;
 
@@ -151,33 +164,38 @@ export const Card = styled.li`
 `;
 
 export const _onExit = (el, i, removeElement) => {
+  // console.log('exiting');
+
   anime({
     targets: el,
     opacity: 0,
     scale: 0.9,
     easing: 'easeOutSine',
-    duration: 300,
-    delay: i * 20,
+    duration: 200,
+    delay: i * 10,
     complete: removeElement
   });
 };
 
-export const _onAppear = el => {
-  el.style.opacity = 1;
-  // anime({
-  //   targets: el,
-  //   opacity: [0, 1],
-  //   scale: [0.9, 1],
-  //   easing: 'easeInSine',
-  //   duration: 300,
-  //   delay: i * 20
-  // });
+export const _onAppear = (el, i) => {
+  // Don't appear if going to project page.
+  // console.log('appearing');
+  // el.style.opacity = 1;
+  anime({
+    targets: el,
+    opacity: [0, 1],
+    scale: [0.5, 1],
+    easing: 'easeInSine',
+    duration: 200,
+    delay: i * 10
+  });
 };
 
 export const _onStart = (el, { previous, current }) => {
   // Hide fade elements - project to projects animation
 
   if (previous.location.pathname !== current.location.pathname) {
+    // console.log('starting');
     // Card should fade only if transitioning between pages.
     [...el.querySelectorAll('[data-fade-in]')].forEach(fadeEl => {
       // eslint-disable-next-line no-param-reassign
@@ -190,6 +208,7 @@ export const _onComplete = (el, { previous, current }) => {
   // Fade in on animation complete - project to projects animation
 
   if (previous.location.pathname !== current.location.pathname) {
+    // console.log('complete');
     // Card should fade only if transitioning between pages.
     anime({
       targets: [...el.querySelectorAll('[data-fade-in]')],
@@ -202,10 +221,19 @@ export const _onComplete = (el, { previous, current }) => {
   }
 };
 
-// export const _shouldFlip = (prev, curr) => {
-//   const sort1 = curr.location.search.match(/sort=([^&]+)/);
-//   curr.location.search.match(/sort=([^&]+)/)[1];
-//   const sort2 = prev.location.search.match(/sort=([^&]+)/);
-//   prev.location.search.match(/sort=([^&]+)/)[1];
-//   return sort1 === sort2;
-// };
+export const _shouldFlip = (previous, current) => {
+  if (previous.location.pathname === current.location.pathname) {
+    // If initial filtering (/projects --> /projects?filter=...) don't flip.
+    if (previous.location.search === '') {
+      return false;
+    }
+    // Else, pathnames must be /projects but search filters are different
+    return true;
+  }
+
+  // If return to projects from project, we should flip card.
+  if (projectPathnameRegex.test(previous.location.pathname)) {
+    return true;
+  }
+  return false;
+};

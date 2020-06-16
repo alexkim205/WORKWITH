@@ -7,6 +7,7 @@ import _ from 'lodash';
 import { useFlip } from '../../_utils/FlipProvider.util';
 import ProjectsPage from '../Projects';
 import AuthPage from '../Auth';
+import ProfilePage from '../Profile';
 import ProjectPage from '../Project';
 
 const RootNavigator = ({ location }) => {
@@ -21,7 +22,7 @@ const RootNavigator = ({ location }) => {
       ]),
     [location.pathname, location.search, flipState, isPending]
   );
-  // console.log(flipKeyParams.join("-"));
+  // console.log(flipKeyParams.join('-'));
   return (
     <Flipper
       flipKey={flipKeyParams.join('-')}
@@ -31,30 +32,43 @@ const RootNavigator = ({ location }) => {
       //   dampness: 30
       // }}
       spring="noWobble"
-      handleEnterUpdateDelete={({
+      handleEnterUpdateDelete={async ({
         hideEnteringElements,
         animateEnteringElements,
         animateExitingElements,
         animateFlippedElements
       }) => {
-        hideEnteringElements();
-        animateExitingElements().then(
-          Promise.all[(animateEnteringElements(), animateFlippedElements())]
-        );
+        // console.log('hiding entering elements');
+        // hideEnteringElements();
+        // console.log('animate entering elements');
+        // animateEnteringElements();
+        // console.log('animate exiting elements');
+        // await animateExitingElements();
+        // console.log('animate flipped elements');
+        // await animateFlippedElements();
 
-        // then(
-        //   Promise.all[(animateEnteringElements(), animateFlippedElements())]
-        // );
-        // Promise.all([animateExitingElements(), animateFlippedElements()]).then(
-        //   animateEnteringElements
-        // );
-        // animateFlippedElements().then(animateEnteringElements);
+        // console.log('hideEnteringElements');
+        // hideEnteringElements(); // gives entering elements opacity 0
+        // console.log('animateFlippedElements');
+        // await animateFlippedElements();
+        // console.log('animateEnteringElements');
+        // animateEnteringElements(); // calls on Appear
+        // console.log('animateExitingElements');
+        // await animateExitingElements(); // calls on Exit
+
+        // console.log('hideEnteringElements');
+        hideEnteringElements(); // gives entering elements opacity 0
+        // console.log('animateFlippedElements + animateExitingElements');
+        await Promise.all([animateFlippedElements(), animateExitingElements()]);
+        // console.log('animateEnteringElements2');
+        animateEnteringElements(); // calls on Appear
       }}
       // debug
     >
       <Switch>
         <Route exact path={'/auth'} render={AuthPage} />
         <Route exact path={'/projects'} render={ProjectsPage} />
+        <Route exact path={'/profile'} render={ProfilePage} />
         <Route path="/project/:id" component={ProjectPage} />
       </Switch>
     </Flipper>

@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 import CreatableSelect from 'react-select/creatable';
 import makeAnimated from 'react-select/animated';
@@ -107,19 +107,16 @@ const Select = ({
 }) => {
   const [localOptions, setLocalOptions] = useState(options);
 
-  const handleChange = ([newValue, actionMeta]) => {
-    console.group('Value Changed');
-    console.log(newValue, actionMeta);
-    console.groupEnd();
-  };
-
   const createOption = label => ({ label, value: label });
 
   const handleCreate = inputValue => {
     this.setState({ isLoading: true });
-    console.group('Option created');
     setLocalOptions([...localOptions, createOption(inputValue)]);
   };
+
+  useEffect(() => {
+    setLocalOptions(options);
+  }, [options]);
 
   return (
     <Controller
@@ -135,7 +132,6 @@ const Select = ({
       isMulti
       isClearable
       isCreatable
-      onChange={handleChange}
       createOption={handleCreate}
       styles={{
         menuPortal: base => ({ ...base, zIndex: 9999 }),
@@ -154,7 +150,9 @@ const Select = ({
 
 Select.propTypes = {
   name: PropTypes.string.isRequired,
-  options: PropTypes.arrayOf(PropTypes.object).isRequired,
+  options: PropTypes.arrayOf(
+    PropTypes.oneOfType([PropTypes.object, PropTypes.string])
+  ).isRequired,
   control: PropTypes.object.isRequired,
   checkValid: PropTypes.func
 };

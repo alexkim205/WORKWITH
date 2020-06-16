@@ -5,14 +5,16 @@ import createActionCreator from '../_utils/createActionCreator.util';
 
 const { projectsServices } = services;
 
-export const getProjectsByUser = userId => async dispatch => {
+export const getProjectsByUser = (userId, axiosOptions) => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     projectsConstants,
     'GET_USER_PROJECTS'
   );
 
   dispatch(actionPending());
-  const [err, projects] = await to(projectsServices.getProjectsByUser(userId));
+  const [err, projects] = await to(
+    projectsServices.getProjectsByUser(userId, axiosOptions)
+  );
   if (err) {
     dispatch(actionError(err));
     return;
@@ -20,14 +22,14 @@ export const getProjectsByUser = userId => async dispatch => {
   dispatch(actionSuccess(projects));
 };
 
-export const getProjects = () => async dispatch => {
+export const getProjects = axiosOptions => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     projectsConstants,
     'GET_PROJECTS'
   );
 
   dispatch(actionPending());
-  const [err, projects] = await to(projectsServices.getProjects());
+  const [err, projects] = await to(projectsServices.getProjects(axiosOptions));
   if (err) {
     dispatch(actionError(err));
     return;
@@ -35,14 +37,16 @@ export const getProjects = () => async dispatch => {
   dispatch(actionSuccess(projects));
 };
 
-export const getProject = projectId => async dispatch => {
+export const getProject = (projectId, axiosOptions) => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     projectsConstants,
     'GET_PROJECT'
   );
 
   dispatch(actionPending());
-  const [err, project] = await to(projectsServices.getProject(projectId));
+  const [err, project] = await to(
+    projectsServices.getProject(projectId, axiosOptions)
+  );
   if (err) {
     dispatch(actionError(err));
     throw err;
@@ -50,14 +54,16 @@ export const getProject = projectId => async dispatch => {
   dispatch(actionSuccess(project));
 };
 
-export const createProject = newProject => async dispatch => {
+export const createProject = (newProject, axiosOptions) => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     projectsConstants,
     'CREATE_PROJECT'
   );
 
   dispatch(actionPending());
-  const [err, project] = await to(projectsServices.createProject(newProject));
+  const [err, project] = await to(
+    projectsServices.createProject(newProject, axiosOptions)
+  );
   if (err) {
     dispatch(actionError(err));
     throw err;
@@ -65,7 +71,11 @@ export const createProject = newProject => async dispatch => {
   dispatch(actionSuccess(project));
 };
 
-export const updateProject = (projectId, newProject) => async dispatch => {
+export const updateProject = (
+  projectId,
+  newProject,
+  axiosOptions
+) => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     projectsConstants,
     'UPDATE_PROJECT'
@@ -73,7 +83,7 @@ export const updateProject = (projectId, newProject) => async dispatch => {
 
   dispatch(actionPending());
   const [err, project] = await to(
-    projectsServices.updateProject(projectId, newProject)
+    projectsServices.updateProject(projectId, newProject, axiosOptions)
   );
   if (err) {
     dispatch(actionError(err));
@@ -82,14 +92,16 @@ export const updateProject = (projectId, newProject) => async dispatch => {
   dispatch(actionSuccess(project));
 };
 
-export const deleteProject = projectId => async dispatch => {
+export const deleteProject = (projectId, axiosOptions) => async dispatch => {
   const { actionPending, actionSuccess, actionError } = createActionCreator(
     projectsConstants,
     'DELETE_PROJECT'
   );
 
   dispatch(actionPending());
-  const [err] = await to(projectsServices.deleteProject(projectId));
+  const [err] = await to(
+    projectsServices.deleteProject(projectId, axiosOptions)
+  );
   if (err) {
     dispatch(actionError(err));
     throw err;

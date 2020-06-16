@@ -1,5 +1,6 @@
 /* eslint-disable no-param-reassign */
 import jwt from 'jsonwebtoken';
+import axios from 'axios';
 import Errors from './errors';
 import { refreshToken as refreshTokenAction } from '../_actions/users.actions';
 import { authAxios, baseAxios } from './axiosInstances.config';
@@ -7,6 +8,9 @@ import { authAxios, baseAxios } from './axiosInstances.config';
 const handleError = error => {
   // If error hasn't been handled yet, cast it as a ServerError.
   if (error.isAxiosError) {
+    if (axios.isCancel(error)) {
+      throw new Errors.Cancel(error);
+    }
     throw new Errors.Server(error);
   }
   throw error;

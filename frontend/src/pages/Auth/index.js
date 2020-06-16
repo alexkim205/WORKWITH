@@ -22,9 +22,9 @@ import { AUTH_KEYS, FIELD_KEYS, initializeFields } from './Auth.data';
 const AuthBox = () => {
   /* Component Setup */
   const [authState, setAuthState] = useState(AUTH_KEYS.REGISTER);
-  const _login = useAction(login);
-  const _register = useAction(register);
-  const _logout = useAction(logout);
+  const [_login, cleanupLogin] = useAction(login);
+  const [_register] = useAction(register);
+  const [_logout] = useAction(logout);
   const { pending } = useSelector(getUsersPendingAndError);
   const formRef = useRef();
   const {
@@ -86,6 +86,8 @@ const AuthBox = () => {
   useEffect(() => {
     // Logout if this page is requested
     _logout();
+    // cleanupLogin
+    return cleanupLogin;
   }, []);
 
   return (

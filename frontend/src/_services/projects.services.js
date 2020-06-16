@@ -1,27 +1,32 @@
 import { authAxios } from '../_config/axiosInstances.config';
 import { handleProjectError } from '../_config/errors/Project.error';
 
-const getProjectsByUser = userId =>
-  authAxios.get(`/projects/user/${userId}`).then(res => res.data.projects);
-
-const getProjects = () =>
-  authAxios.get('/projects').then(res => res.data.projects);
-
-const getProject = projectId =>
-  authAxios.get(`/projects/${projectId}`).then(res => res.data.project);
-
-const createProject = newProject =>
+const getProjectsByUser = (userId, axiosOptions) =>
   authAxios
-    .post('/projects/add', newProject)
+    .get(`/projects/user/${userId}`, axiosOptions)
+    .then(res => res.data.projects);
+
+const getProjects = axiosOptions =>
+  authAxios.get('/projects', axiosOptions).then(res => res.data.projects);
+
+const getProject = (projectId, axiosOptions) =>
+  authAxios
+    .get(`/projects/${projectId}`, axiosOptions)
+    .then(res => res.data.project);
+
+const createProject = (newProject, axiosOptions) =>
+  authAxios
+    .post('/projects/add', newProject, axiosOptions)
     .then(res => res.data.project)
     .catch(handleProjectError);
 
-const updateProject = (projectId, newProject) =>
+const updateProject = (projectId, newProject, axiosOptions) =>
   authAxios
-    .put(`/projects/update/${projectId}`, newProject)
+    .put(`/projects/update/${projectId}`, newProject, axiosOptions)
     .then(res => res.data.project);
 
-const deleteProject = projectId => authAxios.delete(`/projects/${projectId}`);
+const deleteProject = (projectId, axiosOptions) =>
+  authAxios.delete(`/projects/${projectId}`, axiosOptions);
 
 export default {
   getProjectsByUser,

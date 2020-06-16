@@ -2,6 +2,28 @@
 
 ## Backlog Todo
 
+## 6/16/2020
+
+- Use callbacks in project render functions.
+- Add cleanup functions in `useAction` for async calls in `useEffect`. `axiosOptions` trickled down from useEffect to actions to services.
+- Just kidding, I got create project animations to work. TODO: optimize rendering in projects.
+- Optimized rendering by adding first render check in `refreshProjects`.
+- Fixed memory leaks in projects and project pages.
+
+## 6/14/2020
+
+- Animating on create new project is too hard to implement. Just navigate to new project on create.
+
+## 6/13/2020
+
+- Fix bug where contacts weren't showing on first login.
+- TODO: newly created project should enter projects page with animation.
+  - Maybe have callback to create project in projects/index.js page. From here, we can create a skeleton flipped element that would exist before the fetch is made so that the animation can be triggered by react-flip-toolkit. The problem here is that Flipped keys are project id's right now, and there's no way of knowing the id before fetching the project data. Maybe if I create a skeleton right after the project is made (with the successfully returned project), insert it into the DOM as a flipped element, then call \_getProjectsByUser to update the projects array, this will trigger an animation. left off at `Projects/index.js#ProjectsBox#_onCreateProject`
+
+## 6/12/2020
+
+- Add styling for incorrectly formed pills in contacts field.
+
 ## 6/11/2020
 
 - Styled contacts dropdown to match theme. TODO fix dropdown menu overlay on button issue.
