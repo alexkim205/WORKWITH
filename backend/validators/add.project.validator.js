@@ -28,11 +28,23 @@ const validateAddProjectInput = data => {
   }
 
   // Users check
-  if (
-    !_.isEmpty(formattedData.users) &&
-    !Validator.isArray(formattedData.users)
-  ) {
-    errors.users = "Users field is not an array";
+  if (!_.isEmpty(formattedData.users)) {
+    if (!Validator.isArray(formattedData.users)) {
+      // If users data isn't array
+      errors.users = "Users field is not an array";
+    } else {
+      // If users data is array
+      const userIdErrors = formattedData.users.map((userIdOrEmail, i) => {
+        return _.isString(userIdOrEmail) &&
+          (Validator.isObjectId(userIdOrEmail) ||
+            Validator.isEmail(userIdOrEmail))
+          ? null
+          : `User ${i} is not an Object ID or email.`;
+      });
+      if (_.some(userIdErrors)) {
+        errors.users = userIdErrors.join();
+      }
+    }
   }
 
   // Private check

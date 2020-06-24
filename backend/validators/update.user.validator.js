@@ -46,26 +46,24 @@ const validateUpdateUserInput = data => {
   }
 
   // User contacts check
-  if (
-    !_.isEmpty(formattedData.contacts) &&
-    !Validator.isArray(formattedData.contacts)
-  ) {
-    errors.contacts = "Contacts field is not an array";
-  }
-  if (
-    !_.isEmpty(formattedData.contacts) &&
-    Validator.isArray(formattedData.contacts)
-  ) {
-    const contactIdErrors = formattedData.contacts.map(
-      (contactIdOrEmail, i) => {
-        return Validator.isObjectId(contactIdOrEmail) ||
-          Validator.isEmail(contactIdOrEmail)
-          ? null
-          : `User contact ${i} is not an Object ID or email.`;
+  if (!_.isEmpty(formattedData.contacts)) {
+    if (!Validator.isArray(formattedData.contacts)) {
+      // If contacts data isn't array
+      errors.contacts = "Contacts field is not an array";
+    } else {
+      // If contacts data is array
+      const contactIdErrors = formattedData.contacts.map(
+        (contactIdOrEmail, i) => {
+          return _.isString(contactIdOrEmail) &&
+            (Validator.isObjectId(contactIdOrEmail) ||
+              Validator.isEmail(contactIdOrEmail))
+            ? null
+            : `User contact ${i} is not an Object ID or email.`;
+        }
+      );
+      if (_.some(contactIdErrors)) {
+        errors.contacts = contactIdErrors.join();
       }
-    );
-    if (_.some(contactIdErrors)) {
-      errors.contacts = contactIdErrors.join();
     }
   }
 

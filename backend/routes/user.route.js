@@ -12,10 +12,10 @@ const _ = require("lodash");
 const jwt = require("jsonwebtoken");
 const { switchEnvs } = require("../_config/getEnv.config");
 const { HttpStatus } = require("../_constants/error.constants");
-const { BaseUser, User, Guest } = require("../models/user.model");
+const { BaseUser, User } = require("../models/user.model");
 const Role = require("../_utils/roles.util");
 const authorize = require("../_utils/authorize.util");
-const Validator = require("../_utils/validator.util");
+const findOrCreateBaseUser = require("../_utils/findOrCreateBaseUser");
 const validateRegisterInput = require("../validators/register.validator");
 const validateLoginInput = require("../validators/login.validator");
 const validateUpdateUserInput = require("../validators/update.user.validator");
@@ -443,61 +443,9 @@ const updateUser = async (req, res) => {
   }
 
   // Check by id or email if each contact exists. If account doesn't exist,
-  // create guest account. Each promise returns an Object Id or throws
-  // an error. Client can pass in either string email addresses or uuids in
-  // req.body.contacts. Backend will format this field into a list of uuids of
-  // existing users/guests or newly created guests.
+  // create guest account.
   req.body.contacts = req.body.contacts || [];
-  const findOrCreateContactsPromises = req.body.contacts.map(
-    async contactIdOrEmail => {
-      // If Object Id is passed in, the user should exist.
-      if (Validator.isObjectId(contactIdOrEmail)) {
-        const [errContact, contact] = await to(
-          BaseUser.findById(contactIdOrEmail)
-        );
-        if (!_.isEmpty(errContact)) {
-          throw new Error(errContact);
-        }
-        if (_.isEmpty(contact)) {
-          throw new Error(
-            `User contact with id ${contactIdOrEmail} was NOT_FOUND`
-          );
-        }
-        return contact._id;
-      }
-      // Instead, if email is passed in, the guest should be created.
-      if (Validator.isEmail(contactIdOrEmail)) {
-        // Check if user with email is already a user
-        const [errContact, contact] = await to(
-          BaseUser.findOne({ email: contactIdOrEmail })
-        );
-        if (!_.isEmpty(errContact)) {
-          throw new Error(errContact);
-        }
-        // If not already found, create guest.
-        if (_.isEmpty(contact)) {
-          const guest = new Guest({ email: contactIdOrEmail });
-
-          const [errGuest, newGuest] = await to(guest.save());
-
-          if (!_.isEmpty(errGuest)) {
-            throw new Error(errGuest);
-          }
-          if (_.isEmpty(newGuest)) {
-            throw new Error(
-              `Bad request creating new guest with email ${contactIdOrEmail}`
-            );
-          }
-          return newGuest._id;
-        }
-        return contact._id;
-      }
-      // Should already be caught in validator at beginning of function.
-      throw new Error(
-        `User contact ${contactIdOrEmail} is not an Object ID or email.`
-      );
-    }
-  );
+  const findOrCreateContactsPromises = findOrCreateBaseUser(req.body.contacts);
   const [err2, contacts] = await to(Promise.all(findOrCreateContactsPromises));
   if (!_.isEmpty(err2)) {
     return res.status(HttpStatus.UNPROCESSABLE_ENTITY).send(err2);

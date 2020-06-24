@@ -2,6 +2,17 @@
 
 ## Backlog Todo
 
+## 6/24/2020
+
+- Find or create new contacts when creating a project. Copy over from update user route.
+- Refactor `findOrCreateBaseUser` to be used in multiple routes (createProject, updateUser, etc.)
+- Create new project with contacts work now.
+- TODO: call get user contacts again after project is created.
+
+## 6/23/2020
+
+- Pass in users to share with when creating projects.
+
 ## 6/16/2020
 
 - Use callbacks in project render functions.

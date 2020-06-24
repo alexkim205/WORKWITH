@@ -67,7 +67,10 @@ const AddProjectButton = () => {
   /* Form functions */
   const _onSubmit = async data => {
     try {
-      const newProject = _.pick(data, ['title']);
+      const newProject = _.assign(
+        {},
+        { title: data.title, users: data.users.map(newUser => newUser._id) }
+      );
       // const newContacts = _.pick(data, ['contacts']);
 
       // Try to create project
@@ -82,8 +85,6 @@ const AddProjectButton = () => {
       }
     }
   };
-
-  // const watchAllFields = watch();
 
   return (
     <Fragment>
@@ -114,7 +115,7 @@ const AddProjectButton = () => {
                   Invite your friends
                 </Input.Label>
                 <Input.Select
-                  name="contacts"
+                  name="users"
                   placeholder="Add people by name or email"
                   control={control}
                   options={user.contacts}
@@ -134,8 +135,13 @@ const AddProjectButton = () => {
                   })}
                   menuPortalTarget={document.body}
                   checkValid={data => isEmail(data.email)}
+                  rules={{
+                    validate: options =>
+                      _.every(options, option => isEmail(option.email)) ||
+                      `Users are invalid.`
+                  }}
                 />
-                <Input.Error>{errors?.contacts?.message}</Input.Error>
+                <Input.Error>{errors?.users?.message}</Input.Error>
               </Input.Wrapper>
               <Input.Error>{errors?.general?.message}</Input.Error>
             </div>

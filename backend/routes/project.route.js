@@ -13,6 +13,7 @@ const { BaseUser } = require("../models/user.model");
 const Project = require("../models/project.model");
 const Role = require("../_utils/roles.util");
 const authorize = require("../_utils/authorize.util");
+const findOrCreateBaseUser = require("../_utils/findOrCreateBaseUser");
 const validateAddProjectInput = require("../validators/add.project.validator");
 const validateUpdateProjectInput = require("../validators/update.project.validator");
 
@@ -226,7 +227,7 @@ const createProject = async (req, res) => {
       throw new Error(errAuthor);
     }
     if (_.isEmpty(user)) {
-      throw new Error(`Author with id ${authorId} was NOT_FOUND`);
+      throw new Error(`Author with id ${authorId} was not found`);
     }
     return user;
   });
@@ -235,34 +236,56 @@ const createProject = async (req, res) => {
     return res.status(HttpStatus.NOT_FOUND).send(err3);
   }
   if (_.isEmpty(authors)) {
-    return res.status(HttpStatus.NOT_FOUND).send(`Authors were NOT_FOUND`);
+    return res.status(HttpStatus.NOT_FOUND).send(`Authors were not found.`);
   }
 
-  // Check if all users exist
-  const checkUsersPromises = req.body.users.map(async userId => {
-    const [errUser, user] = await to(BaseUser.findById(userId));
-    if (!_.isEmpty(errUser)) {
-      throw new Error(errUser);
-    }
-    if (_.isEmpty(user)) {
-      throw new Error(`User with id ${userId} was NOT_FOUND`);
-    }
-    return user;
-  });
-  const [err4, users] = await to(Promise.all(checkUsersPromises));
-  if (!_.isEmpty(err3)) {
+  // Check if all users exist. If the user doesn't, add as guest.
+  const findOrCreateUsersPromises = findOrCreateBaseUser(req.body.users);
+  const [err4, users] = await to(Promise.all(findOrCreateUsersPromises));
+  if (!_.isEmpty(err4)) {
     return res.status(HttpStatus.NOT_FOUND).send(err4);
   }
-  if (!_.isEmpty(req.body.users) && _.isEmpty(users)) {
-    return res.status(HttpStatus.NOT_FOUND).send(`Users were NOT_FOUND`);
-  }
 
+  // Synchronously update user's contacts to add newly created guests.
+  // Silently throw error if there is one.
+  const updateUserContactPromise = async () => {
+    // First, find user to update
+    const [errUserToUpdate, userToUpdate] = await to(
+      BaseUser.findById(req.user._id)
+    );
+    if (!_.isEmpty(errUserToUpdate)) {
+      // eslint-disable-next-line no-console
+      console.error(
+        "Error updating user's contacts while creating project.",
+        errUserToUpdate
+      );
+    } else if (_.isEmpty(userToUpdate)) {
+      // eslint-disable-next-line no-console
+      console.error(
+        `User with id ${req.user._id} could not be found while creating project.`
+      );
+    } else {
+      userToUpdate.contacts = _(userToUpdate.contacts)
+        .concat(users)
+        .uniqBy(id => id.toString())
+        .value();
+      const [errUpdatedUser, updatedUser] = await to(userToUpdate.save());
+      if (!_.isEmpty(errUpdatedUser) || _.isEmpty(updatedUser)) {
+        // eslint-disable-next-line no-console
+        console.error("Error saving user's contacts while creating project.");
+      }
+      console.log("UPDATED USER CONTACTS", updatedUser);
+    }
+  };
+  updateUserContactPromise();
+
+  req.body.users = users;
   const project = new Project(
     _.pick(req.body, ["title", "authors", "users", "private"])
   );
 
   const [err5, newProject] = await to(project.save());
-  if (!_.isEmpty(err4)) {
+  if (!_.isEmpty(err5)) {
     return res.status(HttpStatus.BAD_REQUEST).send(err5);
   }
   if (_.isEmpty(newProject)) {
