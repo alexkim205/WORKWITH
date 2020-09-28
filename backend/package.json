@@ -23,7 +23,7 @@
     "morgan": "^1.9.1",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
-    "swagger-jsdoc": "^3.5.0",
+    "swagger-jsdoc": "^4.2.0",
     "swagger-ui-express": "^4.1.2",
     "tcp-port-used": "^1.0.1",
     "validator": "^12.1.0"
