@@ -15,7 +15,7 @@
     "fuse.js": "^3.4.6",
     "history": "^4.10.1",
     "jest": "^24.9.0",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "lodash": "^4.17.15",
     "polished": "^3.4.2",
     "prop-types": "^15.7.2",
